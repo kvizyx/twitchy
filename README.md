@@ -1,8 +1,5 @@
 # Twitchy
 
-> [!WARNING]  
-> Before using Twitchy take a look at [this](https://github.com/twirapp/twitchy) fork, which is more likely to be maintainable and probably has a lot more features/updates than here, as I don't plan to maintain nor improve the library anytime soon.
-
 Twitchy is a comprehensive Twitch client library that provides an easy way to communicate with all major Twitch APIs in
 Go applications.
 
