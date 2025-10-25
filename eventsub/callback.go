@@ -404,3 +404,10 @@ func (c *callback[Metadata]) OnChannelChatMessageDelete(onChannelChatMessageDele
 func (c *callback[Metadata]) OnUserAuthorizationRevoke(onUserAuthorizationRevoke Handler[UserAuthorizationRevokeEvent, Metadata]) {
 	c.onUserAuthorizationRevoke = onUserAuthorizationRevoke
 }
+
+// OnChannelModerateV2 subscription type sends a notification when a moderator performs a moderation action in a channel. Some of these actions affect chatters in other channels during Shared Chat.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelmoderate-v2.
+func (c *callback[Metadata]) OnChannelModerateV2(onChannelModerateV2 Handler[ChannelModerateEventV2, Metadata]) {
+	c.onChannelModerateV2 = onChannelModerateV2
+}
