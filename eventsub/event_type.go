@@ -20,6 +20,7 @@ const (
 	EventTypeConduitShardDisabled                      EventType = "conduit.shard.disabled"
 	EventTypeChannelBan                                EventType = "channel.ban"
 	EventTypeChannelChatNotification                   EventType = "channel.chat.notification"
+	EventTypeChannelUnban                              EventType = "channel.unban"
 	EventTypeChannelModeratorAdd                       EventType = "channel.moderator.add"
 	EventTypeChannelModeratorRemove                    EventType = "channel.moderator.remove"
 	EventTypeChannelPollBegin                          EventType = "channel.poll.begin"

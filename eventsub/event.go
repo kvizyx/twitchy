@@ -375,6 +375,27 @@ type ChannelBanEvent struct {
 	IsPermanent bool `json:"is_permanent"`
 }
 
+type ChannelUnbanEvent struct {
+	// The user id for the user who was unbanned on the specified channel.
+	UserID string `json:"user_id"`
+	// The user login for the user who was unbanned on the specified channel.
+	UserLogin string `json:"user_login"`
+	// The user display name for the user who was unbanned on the specified channel.
+	UserName string `json:"user_name"`
+	// The requested broadcaster ID.
+	BroadcasterUserID string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The user ID of the issuer of the unban.
+	ModeratorUserID string `json:"moderator_user_id"`
+	// The user login of the issuer of the unban.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The user name of the issuer of the unban.
+	ModeratorUserName string `json:"moderator_user_name"`
+}
+
 type ChannelChatNotificationEvent struct {
 	// The broadcaster user ID.
 	BroadcasterUserId string `json:"broadcaster_user_id"`

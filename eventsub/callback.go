@@ -23,6 +23,7 @@ type callback[Metadata any] struct {
 	onChannelChatMessage                          Handler[ChannelChatMessageEvent, Metadata]
 	onConduitShardDisabled                        Handler[ConduitShardDisabledEvent, Metadata]
 	onChannelBan                                  Handler[ChannelBanEvent, Metadata]
+	onChannelUnban                                Handler[ChannelUnbanEvent, Metadata]
 	onChannelChatNotification                     Handler[ChannelChatNotificationEvent, Metadata]
 	onChannelModeratorAdd                         Handler[ChannelModeratorAddEvent, Metadata]
 	onChannelModeratorRemove                      Handler[ChannelModeratorRemoveEvent, Metadata]
@@ -174,6 +175,13 @@ func (c *callback[Metadata]) OnConduitShardDisabled(onConduitShardDisabled Handl
 // Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelban.
 func (c *callback[Metadata]) OnChannelBan(onChannelBan Handler[ChannelBanEvent, Metadata]) {
 	c.onChannelBan = onChannelBan
+}
+
+// OnChannelUnban sends a notification when a viewer is unbanned from the specified channel.
+//
+// https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelunban.
+func (c *callback[Metadata]) OnChannelUnban(onChannelUnban Handler[ChannelUnbanEvent, Metadata]) {
+	c.onChannelUnban = onChannelUnban
 }
 
 // OnChannelChatNotification invokes when a user sends a chat notification to a channel’s chat room.
