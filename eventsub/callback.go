@@ -55,6 +55,7 @@ type callback[Metadata any] struct {
 	onChannelVipRemove                            Handler[ChannelVipRemoveEvent, Metadata]
 	onChannelChatMessageDelete                    Handler[ChannelChatMessageDeleteEvent, Metadata]
 	onUserAuthorizationRevoke                     Handler[UserAuthorizationRevokeEvent, Metadata]
+	onChannelModerateV2                           Handler[ChannelModerateEventV2, Metadata]
 }
 
 // OnDuplicate invokes when duplicate message is caught (this is not necessarily an event).

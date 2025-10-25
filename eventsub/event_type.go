@@ -50,6 +50,7 @@ const (
 	EventTypeChannelVipAdd                             EventType = "channel.vip.add"
 	EventTypeChannelVipRemove                          EventType = "channel.vip.remove"
 	EventTypeChannelMessageDelete                      EventType = "channel.chat.message_delete"
+	EventTypeChannelModerate                           EventType = "channel.moderate"
 )
 
 func (et EventType) String() string {

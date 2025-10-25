@@ -1178,3 +1178,271 @@ type ChannelChatMessageDeleteEvent struct {
 	// A UUID that identifies the message that was removed.
 	MessageId string `json:"message_id"`
 }
+
+type ChannelModerateEventV2 struct {
+	// The ID of the broadcaster.
+	BroadcasterUserID string `json:"broadcaster_user_id"`
+	// The login of the broadcaster.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+
+	// The channel in which the action originally occurred. Is the same as the broadcaster_user_id if not in shared chat.
+	SourceBroadcasterUserID string `json:"source_broadcaster_user_id"`
+	// The channel in which the action originally occurred. Is the same as the broadcaster_user_login if not in shared chat.
+	SourceBroadcasterUserLogin string `json:"source_broadcaster_user_login"`
+	// The channel in which the action originally occurred. Is null when the moderator action happens in the same channel as the broadcaster. Is not null when in a shared chat session, and the action happens in the channel of a participant other than the broadcaster.
+	SourceBroadcasterUserName string `json:"source_broadcaster_user_name"`
+
+	// The ID of the moderator who performed the action.
+	ModeratorUserID string `json:"moderator_user_id"`
+	// The login of the moderator.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The user name of the moderator.
+	ModeratorUserName string `json:"moderator_user_name"`
+
+	// The action performed. Possible values are
+	// ban, timeout, unban, untimeout, clear, emoteonly, emoteonlyoff, followers, followersoff, uniquechat, uniquechatoff, slow, slowoff, subscribers, subscribersoff, unraid, delete, unvip, vip, raid, add_blocked_term, add_permitted_term, remove_blocked_term, remove_permitted_term, mod, unmod, approve_unban_request, deny_unban_request, warn, shared_chat_ban, shared_chat_timeout, shared_chat_unban, shared_chat_untimeout, shared_chat_delete
+	Action ChannelModerateEventV2Action `json:"action"`
+
+	// Optional. Metadata associated with the followers command.
+	Followers *ChannelModerateEventV2FollowersMetadata `json:"followers,omitempty"`
+	// Optional. Metadata associated with the slow command.
+	Slow *ChannelModerateEventV2SlowMetadata `json:"slow,omitempty"`
+	// Optional. Metadata associated with the vip command.
+	Vip *ChannelModerateEventV2VipMetadata `json:"vip,omitempty"`
+	// Optional. Metadata associated with the unvip command.
+	Unvip *ChannelModerateEventV2UnvipMetadata `json:"unvip,omitempty"`
+	// Optional. Metadata associated with the mod command.
+	Mod *ChannelModerateEventV2ModMetadata `json:"mod,omitempty"`
+	// Optional. Metadata associated with the unmod command.
+	Unmod *ChannelModerateEventV2UnmodMetadata `json:"unmod,omitempty"`
+	// Optional. Metadata associated with the ban command.
+	Ban *ChannelModerateEventV2BanMetadata `json:"ban,omitempty"`
+	// Optional. Metadata associated with the unban command.
+	Unban *ChannelModerateEventV2UnbanMetadata `json:"unban,omitempty"`
+	// Optional. Metadata associated with the timeout command.
+	Timeout *ChannelModerateEventV2TimeoutMetadata `json:"timeout,omitempty"`
+	// Optional. Metadata associated with the untimeout command.
+	Untimeout *ChannelModerateEventV2UntimeoutMetadata `json:"untimeout,omitempty"`
+	// Optional. Metadata associated with the raid command.
+	Raid *ChannelModerateEventV2RaidMetadata `json:"raid,omitempty"`
+	// Optional. Metadata associated with the unraid command.
+	Unraid *ChannelModerateEventV2UnraidMetadata `json:"unraid,omitempty"`
+	// Optional. Metadata associated with the delete command.
+	Delete *ChannelModerateEventV2DeleteMetadata `json:"delete,omitempty"`
+	// Optional. Metadata associated with the automod terms changes.
+	AutomodTerms *ChannelModerateEventV2AutomodTermsMetadata `json:"automod_terms,omitempty"`
+	// Optional. Metadata associated with an unban request.
+	UnbanRequest *ChannelModerateEventV2UnbanRequestMetadata `json:"unban_request,omitempty"`
+	// Optional. Metadata associated with the warn command.
+	Warn *ChannelModerateEventV2WarnMetadata `json:"warn,omitempty"`
+	// Optional. Information about the shared_chat_ban event.
+	SharedChatBan *ChannelModerateEventV2BanMetadata `json:"shared_chat_ban,omitempty"`
+	// Optional. Information about the shared_chat_unban event.
+	SharedChatUnban *ChannelModerateEventV2UnbanMetadata `json:"shared_chat_unban,omitempty"`
+	// Optional. Information about the shared_chat_timeout event.
+	SharedChatTimeout *ChannelModerateEventV2TimeoutMetadata `json:"shared_chat_timeout,omitempty"`
+	// Optional. Information about the shared_chat_untimeout event.
+	SharedChatUntimeout *ChannelModerateEventV2UntimeoutMetadata `json:"shared_chat_untimeout,omitempty"`
+	// Optional. Information about the shared_chat_delete event.
+	SharedChatDelete *ChannelModerateEventV2DeleteMetadata `json:"shared_chat_delete,omitempty"`
+}
+
+type ChannelModerateEventV2Action string
+
+const (
+	ChannelModerateEventV2ActionBan                 ChannelModerateEventV2Action = "ban"
+	ChannelModerateEventV2ActionTimeout             ChannelModerateEventV2Action = "timeout"
+	ChannelModerateEventV2ActionUnban               ChannelModerateEventV2Action = "unban"
+	ChannelModerateEventV2ActionUntimeout           ChannelModerateEventV2Action = "untimeout"
+	ChannelModerateEventV2ActionClear               ChannelModerateEventV2Action = "clear"
+	ChannelModerateEventV2ActionEmoteOnly           ChannelModerateEventV2Action = "emoteonly"
+	ChannelModerateEventV2ActionEmoteOnlyOff        ChannelModerateEventV2Action = "emoteonlyoff"
+	ChannelModerateEventV2ActionFollowers           ChannelModerateEventV2Action = "followers"
+	ChannelModerateEventV2ActionFollowersOff        ChannelModerateEventV2Action = "followersoff"
+	ChannelModerateEventV2ActionUniqueChat          ChannelModerateEventV2Action = "uniquechat"
+	ChannelModerateEventV2ActionUniqueChatOff       ChannelModerateEventV2Action = "uniquechatoff"
+	ChannelModerateEventV2ActionSlow                ChannelModerateEventV2Action = "slow"
+	ChannelModerateEventV2ActionSlowOff             ChannelModerateEventV2Action = "slowoff"
+	ChannelModerateEventV2ActionSubscribers         ChannelModerateEventV2Action = "subscribers"
+	ChannelModerateEventV2ActionSubscribersOff      ChannelModerateEventV2Action = "subscribersoff"
+	ChannelModerateEventV2ActionUnraid              ChannelModerateEventV2Action = "unraid"
+	ChannelModerateEventV2ActionDelete              ChannelModerateEventV2Action = "delete"
+	ChannelModerateEventV2ActionUnvip               ChannelModerateEventV2Action = "unvip"
+	ChannelModerateEventV2ActionVip                 ChannelModerateEventV2Action = "vip"
+	ChannelModerateEventV2ActionRaid                ChannelModerateEventV2Action = "raid"
+	ChannelModerateEventV2ActionAddBlockedTerm      ChannelModerateEventV2Action = "add_blocked_term"
+	ChannelModerateEventV2ActionAddPermittedTerm    ChannelModerateEventV2Action = "add_permitted_term"
+	ChannelModerateEventV2ActionRemoveBlockedTerm   ChannelModerateEventV2Action = "remove_blocked_term"
+	ChannelModerateEventV2ActionRemovePermittedTerm ChannelModerateEventV2Action = "remove_permitted_term"
+	ChannelModerateEventV2ActionMod                 ChannelModerateEventV2Action = "mod"
+	ChannelModerateEventV2ActionUnmod               ChannelModerateEventV2Action = "unmod"
+	ChannelModerateEventV2ActionApproveUnbanRequest ChannelModerateEventV2Action = "approve_unban_request"
+	ChannelModerateEventV2ActionDenyUnbanRequest    ChannelModerateEventV2Action = "deny_unban_request"
+	ChannelModerateEventV2ActionWarn                ChannelModerateEventV2Action = "warn"
+	ChannelModerateEventV2ActionSharedChatBan       ChannelModerateEventV2Action = "shared_chat_ban"
+	ChannelModerateEventV2ActionSharedChatTimeout   ChannelModerateEventV2Action = "shared_chat_timeout"
+	ChannelModerateEventV2ActionSharedChatUnban     ChannelModerateEventV2Action = "shared_chat_unban"
+	ChannelModerateEventV2ActionSharedChatUntimeout ChannelModerateEventV2Action = "shared_chat_untimeout"
+	ChannelModerateEventV2ActionSharedChatDelete    ChannelModerateEventV2Action = "shared_chat_delete"
+)
+
+type ChannelModerateEventV2FollowersMetadata struct {
+	// The length of time, in minutes, that the followers must have followed the broadcaster to participate in the chat room.
+	FollowDurationMinutes int `json:"follow_duration_minutes"`
+}
+
+type ChannelModerateEventV2SlowMetadata struct {
+	// The amount of time, in seconds, that users need to wait between sending messages.
+	WaitTimeSeconds int `json:"wait_time_seconds"`
+}
+
+type ChannelModerateEventV2VipMetadata struct {
+	// The ID of the user gaining VIP status.
+	UserID string `json:"user_id"`
+	// The login of the user gaining VIP status.
+	UserLogin string `json:"user_login"`
+	// The user name of the user gaining VIP status.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2UnvipMetadata struct {
+	// The ID of the user losing VIP status.
+	UserID string `json:"user_id"`
+	// The login of the user losing VIP status.
+	UserLogin string `json:"user_login"`
+	// The user name of the user losing VIP status.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2ModMetadata struct {
+	// The ID of the user gaining mod status.
+	UserID string `json:"user_id"`
+	// The login of the user gaining mod status.
+	UserLogin string `json:"user_login"`
+	// The user name of the user gaining mod status.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2UnmodMetadata struct {
+	// The ID of the user losing mod status.
+	UserID string `json:"user_id"`
+	// The login of the user losing mod status.
+	UserLogin string `json:"user_login"`
+	// The user name of the user losing mod status.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2BanMetadata struct {
+	// The ID of the user being banned.
+	UserID string `json:"user_id"`
+	// The login of the user being banned.
+	UserLogin string `json:"user_login"`
+	// The user name of the user being banned.
+	UserName string `json:"user_name"`
+	// Optional. Reason given for the ban.
+	Reason string `json:"reason,omitempty"`
+}
+
+type ChannelModerateEventV2UnbanMetadata struct {
+	// The ID of the user being unbanned.
+	UserID string `json:"user_id"`
+	// The login of the user being unbanned.
+	UserLogin string `json:"user_login"`
+	// The user name of the user being unbanned.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2TimeoutMetadata struct {
+	// The ID of the user being timed out.
+	UserID string `json:"user_id"`
+	// The login of the user being timed out.
+	UserLogin string `json:"user_login"`
+	// The user name of the user being timed out.
+	UserName string `json:"user_name"`
+	// Optional. The reason given for the timeout.
+	Reason string `json:"reason,omitempty"`
+	// The UTC timestamp of when the ad break began, in RFC3339 format.
+	// The time at which the timeout ends.
+	ExpiresAt TimestampUTC `json:"expires_at"`
+}
+
+type ChannelModerateEventV2UntimeoutMetadata struct {
+	// The ID of the user being untimed out.
+	UserID string `json:"user_id"`
+	// The login of the user being untimed out.
+	UserLogin string `json:"user_login"`
+	// The user name of the user untimed out.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2RaidMetadata struct {
+	// The ID of the user being raided.
+	UserID string `json:"user_id"`
+	// The login of the user being raided.
+	UserLogin string `json:"user_login"`
+	// The user name of the user raided.
+	UserName string `json:"user_name"`
+	// The viewer count.
+	ViewerCount int `json:"viewer_count"`
+}
+
+type ChannelModerateEventV2UnraidMetadata struct {
+	// The ID of the user no longer being raided.
+	UserID string `json:"user_id"`
+	// The login of the user no longer being raided.
+	UserLogin string `json:"user_login"`
+	// The user name of the no longer user raided.
+	UserName string `json:"user_name"`
+}
+
+type ChannelModerateEventV2DeleteMetadata struct {
+	// The ID of the user whose message is being deleted.
+	UserID string `json:"user_id"`
+	// The login of the user.
+	UserLogin string `json:"user_login"`
+	// The user name of the user.
+	UserName string `json:"user_name"`
+	// The ID of the message being deleted.
+	MessageID string `json:"message_id"`
+	// The message body of the message being deleted.
+	MessageBody string `json:"message_body"`
+}
+
+type ChannelModerateEventV2AutomodTermsMetadata struct {
+	// Either “add” or “remove”.
+	Action string `json:"action"`
+	// Either “blocked” or “permitted”.
+	List string `json:"list"`
+	// Terms being added or removed.
+	Terms []string `json:"terms"`
+	// Whether the terms were added due to an Automod message approve/deny action.
+	FromAutomod bool `json:"from_automod"`
+}
+
+type ChannelModerateEventV2UnbanRequestMetadata struct {
+	// Whether or not the unban request was approved or denied.
+	IsApproved bool `json:"is_approved"`
+	// The ID of the banned user.
+	UserID string `json:"user_id"`
+	// The login of the user.
+	UserLogin string `json:"user_login"`
+	// The user name of the user.
+	UserName string `json:"user_name"`
+	// The message included by the moderator explaining their approval or denial.
+	ModeratorMessage string `json:"moderator_message"`
+}
+
+type ChannelModerateEventV2WarnMetadata struct {
+	// The ID of the user being warned.
+	UserID string `json:"user_id"`
+	// The login of the user being warned.
+	UserLogin string `json:"user_login"`
+	// The user name of the user being warned.
+	UserName string `json:"user_name"`
+	// Optional. Reason given for the warning.
+	Reason string `json:"reason,omitempty"`
+	// Optional. Chat rules cited for the warning.
+	ChatRulesCited []string `json:"chat_rules_cited,omitempty"`
+}

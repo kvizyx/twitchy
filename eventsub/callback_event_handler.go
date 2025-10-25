@@ -134,6 +134,11 @@ func (c *callback[Metadata]) runEventCallback(
 		return runEventCallbackHandler(c.onChannelVipRemove, event, metadata)
 	case EventTypeChannelMessageDelete:
 		return runEventCallbackHandler(c.onChannelChatMessageDelete, event, metadata)
+	case EventTypeChannelModerate:
+		switch eventVersion {
+		case "2":
+			return runEventCallbackHandler(c.onChannelModerateV2, event, metadata)
+		}
 	default:
 		if c.onUndefinedEvent != nil {
 			go c.onUndefinedEvent(rawEvent, metadata)
