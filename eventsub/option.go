@@ -19,7 +19,7 @@ func WithEventTracker(eventTracker eventtracker.EventTracker) Option {
 
 // WithUnmarshal sets JSON un-marshaller that will be used as default un-marshaller.
 //
-// Default value is a standard library un-marshaller.
+// Default value is an [encoding/json] un-marshaller.
 func WithUnmarshal(unmarshal json.UnMarshaller) Option {
 	return func(es *EventSub) {
 		es.unmarshal = unmarshal

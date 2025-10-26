@@ -29,9 +29,9 @@ func (ws *Websocket) OnReconnect(onReconnect func(WebsocketReconnectMessage)) {
 	ws.onReconnect = onReconnect
 }
 
-// OnReconnectError invokes when reconnection failed and error is returned.
-func (ws *Websocket) OnReconnectError(onReconnectError func(error)) {
-	ws.onReconnectError = onReconnectError
+// OnError invokes when some internal error occurs that cannot be returned at start (e.g. reconnection error).
+func (ws *Websocket) OnError(onError func(error)) {
+	ws.onError = onError
 }
 
 // OnDisconnect invokes when client instance is being disconnected from eventsub server.

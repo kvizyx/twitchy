@@ -113,7 +113,7 @@ func (ws *Websocket) handleKeepaliveMessage(rawMetadata websocketRawMessageMetad
 		Payload: struct{}{},
 	}
 
-	ws.setKeepalive(keepaliveMessage.Metadata.MessageTimestamp)
+	ws.setLastKeepalive(keepaliveMessage.Metadata.MessageTimestamp)
 
 	if ws.onKeepalive != nil {
 		go ws.onKeepalive(keepaliveMessage)
@@ -149,8 +149,8 @@ func (ws *Websocket) handleReconnectMessage(
 			return
 		}
 
-		if ws.onReconnectError != nil {
-			go ws.onReconnectError(err)
+		if ws.onError != nil {
+			go ws.onError(err)
 		}
 	}()
 

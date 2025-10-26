@@ -1,6 +1,6 @@
 package eventsub
 
-// Condition is a marker for condition.
+// Condition is a marker for conditions.
 type Condition interface {
 	condition()
 }

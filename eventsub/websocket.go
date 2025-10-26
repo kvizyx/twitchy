@@ -48,12 +48,12 @@ type Websocket struct {
 	reconnected chan struct{}
 	disconnect  chan struct{}
 
-	onWelcome        func(WebsocketWelcomeMessage)
-	onKeepalive      func(WebsocketKeepaliveMessage)
-	onPing           func()
-	onReconnect      func(WebsocketReconnectMessage)
-	onReconnectError func(error)
-	onDisconnect     func()
+	onWelcome    func(WebsocketWelcomeMessage)
+	onKeepalive  func(WebsocketKeepaliveMessage)
+	onPing       func()
+	onReconnect  func(WebsocketReconnectMessage)
+	onError      func(error)
+	onDisconnect func()
 
 	callback[WebsocketNotificationMetadata]
 }
@@ -299,7 +299,7 @@ func (ws *Websocket) startReadWorker(ctx context.Context) error {
 	}
 }
 
-// startKeepaliveWorker starts and blocks on trying to keep connection healthy and reconnect if needed.
+// startKeepaliveWorker ...
 func (ws *Websocket) startKeepaliveWorker(ctx context.Context) {
 	const delay = 1 * time.Second
 
@@ -311,44 +311,64 @@ func (ws *Websocket) startKeepaliveWorker(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-keepalive.C:
+			lastKeepaliveTimeout := ws.getLastKeepalive()
+
 			var (
 				now, _               = timestampUTCFromString(time.Now().String())
-				lastKeepaliveSeconds = now.Sub(ws.getLastKeepalive()).Seconds()
+				lastKeepaliveSeconds = now.Sub(lastKeepaliveTimeout.Time).Seconds()
 			)
 
-			if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
-				continue
+			// If last keepalive timeout is zero then we definitely need to try to reconnect.
+			// We don't need to reconnect only if last keepalive timeout is not zero and
+			if !lastKeepaliveTimeout.IsZero() {
+				if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
+					continue
+				}
 			}
 
-			// We must reconnect to the eventsub server if keepalive timeout expired.
+			// We must reconnect to the eventsub server if keepalive timeout expired too.
 			if err := ws.reconnect(ctx, ws.serverReconnectURL); err != nil {
-				if ws.onReconnectError == nil {
+				if ws.onError == nil {
 					continue
 				}
 
-				go ws.onReconnectError(err)
+				go ws.onError(err)
 			}
 		}
 	}
 }
 
+// setInactivate atomically sets Websocket in reconnecting state (meaning that it's reconnecting to the server) if it was
+// not in reconnecting state and returns does Websocket was not reconnecting.
 func (ws *Websocket) setReconnecting() bool {
 	return ws.isReconnecting.CompareAndSwap(false, true)
 }
 
+// setInactivate atomically sets Websocket in active state (meaning that it's running and eventually will be connected to
+// the server or already connected) if it was in inactive state and returns does Websocket was in inactive state.
 func (ws *Websocket) setActive() bool {
 	return ws.isActive.CompareAndSwap(false, true)
 }
 
+// setInactivate atomically sets Websocket in inactive state (meaning that it's not connected to the server nor running) if it
+// was in active state and returns does Websocket was in active state.
 func (ws *Websocket) setInactivate() bool {
 	return ws.isActive.CompareAndSwap(true, false)
 }
 
-func (ws *Websocket) setKeepalive(timestamp TimestampUTC) {
-	ws.lastKeepalive.Store(timestamp)
+// setLastKeepalive atomically sets timestamp for the last time keepalive message was received from server.
+func (ws *Websocket) setLastKeepalive(lastKeepalive TimestampUTC) {
+	ws.lastKeepalive.Store(lastKeepalive)
 }
 
-func (ws *Websocket) getLastKeepalive() time.Time {
-	lastKeepalive := ws.lastKeepalive.Load().(TimestampUTC)
-	return lastKeepalive.Time
+// getLastKeepalive atomically loads and returns the last time keepalive message was received from the server.
+// It may return zeroed time if there was no keepalive message since the application started, so you should consider this case.
+func (ws *Websocket) getLastKeepalive() TimestampUTC {
+	lastKeepalive := ws.lastKeepalive.Load()
+	if lastKeepalive == nil {
+		return TimestampUTC{}
+	}
+
+	lastKeepaliveTimestamp := lastKeepalive.(TimestampUTC)
+	return lastKeepaliveTimestamp
 }
