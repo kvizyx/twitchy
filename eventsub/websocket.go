@@ -311,19 +311,13 @@ func (ws *Websocket) startKeepaliveWorker(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-keepalive.C:
-			lastKeepaliveTimeout := ws.getLastKeepalive()
-
 			var (
 				now, _               = timestampUTCFromString(time.Now().String())
-				lastKeepaliveSeconds = now.Sub(lastKeepaliveTimeout.Time).Seconds()
+				lastKeepaliveSeconds = now.Sub(ws.getLastKeepalive()).Seconds()
 			)
 
-			// If last keepalive timeout is zero then we definitely need to try to reconnect.
-			// We don't need to reconnect only if last keepalive timeout is not zero and
-			if !lastKeepaliveTimeout.IsZero() {
-				if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
-					continue
-				}
+			if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
+				continue
 			}
 
 			// We must reconnect to the eventsub server if keepalive timeout expired too.
@@ -363,12 +357,12 @@ func (ws *Websocket) setLastKeepalive(lastKeepalive TimestampUTC) {
 
 // getLastKeepalive atomically loads and returns the last time keepalive message was received from the server.
 // It may return zeroed time if there was no keepalive message since the application started, so you should consider this case.
-func (ws *Websocket) getLastKeepalive() TimestampUTC {
+func (ws *Websocket) getLastKeepalive() time.Time {
 	lastKeepalive := ws.lastKeepalive.Load()
 	if lastKeepalive == nil {
-		return TimestampUTC{}
+		return time.Time{}
 	}
 
 	lastKeepaliveTimestamp := lastKeepalive.(TimestampUTC)
-	return lastKeepaliveTimestamp
+	return lastKeepaliveTimestamp.Time
 }
