@@ -31,7 +31,7 @@ func WebsocketWithServerURL(serverURL string) WebsocketOption {
 // WebsocketWithKeepalive sets timeout in seconds for Twitch to send keepalive messages to ensure that connection to server is healthy.
 // See https://dev.twitch.tv/docs/eventsub/handling-websocket-events/#keepalive-message for more information on keepalive timeout.
 //
-// Default value is 600 (Twitch's default keepalive timeout).
+// Default value is 300.
 func WebsocketWithKeepalive(seconds uint) WebsocketOption {
 	return func(ws *Websocket) {
 		ws.keepaliveSeconds = seconds

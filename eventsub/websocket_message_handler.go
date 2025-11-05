@@ -179,6 +179,8 @@ func (ws *Websocket) handleNotificationMessage(rawMetadata websocketRawMessageMe
 		SubscriptionVersion: rawMetadata.SubscriptionVersion,
 	}
 
+	ws.setLastKeepalive(metadata.MessageTimestamp)
+
 	rawEvent := RawEvent{
 		Subscription: wsRawEvent.Subscription,
 		Event:        wsRawEvent.Event,

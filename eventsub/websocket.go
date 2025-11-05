@@ -23,6 +23,9 @@ var (
 
 const websocketURL = "wss://eventsub.wss.twitch.tv/ws"
 
+// Default timeout for keepalive messages in seconds.
+const defaultKeepaliveTimeout = 300
+
 // Websocket is an EventSub websocket client.
 type Websocket struct {
 	client       *http.Client
@@ -66,7 +69,7 @@ func newWebsocket(eventTracker eventtracker.EventTracker, options ...WebsocketOp
 		serverReconnectURL: websocketURL,
 		retryAttempts:      5,
 		retryDelay:         1 * time.Second,
-		keepaliveSeconds:   600,
+		keepaliveSeconds:   defaultKeepaliveTimeout,
 		reconnected:        make(chan struct{}),
 		welcome:            make(chan struct{}),
 		restart:            make(chan struct{}),
@@ -95,10 +98,6 @@ func (ws *Websocket) Connect(ctx context.Context) error {
 		return nil
 	}
 
-	// We should recreate disconnect channel on each connect so user can do connect-disconnect cycle as many times as he
-	// wants and don't get panic on double-close already closed channel.
-	ws.disconnect = make(chan struct{})
-
 	defer func() {
 		ws.setInactivate()
 
@@ -106,6 +105,10 @@ func (ws *Websocket) Connect(ctx context.Context) error {
 			go ws.onDisconnect()
 		}
 	}()
+
+	// We should recreate disconnect channel on each connect so user can do connect-disconnect cycle as many times as he
+	// wants and don't get panic on double-close already closed channel.
+	ws.disconnect = make(chan struct{})
 
 	if err := ws.connect(ctx, ws.serverURL); err != nil {
 		return err
@@ -299,7 +302,6 @@ func (ws *Websocket) startReadWorker(ctx context.Context) error {
 	}
 }
 
-// startKeepaliveWorker ...
 func (ws *Websocket) startKeepaliveWorker(ctx context.Context) {
 	const delay = 1 * time.Second
 
@@ -311,13 +313,19 @@ func (ws *Websocket) startKeepaliveWorker(ctx context.Context) {
 		case <-ctx.Done():
 			return
 		case <-keepalive.C:
+			lastKeepaliveTime := ws.getLastKeepalive()
+
 			var (
 				now, _               = timestampUTCFromString(time.Now().String())
-				lastKeepaliveSeconds = now.Sub(ws.getLastKeepalive()).Seconds()
+				lastKeepaliveSeconds = now.Sub(lastKeepaliveTime.Time).Seconds()
 			)
 
-			if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
-				continue
+			// If last keepalive timeout is zero then we definitely need to try to reconnect.
+			// We don't need to reconnect only if last keepalive timeout is not zero and
+			if !lastKeepaliveTime.IsZero() {
+				if lastKeepaliveSeconds < float64(ws.keepaliveSeconds) {
+					continue
+				}
 			}
 
 			// We must reconnect to the eventsub server if keepalive timeout expired too.
@@ -357,12 +365,12 @@ func (ws *Websocket) setLastKeepalive(lastKeepalive TimestampUTC) {
 
 // getLastKeepalive atomically loads and returns the last time keepalive message was received from the server.
 // It may return zeroed time if there was no keepalive message since the application started, so you should consider this case.
-func (ws *Websocket) getLastKeepalive() time.Time {
+func (ws *Websocket) getLastKeepalive() TimestampUTC {
 	lastKeepalive := ws.lastKeepalive.Load()
 	if lastKeepalive == nil {
-		return time.Time{}
+		return TimestampUTC{}
 	}
 
 	lastKeepaliveTimestamp := lastKeepalive.(TimestampUTC)
-	return lastKeepaliveTimestamp.Time
+	return lastKeepaliveTimestamp
 }
