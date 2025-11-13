@@ -9,6 +9,7 @@ type HTMLBuffer struct {
 	data       []byte
 	cursor     int
 	currentTag tag
+	closingTag tag
 }
 
 func New(data []byte) HTMLBuffer {
@@ -18,74 +19,25 @@ func New(data []byte) HTMLBuffer {
 	}
 }
 
+// MarkClosingTag marks current tag as closing tag so buffer will be not allowed to seek after cursor will pass current
+// tag closer.
+func (hb *HTMLBuffer) MarkClosingTag() {
+	hb.closingTag = newTag(hb.currentTag.name)
+}
+
+// SeekToIdentifiedTag seeks cursor to the first occurrence of tag with given identifier (id or class) and returns whether
+// it was found or not.
 func (hb *HTMLBuffer) SeekToIdentifiedTag(tag, identifier string) bool {
-	data := hb.data[hb.cursor:]
-
-	for index, value := range data {
-		if isOpeningBracket(value) && value != '/' {
-			var (
-				tagStart = index + 1
-				tagEnd   = tagStart + len(tag)
-			)
-
-			if len(data) < tagEnd {
-				return false
-			}
-
-			tagName := string(data[tagStart:tagEnd])
-			if tagName != tag {
-				continue
-			}
-
-			tagEndCursor := hb.cursor + tagEnd
-			tagClosingBracketIndex, isIdentified := hb.isIdentifiedWith(tagEndCursor, identifier)
-			if !isIdentified {
-				continue
-			}
-
-			hb.currentTag = newTag(tagName)
-			hb.cursor = hb.cursor + tagEnd + tagClosingBracketIndex
-			return true
-		}
-	}
-
-	return false
+	return hb.seek(tag, identifier)
 }
 
+// SeekToTag seeks cursor to the first occurrence of given tag and returns whether it was found or not.
 func (hb *HTMLBuffer) SeekToTag(tag string) bool {
-	data := hb.data[hb.cursor:]
-
-	for index, value := range data {
-		if isOpeningBracket(value) && value != '/' {
-			var (
-				tagStart = index + 1
-				tagEnd   = tagStart + len(tag)
-			)
-
-			if len(data) < tagEnd {
-				return false
-			}
-
-			tagName := string(data[tagStart:tagEnd])
-			if tagName != tag {
-				continue
-			}
-
-			tagEndCursor := hb.cursor + tagEnd
-			tagClosingBracketIndex, isFound := hb.findClosingBracket(tagEndCursor)
-			if !isFound {
-				continue
-			}
-
-			hb.currentTag = newTag(tagName)
-			hb.cursor = hb.cursor + tagEnd + tagClosingBracketIndex
-			return true
-		}
-	}
-
-	return false
+	return hb.seek(tag, "")
 }
 
+// ReadTagValue reads and returns value of tag that cursor is currently pointing on without seeking cursor.
+// Empty string and false value will be returned if cursor is not pointing to any tag or its void tag.
 func (hb *HTMLBuffer) ReadTagValue() (string, bool) {
 	if hb.currentTag.isZero() || hb.currentTag.isVoid {
 		return "", false
@@ -116,6 +68,61 @@ func (hb *HTMLBuffer) ReadTagValue() (string, bool) {
 	return "", false
 }
 
+func (hb *HTMLBuffer) seek(tag string, identifier string) bool {
+	data := hb.data[hb.cursor:]
+
+	for index, value := range data {
+		if !isOpeningBracket(value) {
+			continue
+		}
+
+		if rune(data[index+1]) == '/' {
+			if !hb.isClosingTag(data, index) {
+				continue
+			}
+
+			return false
+		}
+
+		var (
+			tagStart = index + 1
+			tagEnd   = tagStart + len(tag)
+		)
+
+		if len(data) < tagEnd {
+			return false
+		}
+
+		tagName := string(data[tagStart:tagEnd])
+		if tagName != tag {
+			continue
+		}
+
+		tagEndCursor := hb.cursor + tagEnd
+
+		var (
+			tagClosingBracketIndex int
+			pass                   bool
+		)
+
+		if len(identifier) == 0 {
+			tagClosingBracketIndex, pass = hb.findClosingBracket(tagEndCursor)
+		} else {
+			tagClosingBracketIndex, pass = hb.isIdentifiedWith(tagEndCursor, identifier)
+		}
+
+		if !pass {
+			continue
+		}
+
+		hb.currentTag = newTag(tagName)
+		hb.cursor = hb.cursor + tagEnd + tagClosingBracketIndex
+		return true
+	}
+
+	return false
+}
+
 func (hb *HTMLBuffer) findClosingBracket(tagEndCursor int) (int, bool) {
 	data := hb.data[tagEndCursor:]
 
@@ -128,8 +135,31 @@ func (hb *HTMLBuffer) findClosingBracket(tagEndCursor int) (int, bool) {
 	return 0, false
 }
 
-func (hb *HTMLBuffer) isIdentifiedWith(tagEndCursor int, identifier string) (int, bool) {
-	data := hb.data[tagEndCursor:]
+func (hb *HTMLBuffer) isClosingTag(data []byte, openingBracketIndex int) bool {
+	if hb.closingTag.isZero() {
+		return false
+	}
+
+	var (
+		tagStart      = openingBracketIndex + 2
+		closingTagEnd = tagStart + len(hb.closingTag.name) + 1
+	)
+
+	for index, value := range string(data[tagStart:closingTagEnd]) {
+		if rune(value) != closingBracket {
+			continue
+		}
+
+		if string(data[tagStart:tagStart+index]) == hb.closingTag.name {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (hb *HTMLBuffer) isIdentifiedWith(tagEndIndex int, identifier string) (int, bool) {
+	data := hb.data[tagEndIndex:]
 
 	var isIdentified bool
 
