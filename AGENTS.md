@@ -1,16 +1,16 @@
-# Codebase Guide
+# Codebase Overview
 
-This file provides instructions for agentic coding agents working in this repository.
+This file provides instructions and overview for agentic coding agents working in this repository.
 
 ## Project Overview
 
-`github.com/kvizyx/twitchy` is a pure Go library (requires Go 1.24) for the Twitch EventSub API.
+`github.com/kvizyx/twitchy` is a pure Go library (requires at least Go 1.24) for the Twitch EventSub and Helix API.
 It supports both Webhook and WebSocket transports. There are no non-Go files to build or compile.
 
 ```
 twitchy/
 ├── eventsub/                   # Main public package
-│   ├── eventtracker/           # Duplicate-event tracking (in-memory and Redis)
+│   ├── messagetracker/         # Duplicate-message tracking (in-memory and Redis)
 │   ├── eventsub.go             # Top-level EventSub struct and New()
 │   ├── option.go               # Functional options
 │   ├── callback.go             # Generic callback store
@@ -21,12 +21,11 @@ twitchy/
 │   ├── subscription.go         # Generic Subscription[C, T] type
 │   ├── webhook.go / websocket.go
 │   └── ...
-├── helix/                      # Future Helix API package (stubs only)
+├── helix/                      # Future Helix API package (stubs only for now)
 ├── internal/
 │   ├── json/                   # Swappable JSON marshal/unmarshal vars
-│   ├── shardedmap/             # Generic concurrent map with TTL eviction
-│   └── htmlbuffer/             # HTML cursor/parser utility
-├── examples/                   # Standalone main packages (not part of the API)
+│   └── shardedset/             # Generic concurrent sharded set with TTL eviction
+├── _examples/                  # Standalone main packages (not part of the API)
 ├── Taskfile.yaml
 ├── .golangci.yaml
 └── .editorconfig
@@ -117,7 +116,7 @@ import (
 
     "github.com/avast/retry-go/v4"
     "github.com/coder/websocket"
-    "github.com/kvizyx/twitchy/eventsub/eventtracker"
+    "github.com/kvizyx/twitchy/eventsub/messagetracker"
     "github.com/kvizyx/twitchy/internal/json"
 )
 ```
@@ -129,8 +128,8 @@ import (
 | Files | `snake_case` with subject prefix | `websocket_message_handler.go` |
 | Exported types | `PascalCase` with full domain context | `ChannelPointsCustomRewardRedemptionAddEvent` |
 | Unexported types | `camelCase` | `callbackStore` |
-| Interfaces | `PascalCase`, semantic names | `EventTracker`, `Transport` |
-| Constructors | `New()` or `New<Type>()` | `NewInMemoryEventTracker()`, `newWebsocket()` |
+| Interfaces | `PascalCase`, semantic names | `MessageTracker`, `Transport` |
+| Constructors | `New()` or `New<Type>()` | `NewInMemoryMessageTracker()`, `newWebsocket()` |
 | Exported functions/methods | `PascalCase` | `ServeHTTP`, `Connect` |
 | Unexported functions/methods | `camelCase` | `handleMessage`, `isSafeMessage` |
 | Constants/string enums | `TypeName` + `ValueName` | `EventTypeChannelFollow`, `SubscriptionTierOne` |
@@ -150,9 +149,11 @@ import (
 - Add compile-time interface assertions where a type must satisfy an external interface:
   ```go
   var _ http.Handler = (*Webhook)(nil)
-  var _ EventTracker = (*InMemoryEventTracker)(nil)
+  var _ MessageTracker = (*InMemoryMessageTracker)(nil)
   ```
 - Use the **functional options** pattern for all optional configuration (`Option func(*T)`).
+- When options are implementation-specific, prefix them with the implementation name:
+  `InMemoryOption`, `InMemoryWithMessageTTL()`, `RedisOption`, `RedisWithKeyBuilder()`.
 
 ### Error Handling
 
@@ -178,8 +179,8 @@ import (
 - Doc comments **must end with a period** (enforced by `godot` linter).
 - Begin doc comments with the identifier name:
   ```go
-  // EventSub is a Twitch eventsub module.
-  // Webhook returns a new eventsub Webhook handler...
+  // EventSub is a Twitch event-sub module.
+  // Webhook returns a new event-sub Webhook handler...
   ```
 - Include Twitch API reference links where relevant:
   ```go
@@ -194,16 +195,21 @@ import (
 - **One API domain = one package.** Keep `eventsub`, `helix`, etc. separate.
 - Split large packages across multiple focused files by concept, not by type:
   `option.go`, `callback.go`, `websocket.go`, `websocket_option.go`, `websocket_message.go`, etc.
+- When a concept has multiple implementations with their own options, split options into separate
+  files per implementation (e.g., `message_tracker_in_memory_options.go`,
+  `message_tracker_redis_options.go`).
 - Place reusable utilities that must not be exported under `internal/`.
-- Create a sub-package (like `eventsub/eventtracker`) only when there is a standalone concept
+- Create a sub-package (like `eventsub/messagetracker`) only when there is a standalone concept
   with its own interface and multiple concrete implementations.
-- `examples/` are standalone `main` packages and are not part of the importable API.
+- `_examples/` are standalone `main` packages and are not part of the importable API.
 
 ### Concurrency
 
 - Use `sync/atomic.Bool` and `atomic.Value` for hot-path state (e.g., `isActive`, `isReconnecting`).
 - Use channels for goroutine coordination and signaling rather than shared mutable state with mutexes
   where practical.
+- Prefer explicit `Stop()` methods over `context.Context` for lifecycle management of background
+  goroutines in internal utilities (e.g., `ShardedSet.Stop()`).
 - Every user-facing callback is dispatched in a new goroutine so user code cannot block the
   internal read loop:
   ```go

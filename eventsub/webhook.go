@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"unicode"
 
-	"github.com/kvizyx/twitchy/eventsub/eventtracker"
+	"github.com/kvizyx/twitchy/eventsub/messagetracker"
 )
 
 // ErrInvalidWebhookSecret indicates that your webhook secret doesn't match with Twitch's webhook secret requirements.
@@ -21,7 +21,7 @@ var ErrInvalidWebhookSecret = errors.New("webhook secret is not valid")
 
 // Webhook is an EventSub webhook HTTP handler.
 type Webhook struct {
-	eventTracker              eventtracker.EventTracker
+	eventTracker              messagetracker.MessageTracker
 	secret                    []byte
 	withSignatureVerification bool
 
@@ -33,7 +33,7 @@ type Webhook struct {
 
 var _ http.Handler = (*Webhook)(nil)
 
-func newWebhook(secret []byte, eventTracker eventtracker.EventTracker, verifySignature bool) (*Webhook, error) {
+func newWebhook(secret []byte, eventTracker messagetracker.MessageTracker, verifySignature bool) (*Webhook, error) {
 	if !isValidWebhookSecret(secret) {
 		return nil, ErrInvalidWebhookSecret
 	}

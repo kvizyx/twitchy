@@ -12,7 +12,7 @@ import (
 
 	"github.com/avast/retry-go/v4"
 	"github.com/coder/websocket"
-	"github.com/kvizyx/twitchy/eventsub/eventtracker"
+	"github.com/kvizyx/twitchy/eventsub/messagetracker"
 	"github.com/kvizyx/twitchy/internal/json"
 )
 
@@ -29,7 +29,7 @@ const defaultKeepaliveTimeout = 600
 // Websocket is an EventSub websocket client.
 type Websocket struct {
 	client       *http.Client
-	eventTracker eventtracker.EventTracker
+	eventTracker messagetracker.MessageTracker
 
 	serverURL          string
 	serverReconnectURL string
@@ -61,7 +61,7 @@ type Websocket struct {
 	callback[WebsocketNotificationMetadata]
 }
 
-func newWebsocket(eventTracker eventtracker.EventTracker, options ...WebsocketOption) *Websocket {
+func newWebsocket(eventTracker messagetracker.MessageTracker, options ...WebsocketOption) *Websocket {
 	ws := &Websocket{
 		client:             http.DefaultClient,
 		eventTracker:       eventTracker,

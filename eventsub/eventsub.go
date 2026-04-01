@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/kvizyx/twitchy/eventsub/eventtracker"
+	"github.com/kvizyx/twitchy/eventsub/messagetracker"
 	"github.com/kvizyx/twitchy/internal/json"
 )
 
@@ -13,7 +13,7 @@ import (
 //
 // Reference: https://dev.twitch.tv/docs/eventsub.
 type EventSub struct {
-	eventTracker eventtracker.EventTracker
+	eventTracker messagetracker.MessageTracker
 	unmarshal    json.UnMarshaller
 }
 
@@ -58,7 +58,7 @@ func isExpiredMessage(messageTimestamp TimestampUTC) bool {
 func isSafeMessage[Metadata any](
 	ctx context.Context,
 	onDuplicate func(Metadata),
-	eventTracker eventtracker.EventTracker,
+	eventTracker messagetracker.MessageTracker,
 	metadata Metadata,
 	messageID string,
 	messageTimestamp TimestampUTC,
