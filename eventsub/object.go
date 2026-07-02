@@ -748,6 +748,216 @@ func (s StreamType) String() string {
 
 type CustomRewardRedemptionStatus string
 
+type CharityAmount struct {
+	// The monetary amount. The amount is specified in the currency's minor unit.
+	// For example, the minor units for USD is cents, so if the amount is $5.50 USD, value is set to 550.
+	Value int `json:"value"`
+	// The number of decimal places used by the currency. For example, USD uses two decimal places.
+	DecimalPlaces int `json:"decimal_places"`
+	// The ISO-4217 three-letter currency code that identifies the type of currency in value.
+	Currency string `json:"currency"`
+}
+
+type CharityDescription struct {
+	// CharityName is the charity's name.
+	CharityName string `json:"charity_name"`
+	// CharityDescription is a description of the charity.
+	CharityDescription string `json:"charity_description"`
+	// CharityLogo is a URL to an image of the charity's logo.
+	CharityLogo string `json:"charity_logo"`
+	// CharityWebsite is a URL to the charity's website.
+	CharityWebsite string `json:"charity_website"`
+}
+
+type GoalType string
+
+const (
+	GoalTypeFollow              GoalType = "follow"
+	GoalTypeSubscription        GoalType = "subscription"
+	GoalTypeSubscriptionCount   GoalType = "subscription_count"
+	GoalTypeNewSubscription     GoalType = "new_subscription"
+	GoalTypeNewSubscriptionCount GoalType = "new_subscription_count"
+	GoalTypeNewBit              GoalType = "new_bit"
+	GoalTypeNewCheerer          GoalType = "new_cheerer"
+)
+
+func (g GoalType) String() string {
+	return string(g)
+}
+
+type HypeTrainContributionType string
+
+const (
+	HypeTrainContributionBits         HypeTrainContributionType = "bits"
+	HypeTrainContributionSubscription HypeTrainContributionType = "subscription"
+	HypeTrainContributionOther        HypeTrainContributionType = "other"
+)
+
+func (h HypeTrainContributionType) String() string {
+	return string(h)
+}
+
+type HypeTrainContribution struct {
+	// UserId is the ID of the user that made the contribution.
+	UserId string `json:"user_id"`
+	// UserLogin is the user's login name.
+	UserLogin string `json:"user_login"`
+	// UserName is the user's display name.
+	UserName string `json:"user_name"`
+	// Type is the contribution method used.
+	Type HypeTrainContributionType `json:"type"`
+	// Total is the total amount contributed.
+	Total int `json:"total"`
+}
+
+type HypeTrainType string
+
+const (
+	HypeTrainTypeTreasure    HypeTrainType = "treasure"
+	HypeTrainTypeGoldenKappa HypeTrainType = "golden_kappa"
+	HypeTrainTypeRegular     HypeTrainType = "regular"
+)
+
+func (h HypeTrainType) String() string {
+	return string(h)
+}
+
+type SharedChatParticipant struct {
+	// BroadcasterUserId is the User ID of the participant channel.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// BroadcasterUserName is the display name of the participant channel.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// BroadcasterUserLogin is the user login of the participant channel.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+}
+
+type GuestStarGuestState string
+
+const (
+	GuestStarGuestStateInvited   GuestStarGuestState = "invited"
+	GuestStarGuestStateAccepted  GuestStarGuestState = "accepted"
+	GuestStarGuestStateReady     GuestStarGuestState = "ready"
+	GuestStarGuestStateBackstage GuestStarGuestState = "backstage"
+	GuestStarGuestStateLive      GuestStarGuestState = "live"
+	GuestStarGuestStateRemoved   GuestStarGuestState = "removed"
+)
+
+func (g GuestStarGuestState) String() string {
+	return string(g)
+}
+
+type GuestStarGroupLayout string
+
+const (
+	GuestStarGroupLayoutTiled            GuestStarGroupLayout = "tiled"
+	GuestStarGroupLayoutScreenshare      GuestStarGroupLayout = "screenshare"
+	GuestStarGroupLayoutHorizontalTop    GuestStarGroupLayout = "horizontal_top"
+	GuestStarGroupLayoutHorizontalBottom GuestStarGroupLayout = "horizontal_bottom"
+	GuestStarGroupLayoutVerticalLeft     GuestStarGroupLayout = "vertical_left"
+	GuestStarGroupLayoutVerticalRight    GuestStarGroupLayout = "vertical_right"
+)
+
+func (g GuestStarGroupLayout) String() string {
+	return string(g)
+}
+
+type SuspiciousUserLowTrustStatus string
+
+const (
+	SuspiciousUserLowTrustStatusNone             SuspiciousUserLowTrustStatus = "none"
+	SuspiciousUserLowTrustStatusActiveMonitoring SuspiciousUserLowTrustStatus = "active_monitoring"
+	SuspiciousUserLowTrustStatusRestricted       SuspiciousUserLowTrustStatus = "restricted"
+)
+
+func (s SuspiciousUserLowTrustStatus) String() string {
+	return string(s)
+}
+
+type SuspiciousUserType string
+
+const (
+	SuspiciousUserTypeManuallyAdded         SuspiciousUserType = "manually_added"
+	SuspiciousUserTypeBanEvader             SuspiciousUserType = "ban_evader"
+	SuspiciousUserTypeBannedInSharedChannel SuspiciousUserType = "banned_in_shared_channel"
+)
+
+type SuspiciousUserBanEvasionEvaluation string
+
+const (
+	SuspiciousUserBanEvasionEvaluationUnknown  SuspiciousUserBanEvasionEvaluation = "unknown"
+	SuspiciousUserBanEvasionEvaluationPossible SuspiciousUserBanEvasionEvaluation = "possible"
+	SuspiciousUserBanEvasionEvaluationLikely   SuspiciousUserBanEvasionEvaluation = "likely"
+)
+
+type UserMessageUpdateStatus string
+
+const (
+	UserMessageUpdateStatusApproved UserMessageUpdateStatus = "approved"
+	UserMessageUpdateStatusDenied   UserMessageUpdateStatus = "denied"
+	UserMessageUpdateStatusInvalid  UserMessageUpdateStatus = "invalid"
+)
+
+func (u UserMessageUpdateStatus) String() string {
+	return string(u)
+}
+
+type SuspiciousUserMessageMessage struct {
+	// MessageId is the UUID that identifies the message.
+	MessageId string `json:"message_id"`
+	// Text is the chat message in plain text.
+	Text string `json:"text"`
+	// Fragments is an ordered list of chat message fragments.
+	Fragments []ChannelChatMessageEventMessageFragment `json:"fragments"`
+}
+
+type ExtensionBitsTransactionProduct struct {
+	// Name is the product name.
+	Name string `json:"name"`
+	// Bits is the number of Bits the product cost.
+	Bits int `json:"bits"`
+	// Sku is the product's SKU.
+	Sku string `json:"sku"`
+}
+
+type WhisperMessageBody struct {
+	// Text is the body of the whisper message.
+	Text string `json:"text"`
+}
+
+type CustomPowerUp struct {
+	// Id is the unique ID for this Custom Power-up.
+	Id string `json:"id"`
+	// Title is the user-viewable name of this Custom Power-up.
+	Title string `json:"title"`
+	// Bits is the cost of the Custom Power-up to redeem.
+	Bits int `json:"bits"`
+	// Prompt is the creator-provided description for this Power-up.
+	Prompt string `json:"prompt"`
+}
+
+type DropEntitlementGrantData struct {
+	// OrganizationId is the ID of the organization that owns the game that has Drops enabled.
+	OrganizationId string `json:"organization_id"`
+	// CategoryId is the Twitch category ID of the game that was being played when this benefit was entitled.
+	CategoryId string `json:"category_id"`
+	// CategoryName is the category name.
+	CategoryName string `json:"category_name"`
+	// CampaignId is the campaign this entitlement is associated with.
+	CampaignId string `json:"campaign_id"`
+	// UserId is the Twitch user ID of the user who was granted the entitlement.
+	UserId string `json:"user_id"`
+	// UserName is the user display name of the user who was granted the entitlement.
+	UserName string `json:"user_name"`
+	// UserLogin is the user login of the user who was granted the entitlement.
+	UserLogin string `json:"user_login"`
+	// EntitlementId is the unique identifier of the entitlement.
+	EntitlementId string `json:"entitlement_id"`
+	// BenefitId is the identifier of the Benefit.
+	BenefitId string `json:"benefit_id"`
+	// CreatedAt is the UTC timestamp in ISO format when this entitlement was granted on Twitch.
+	CreatedAt TimestampUTC `json:"created_at"`
+}
+
 const (
 	CustomRewardRedemptionStatusUnknown     CustomRewardRedemptionStatus = "unknown"
 	CustomRewardRedemptionStatusUnfulfilled CustomRewardRedemptionStatus = "unfulfilled"

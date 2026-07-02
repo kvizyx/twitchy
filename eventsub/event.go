@@ -1179,6 +1179,753 @@ type ChannelChatMessageDeleteEvent struct {
 	MessageId string `json:"message_id"`
 }
 
+type ChannelChatSettingsUpdateEvent struct {
+	// The ID of the broadcaster specified in the request.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The login of the broadcaster specified in the request.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster specified in the request.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// A Boolean value that determines whether chat messages must contain only emotes.
+	EmoteMode bool `json:"emote_mode"`
+	// A Boolean value that determines whether the broadcaster restricts the chat room to followers only.
+	FollowerMode bool `json:"follower_mode"`
+	// The length of time, in minutes, that the followers must have followed the broadcaster to participate in the chat room.
+	// Null if follower_mode is false.
+	FollowerModeDurationMinutes int `json:"follower_mode_duration_minutes"`
+	// A Boolean value that determines whether the broadcaster limits how often users in the chat room are allowed to send messages.
+	SlowMode bool `json:"slow_mode"`
+	// The amount of time, in seconds, that users need to wait between sending messages. Null if slow_mode is false.
+	SlowModeWaitTimeSeconds int `json:"slow_mode_wait_time_seconds"`
+	// A Boolean value that determines whether only users that subscribe to the broadcaster's channel can talk in the chat room.
+	SubscriberMode bool `json:"subscriber_mode"`
+	// A Boolean value that determines whether the broadcaster requires users to post only unique messages in the chat room.
+	UniqueChatMode bool `json:"unique_chat_mode"`
+}
+
+type ChannelChatUserMessageHoldEvent struct {
+	// The ID of the broadcaster specified in the request.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The login of the broadcaster specified in the request.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster specified in the request.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The User ID of the message sender.
+	UserId string `json:"user_id"`
+	// The message sender's login.
+	UserLogin string `json:"user_login"`
+	// The message sender's display name.
+	UserName string `json:"user_name"`
+	// The ID of the message that was flagged by automod.
+	MessageId string `json:"message_id"`
+	// The body of the message.
+	Message ChannelChatMessageEventMessage `json:"message"`
+}
+
+type ChannelChatUserMessageUpdateEvent struct {
+	// The ID of the broadcaster specified in the request.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The login of the broadcaster specified in the request.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster specified in the request.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The User ID of the message sender.
+	UserId string `json:"user_id"`
+	// The message sender's login.
+	UserLogin string `json:"user_login"`
+	// The message sender's user name.
+	UserName string `json:"user_name"`
+	// The message's status. Possible values are: approved, denied, invalid.
+	Status UserMessageUpdateStatus `json:"status"`
+	// The ID of the message that was flagged by automod.
+	MessageId string `json:"message_id"`
+	// The body of the message.
+	Message ChannelChatMessageEventMessage `json:"message"`
+}
+
+type ChannelCustomPowerUpRedemptionAddEvent struct {
+	// The redemption identifier.
+	Id string `json:"id"`
+	// The requested broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// User ID of the user that redeemed the custom Power-up.
+	UserId string `json:"user_id"`
+	// Login of the user that redeemed the custom Power-up.
+	UserLogin string `json:"user_login"`
+	// Display name of the user that redeemed the custom Power-up.
+	UserName string `json:"user_name"`
+	// The user input provided. Empty string if not provided.
+	UserInput string `json:"user_input"`
+	// Defaults to unfulfilled. Possible values are unknown, unfulfilled, fulfilled, and canceled.
+	Status CustomRewardRedemptionStatus `json:"status"`
+	// Basic information about the custom Power-up that was redeemed.
+	CustomPowerUp CustomPowerUp `json:"custom_power_up"`
+	// RFC3339 timestamp of when the custom Power-up was redeemed.
+	RedeemedAt TimestampUTC `json:"redeemed_at"`
+}
+
+type ChannelSharedChatSessionBeginEvent struct {
+	// The unique identifier for the shared chat session.
+	SessionId string `json:"session_id"`
+	// The User ID of the channel in the subscription condition which is now active in the shared chat session.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The display name of the channel in the subscription condition which is now active in the shared chat session.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The user login of the channel in the subscription condition which is now active in the shared chat session.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The User ID of the host channel.
+	HostBroadcasterUserId string `json:"host_broadcaster_user_id"`
+	// The display name of the host channel.
+	HostBroadcasterUserName string `json:"host_broadcaster_user_name"`
+	// The user login of the host channel.
+	HostBroadcasterUserLogin string `json:"host_broadcaster_user_login"`
+	// The list of participants in the session.
+	Participants []SharedChatParticipant `json:"participants"`
+}
+
+type ChannelSharedChatSessionUpdateEvent struct {
+	// The unique identifier for the shared chat session.
+	SessionId string `json:"session_id"`
+	// The User ID of the channel in the subscription condition.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The display name of the channel in the subscription condition.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The user login of the channel in the subscription condition.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The User ID of the host channel.
+	HostBroadcasterUserId string `json:"host_broadcaster_user_id"`
+	// The display name of the host channel.
+	HostBroadcasterUserName string `json:"host_broadcaster_user_name"`
+	// The user login of the host channel.
+	HostBroadcasterUserLogin string `json:"host_broadcaster_user_login"`
+	// The list of participants in the session.
+	Participants []SharedChatParticipant `json:"participants"`
+}
+
+type ChannelSharedChatSessionEndEvent struct {
+	// The unique identifier for the shared chat session.
+	SessionId string `json:"session_id"`
+	// The User ID of the channel in the subscription condition which is no longer active in the shared chat session.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The display name of the channel in the subscription condition which is no longer active in the shared chat session.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The user login of the channel in the subscription condition which is no longer active in the shared chat session.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The User ID of the host channel.
+	HostBroadcasterUserId string `json:"host_broadcaster_user_id"`
+	// The display name of the host channel.
+	HostBroadcasterUserName string `json:"host_broadcaster_user_name"`
+	// The user login of the host channel.
+	HostBroadcasterUserLogin string `json:"host_broadcaster_user_login"`
+}
+
+type ChannelSuspiciousUserMessageEvent struct {
+	// The ID of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The display name of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The login of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user ID of the user that sent the message.
+	UserId string `json:"user_id"`
+	// The user name of the user that sent the message.
+	UserName string `json:"user_name"`
+	// The user login of the user that sent the message.
+	UserLogin string `json:"user_login"`
+	// The status set for the suspicious user. Can be none, active_monitoring, or restricted.
+	LowTrustStatus SuspiciousUserLowTrustStatus `json:"low_trust_status"`
+	// A list of channel IDs where the suspicious user is also banned.
+	SharedBanChannelIds []string `json:"shared_ban_channel_ids"`
+	// User types (if any) that apply to the suspicious user.
+	Types []SuspiciousUserType `json:"types"`
+	// A ban evasion likelihood value (if any) that has been applied to the user automatically by Twitch.
+	BanEvasionEvaluation SuspiciousUserBanEvasionEvaluation `json:"ban_evasion_evaluation"`
+	// The structured chat message.
+	Message SuspiciousUserMessageMessage `json:"message"`
+}
+
+type ChannelSuspiciousUserUpdateEvent struct {
+	// The ID of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The display name of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The login of the channel where the treatment for a suspicious user was updated.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The ID of the moderator that updated the treatment for a suspicious user.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The display name of the moderator that updated the treatment for a suspicious user.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The login of the moderator that updated the treatment for a suspicious user.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The ID of the suspicious user whose treatment was updated.
+	UserId string `json:"user_id"`
+	// The display name of the suspicious user whose treatment was updated.
+	UserName string `json:"user_name"`
+	// The login of the suspicious user whose treatment was updated.
+	UserLogin string `json:"user_login"`
+	// The status set for the suspicious user. Can be none, active_monitoring, or restricted.
+	LowTrustStatus SuspiciousUserLowTrustStatus `json:"low_trust_status"`
+}
+
+type ChannelWarningAcknowledgeEvent struct {
+	// The user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The login of the broadcaster.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The ID of the user that has acknowledged their warning.
+	UserId string `json:"user_id"`
+	// The login of the user that has acknowledged their warning.
+	UserLogin string `json:"user_login"`
+	// The user name of the user that has acknowledged their warning.
+	UserName string `json:"user_name"`
+}
+
+type ChannelWarningSendEvent struct {
+	// The user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The login of the broadcaster.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user name of the broadcaster.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The user ID of the moderator who sent the warning.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The login of the moderator.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The user name of the moderator.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The ID of the user being warned.
+	UserId string `json:"user_id"`
+	// The login of the user being warned.
+	UserLogin string `json:"user_login"`
+	// The user name of the user being warned.
+	UserName string `json:"user_name"`
+	// Optional. The reason given for the warning.
+	Reason string `json:"reason,omitempty"`
+	// Optional. The chat rules cited for the warning.
+	ChatRulesCited []string `json:"chat_rules_cited,omitempty"`
+}
+
+type ChannelCheerEvent struct {
+	// Whether the user cheered anonymously or not.
+	IsAnonymous bool `json:"is_anonymous"`
+	// The user ID for the user who cheered on the specified channel. Null if is_anonymous is true.
+	UserId string `json:"user_id,omitempty"`
+	// The user login for the user who cheered on the specified channel. Null if is_anonymous is true.
+	UserLogin string `json:"user_login,omitempty"`
+	// The user display name for the user who cheered on the specified channel. Null if is_anonymous is true.
+	UserName string `json:"user_name,omitempty"`
+	// The requested broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The message sent with the cheer.
+	Message string `json:"message"`
+	// The number of Bits cheered.
+	Bits int `json:"bits"`
+}
+
+type CharityCampaignDonateEvent struct {
+	// An ID that identifies the donation. The ID is unique across campaigns.
+	Id string `json:"id"`
+	// An ID that identifies the charity campaign.
+	CampaignId string `json:"campaign_id"`
+	// An ID that identifies the broadcaster that's running the campaign.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's login name.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// An ID that identifies the user that donated to the campaign.
+	UserId string `json:"user_id"`
+	// The user's login name.
+	UserLogin string `json:"user_login"`
+	// The user's display name.
+	UserName string `json:"user_name"`
+	// The charity's name.
+	CharityName string `json:"charity_name"`
+	// A description of the charity.
+	CharityDescription string `json:"charity_description"`
+	// A URL to an image of the charity's logo.
+	CharityLogo string `json:"charity_logo"`
+	// A URL to the charity's website.
+	CharityWebsite string `json:"charity_website"`
+	// An object that contains the amount of money that the user donated.
+	Amount CharityAmount `json:"amount"`
+}
+
+type CharityCampaignStartEvent struct {
+	// An ID that identifies the charity campaign.
+	Id string `json:"id"`
+	// An ID that identifies the broadcaster that's running the campaign.
+	BroadcasterUserId string `json:"broadcaster_id"`
+	// The broadcaster's login name.
+	BroadcasterUserLogin string `json:"broadcaster_login"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_name"`
+	// The charity's name.
+	CharityName string `json:"charity_name"`
+	// A description of the charity.
+	CharityDescription string `json:"charity_description"`
+	// A URL to an image of the charity's logo.
+	CharityLogo string `json:"charity_logo"`
+	// A URL to the charity's website.
+	CharityWebsite string `json:"charity_website"`
+	// An object that contains the current amount of donations that the campaign has received.
+	CurrentAmount CharityAmount `json:"current_amount"`
+	// An object that contains the campaign's target fundraising goal.
+	TargetAmount CharityAmount `json:"target_amount"`
+	// The UTC timestamp (in RFC3339 format) of when the broadcaster started the campaign.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type CharityCampaignProgressEvent struct {
+	// An ID that identifies the charity campaign.
+	Id string `json:"id"`
+	// An ID that identifies the broadcaster that's running the campaign.
+	BroadcasterUserId string `json:"broadcaster_id"`
+	// The broadcaster's login name.
+	BroadcasterUserLogin string `json:"broadcaster_login"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_name"`
+	// The charity's name.
+	CharityName string `json:"charity_name"`
+	// A description of the charity.
+	CharityDescription string `json:"charity_description"`
+	// A URL to an image of the charity's logo.
+	CharityLogo string `json:"charity_logo"`
+	// A URL to the charity's website.
+	CharityWebsite string `json:"charity_website"`
+	// An object that contains the current amount of donations that the campaign has received.
+	CurrentAmount CharityAmount `json:"current_amount"`
+	// An object that contains the campaign's target fundraising goal.
+	TargetAmount CharityAmount `json:"target_amount"`
+}
+
+type CharityCampaignStopEvent struct {
+	// An ID that identifies the charity campaign.
+	Id string `json:"id"`
+	// An ID that identifies the broadcaster that ran the campaign.
+	BroadcasterUserId string `json:"broadcaster_id"`
+	// The broadcaster's login name.
+	BroadcasterUserLogin string `json:"broadcaster_login"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_name"`
+	// The charity's name.
+	CharityName string `json:"charity_name"`
+	// A description of the charity.
+	CharityDescription string `json:"charity_description"`
+	// A URL to an image of the charity's logo.
+	CharityLogo string `json:"charity_logo"`
+	// A URL to the charity's website.
+	CharityWebsite string `json:"charity_website"`
+	// An object that contains the final amount of donations that the campaign received.
+	CurrentAmount CharityAmount `json:"current_amount"`
+	// An object that contains the campaign's target fundraising goal.
+	TargetAmount CharityAmount `json:"target_amount"`
+	// The UTC timestamp (in RFC3339 format) of when the broadcaster stopped the campaign.
+	StoppedAt TimestampUTC `json:"stopped_at"`
+}
+
+type DropEntitlementGrantEvent struct {
+	// Individual event ID, as assigned by EventSub.
+	Id string `json:"id"`
+	// Entitlement object.
+	Data []DropEntitlementGrantData `json:"data"`
+}
+
+type ExtensionBitsTransactionCreateEvent struct {
+	// ExtensionClientId is the client ID of the extension.
+	ExtensionClientId string `json:"extension_client_id"`
+	// Id is the transaction ID.
+	Id string `json:"id"`
+	// The transaction's broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The transaction's broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The transaction's broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The transaction's user ID.
+	UserId string `json:"user_id"`
+	// The transaction's user login.
+	UserLogin string `json:"user_login"`
+	// The transaction's user display name.
+	UserName string `json:"user_name"`
+	// Additional extension product information.
+	Product ExtensionBitsTransactionProduct `json:"product"`
+}
+
+type ChannelGoalBeginEvent struct {
+	// An ID that identifies this event.
+	Id string `json:"id"`
+	// An ID that uniquely identifies the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's user handle.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The type of goal.
+	Type GoalType `json:"type"`
+	// A description of the goal, if specified.
+	Description string `json:"description"`
+	// The goal's current value.
+	CurrentAmount int `json:"current_amount"`
+	// The goal's target value.
+	TargetAmount int `json:"target_amount"`
+	// The UTC timestamp of when the broadcaster created the goal.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type ChannelGoalProgressEvent struct {
+	// An ID that identifies this event.
+	Id string `json:"id"`
+	// An ID that uniquely identifies the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's user handle.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The type of goal.
+	Type GoalType `json:"type"`
+	// A description of the goal, if specified.
+	Description string `json:"description"`
+	// The goal's current value.
+	CurrentAmount int `json:"current_amount"`
+	// The goal's target value.
+	TargetAmount int `json:"target_amount"`
+	// The UTC timestamp of when the broadcaster created the goal.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type ChannelGoalEndEvent struct {
+	// An ID that identifies this event.
+	Id string `json:"id"`
+	// An ID that uniquely identifies the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's user handle.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The type of goal.
+	Type GoalType `json:"type"`
+	// A description of the goal, if specified.
+	Description string `json:"description"`
+	// A Boolean value that indicates whether the broadcaster achieved their goal.
+	IsAchieved bool `json:"is_achieved"`
+	// The goal's current value.
+	CurrentAmount int `json:"current_amount"`
+	// The goal's target value.
+	TargetAmount int `json:"target_amount"`
+	// The UTC timestamp of when the broadcaster created the goal.
+	StartedAt TimestampUTC `json:"started_at"`
+	// The UTC timestamp of when the broadcaster ended the goal.
+	EndedAt TimestampUTC `json:"ended_at"`
+}
+
+type HypeTrainBeginEvent struct {
+	// The Hype Train ID.
+	Id string `json:"id"`
+	// The requested broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// Total points contributed to the Hype Train.
+	Total int `json:"total"`
+	// The number of points contributed to the Hype Train at the current level.
+	Progress int `json:"progress"`
+	// The number of points required to reach the next level.
+	Goal int `json:"goal"`
+	// The contributors with the most points contributed.
+	TopContributions []HypeTrainContribution `json:"top_contributions"`
+	// The current level of the Hype Train.
+	Level int `json:"level"`
+	// The all-time high level this type of Hype Train has reached for this broadcaster.
+	AllTimeHighLevel int `json:"all_time_high_level"`
+	// The all-time high total this type of Hype Train has reached for this broadcaster.
+	AllTimeHighTotal int `json:"all_time_high_total"`
+	// Optional. Non-null for a shared Hype Train.
+	SharedTrainParticipants []SharedChatParticipant `json:"shared_train_participants,omitempty"`
+	// The time when the Hype Train started.
+	StartedAt TimestampUTC `json:"started_at"`
+	// The time when the Hype Train expires.
+	ExpiresAt TimestampUTC `json:"expires_at"`
+	// The type of the Hype Train.
+	Type HypeTrainType `json:"type"`
+	// Indicates if the Hype Train is shared.
+	IsSharedTrain bool `json:"is_shared_train"`
+}
+
+type HypeTrainProgressEvent struct {
+	// The Hype Train ID.
+	Id string `json:"id"`
+	// The requested broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// Total points contributed to the Hype Train.
+	Total int `json:"total"`
+	// The number of points contributed to the Hype Train at the current level.
+	Progress int `json:"progress"`
+	// The number of points required to reach the next level.
+	Goal int `json:"goal"`
+	// The contributors with the most points contributed.
+	TopContributions []HypeTrainContribution `json:"top_contributions"`
+	// The current level of the Hype Train.
+	Level int `json:"level"`
+	// Optional. Non-null for a shared Hype Train.
+	SharedTrainParticipants []SharedChatParticipant `json:"shared_train_participants,omitempty"`
+	// The time when the Hype Train started.
+	StartedAt TimestampUTC `json:"started_at"`
+	// The time when the Hype Train expires.
+	ExpiresAt TimestampUTC `json:"expires_at"`
+	// The type of the Hype Train.
+	Type HypeTrainType `json:"type"`
+	// Indicates if the Hype Train is shared.
+	IsSharedTrain bool `json:"is_shared_train"`
+}
+
+type HypeTrainEndEvent struct {
+	// The Hype Train ID.
+	Id string `json:"id"`
+	// The requested broadcaster ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The requested broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The requested broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// Total points contributed to the Hype Train.
+	Total int `json:"total"`
+	// The contributors with the most points contributed.
+	TopContributions []HypeTrainContribution `json:"top_contributions"`
+	// The current level of the Hype Train.
+	Level int `json:"level"`
+	// Optional. Non-null for a shared Hype Train.
+	SharedTrainParticipants []SharedChatParticipant `json:"shared_train_participants,omitempty"`
+	// The time when the Hype Train started.
+	StartedAt TimestampUTC `json:"started_at"`
+	// The time when the Hype Train cooldown ends so that the next Hype Train can start.
+	CooldownEndsAt TimestampUTC `json:"cooldown_ends_at"`
+	// The time when the Hype Train ended.
+	EndedAt TimestampUTC `json:"ended_at"`
+	// The type of the Hype Train.
+	Type HypeTrainType `json:"type"`
+	// Indicates if the Hype Train is shared.
+	IsSharedTrain bool `json:"is_shared_train"`
+}
+
+type ShieldModeBeginEvent struct {
+	// The user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user ID of the moderator who activated Shield Mode.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The moderator's display name.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The moderator's login.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The UTC timestamp of when Shield Mode was activated.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type ShieldModeEndEvent struct {
+	// The user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user ID of the moderator who deactivated Shield Mode.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The moderator's display name.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The moderator's login.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The UTC timestamp of when Shield Mode was deactivated.
+	EndedAt TimestampUTC `json:"ended_at"`
+}
+
+type ShoutoutCreateEvent struct {
+	// The user ID of the broadcaster that sent the Shoutout.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user ID of the moderator that sent the Shoutout.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The moderator's display name.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The moderator's login.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The user ID of the broadcaster that received the Shoutout.
+	ToBroadcasterUserId string `json:"to_broadcaster_user_id"`
+	// The display name of the broadcaster that received the Shoutout.
+	ToBroadcasterUserName string `json:"to_broadcaster_user_name"`
+	// The login of the broadcaster that received the Shoutout.
+	ToBroadcasterUserLogin string `json:"to_broadcaster_user_login"`
+	// The UTC timestamp of when the Shoutout was sent.
+	StartedAt TimestampUTC `json:"started_at"`
+	// The number of users that were watching the broadcaster's stream at the time of the Shoutout.
+	ViewerCount int `json:"viewer_count"`
+	// The UTC timestamp of when the broadcaster may send a new Shoutout.
+	CooldownEndsAt TimestampUTC `json:"cooldown_ends_at"`
+	// The UTC timestamp of when the broadcaster may send a Shoutout to a specified broadcaster.
+	TargetCooldownEndsAt TimestampUTC `json:"target_cooldown_ends_at"`
+}
+
+type ShoutoutReceiveEvent struct {
+	// The user ID of the broadcaster that received the Shoutout.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster's display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster's login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// The user ID of the broadcaster that sent the Shoutout.
+	FromBroadcasterUserId string `json:"from_broadcaster_user_id"`
+	// The display name of the broadcaster that sent the Shoutout.
+	FromBroadcasterUserName string `json:"from_broadcaster_user_name"`
+	// The login of the broadcaster that sent the Shoutout.
+	FromBroadcasterUserLogin string `json:"from_broadcaster_user_login"`
+	// The number of users that were watching the from-broadcaster's stream at the time of the Shoutout.
+	ViewerCount int `json:"viewer_count"`
+	// The UTC timestamp of when the Shoutout was received.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type UserAuthorizationGrantEvent struct {
+	// The client_id of the application that was granted user access.
+	ClientId string `json:"client_id"`
+	// The user id for the user who has granted authorization for your client id.
+	UserId string `json:"user_id"`
+	// The user login for the user who has granted authorization for your client id.
+	UserLogin string `json:"user_login"`
+	// The user display name for the user who has granted authorization for your client id.
+	UserName string `json:"user_name"`
+}
+
+type WhisperReceivedEvent struct {
+	// The ID of the user sending the message.
+	FromUserId string `json:"from_user_id"`
+	// The name of the user sending the message.
+	FromUserName string `json:"from_user_name"`
+	// The login of the user sending the message.
+	FromUserLogin string `json:"from_user_login"`
+	// The ID of the user receiving the message.
+	ToUserId string `json:"to_user_id"`
+	// The name of the user receiving the message.
+	ToUserName string `json:"to_user_name"`
+	// The login of the user receiving the message.
+	ToUserLogin string `json:"to_user_login"`
+	// The whisper ID.
+	WhisperId string `json:"whisper_id"`
+	// Object containing whisper information.
+	Whisper WhisperMessageBody `json:"whisper"`
+}
+
+type ChannelGuestStarSessionBeginEvent struct {
+	// The broadcaster user ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// ID representing the unique session that was started.
+	SessionId string `json:"session_id"`
+	// RFC3339 timestamp indicating the time the session began.
+	StartedAt TimestampUTC `json:"started_at"`
+}
+
+type ChannelGuestStarSessionEndEvent struct {
+	// The non-host broadcaster user ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The non-host broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The non-host broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// ID representing the unique session that was started.
+	SessionId string `json:"session_id"`
+	// RFC3339 timestamp indicating the time the session began.
+	StartedAt TimestampUTC `json:"started_at"`
+	// RFC3339 timestamp indicating the time the session ended.
+	EndedAt TimestampUTC `json:"ended_at"`
+	// User ID of the host channel.
+	HostUserId string `json:"host_user_id"`
+	// The host display name.
+	HostUserName string `json:"host_user_name"`
+	// The host login.
+	HostUserLogin string `json:"host_user_login"`
+}
+
+type ChannelGuestStarGuestUpdateEvent struct {
+	// The non-host broadcaster user ID.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The non-host broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The non-host broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// ID representing the unique session that was started.
+	SessionId string `json:"session_id"`
+	// The user ID of the moderator who updated the guest's state. Null if the update was performed by the guest.
+	ModeratorUserId string `json:"moderator_user_id"`
+	// The moderator display name. Null if the update was performed by the guest.
+	ModeratorUserName string `json:"moderator_user_name"`
+	// The moderator login. Null if the update was performed by the guest.
+	ModeratorUserLogin string `json:"moderator_user_login"`
+	// The user ID of the guest who transitioned states in the session. Null if the slot is now empty.
+	GuestUserId string `json:"guest_user_id"`
+	// The guest display name. Null if the slot is now empty.
+	GuestUserName string `json:"guest_user_name"`
+	// The guest login. Null if the slot is now empty.
+	GuestUserLogin string `json:"guest_user_login"`
+	// The ID of the slot assignment the guest is assigned to. Null if the guest is in the INVITED, REMOVED, READY, or ACCEPTED state.
+	SlotId string `json:"slot_id"`
+	// The current state of the user after the update has taken place. Null if the slot is now empty.
+	State GuestStarGuestState `json:"state"`
+	// User ID of the host channel.
+	HostUserId string `json:"host_user_id"`
+	// The host display name.
+	HostUserName string `json:"host_user_name"`
+	// The host login.
+	HostUserLogin string `json:"host_user_login"`
+	// Flag that signals whether the host is allowing the slot's video to be seen by participants.
+	HostVideoEnabled bool `json:"host_video_enabled"`
+	// Flag that signals whether the host is allowing the slot's audio to be heard by participants.
+	HostAudioEnabled bool `json:"host_audio_enabled"`
+	// Value between 0-100 that represents the slot's audio level as heard by participants.
+	HostVolume int `json:"host_volume"`
+}
+
+type ChannelGuestStarSettingsUpdateEvent struct {
+	// User ID of the host channel.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// The broadcaster display name.
+	BroadcasterUserName string `json:"broadcaster_user_name"`
+	// The broadcaster login.
+	BroadcasterUserLogin string `json:"broadcaster_user_login"`
+	// Flag determining if Guest Star moderators have access to control whether a guest is live once assigned to a slot.
+	IsModeratorSendLiveEnabled bool `json:"is_moderator_send_live_enabled"`
+	// Number of slots the Guest Star call interface will allow the host to add to a call.
+	SlotCount int `json:"slot_count"`
+	// Flag determining if browser sources subscribed to sessions on this channel should output audio.
+	IsBrowserSourceAudioEnabled bool `json:"is_browser_source_audio_enabled"`
+	// This setting determines how the guests within a session should be laid out within a group browser source.
+	GroupLayout GuestStarGroupLayout `json:"group_layout"`
+}
+
 type ChannelModerateEventV2 struct {
 	// The ID of the broadcaster.
 	BroadcasterUserID string `json:"broadcaster_user_id"`

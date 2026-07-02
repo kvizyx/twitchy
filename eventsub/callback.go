@@ -56,6 +56,40 @@ type callback[Metadata any] struct {
 	onChannelChatMessageDelete                    Handler[ChannelChatMessageDeleteEvent, Metadata]
 	onUserAuthorizationRevoke                     Handler[UserAuthorizationRevokeEvent, Metadata]
 	onChannelModerateV2                           Handler[ChannelModerateEventV2, Metadata]
+	onChannelChatSettingsUpdate                   Handler[ChannelChatSettingsUpdateEvent, Metadata]
+	onChannelChatUserMessageHold                  Handler[ChannelChatUserMessageHoldEvent, Metadata]
+	onChannelChatUserMessageUpdate                Handler[ChannelChatUserMessageUpdateEvent, Metadata]
+	onChannelCustomPowerUpRedemptionAdd           Handler[ChannelCustomPowerUpRedemptionAddEvent, Metadata]
+	onChannelSharedChatSessionBegin               Handler[ChannelSharedChatSessionBeginEvent, Metadata]
+	onChannelSharedChatSessionUpdate              Handler[ChannelSharedChatSessionUpdateEvent, Metadata]
+	onChannelSharedChatSessionEnd                 Handler[ChannelSharedChatSessionEndEvent, Metadata]
+	onChannelSuspiciousUserMessage                Handler[ChannelSuspiciousUserMessageEvent, Metadata]
+	onChannelSuspiciousUserUpdate                 Handler[ChannelSuspiciousUserUpdateEvent, Metadata]
+	onChannelWarningAcknowledge                   Handler[ChannelWarningAcknowledgeEvent, Metadata]
+	onChannelWarningSend                          Handler[ChannelWarningSendEvent, Metadata]
+	onChannelCheer                                Handler[ChannelCheerEvent, Metadata]
+	onCharityCampaignDonate                       Handler[CharityCampaignDonateEvent, Metadata]
+	onCharityCampaignStart                        Handler[CharityCampaignStartEvent, Metadata]
+	onCharityCampaignProgress                     Handler[CharityCampaignProgressEvent, Metadata]
+	onCharityCampaignStop                         Handler[CharityCampaignStopEvent, Metadata]
+	onDropEntitlementGrant                        Handler[DropEntitlementGrantEvent, Metadata]
+	onExtensionBitsTransactionCreate              Handler[ExtensionBitsTransactionCreateEvent, Metadata]
+	onChannelGoalBegin                            Handler[ChannelGoalBeginEvent, Metadata]
+	onChannelGoalProgress                         Handler[ChannelGoalProgressEvent, Metadata]
+	onChannelGoalEnd                              Handler[ChannelGoalEndEvent, Metadata]
+	onHypeTrainBegin                              Handler[HypeTrainBeginEvent, Metadata]
+	onHypeTrainProgress                           Handler[HypeTrainProgressEvent, Metadata]
+	onHypeTrainEnd                                Handler[HypeTrainEndEvent, Metadata]
+	onShieldModeBegin                             Handler[ShieldModeBeginEvent, Metadata]
+	onShieldModeEnd                               Handler[ShieldModeEndEvent, Metadata]
+	onShoutoutCreate                              Handler[ShoutoutCreateEvent, Metadata]
+	onShoutoutReceive                             Handler[ShoutoutReceiveEvent, Metadata]
+	onUserAuthorizationGrant                      Handler[UserAuthorizationGrantEvent, Metadata]
+	onUserWhisperMessage                          Handler[WhisperReceivedEvent, Metadata]
+	onGuestStarSessionBegin                       Handler[ChannelGuestStarSessionBeginEvent, Metadata]
+	onGuestStarSessionEnd                         Handler[ChannelGuestStarSessionEndEvent, Metadata]
+	onGuestStarGuestUpdate                        Handler[ChannelGuestStarGuestUpdateEvent, Metadata]
+	onGuestStarSettingsUpdate                     Handler[ChannelGuestStarSettingsUpdateEvent, Metadata]
 }
 
 // OnDuplicate invokes when duplicate message is caught (this is not necessarily an event).
@@ -410,4 +444,244 @@ func (c *callback[Metadata]) OnUserAuthorizationRevoke(onUserAuthorizationRevoke
 // Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelmoderate-v2.
 func (c *callback[Metadata]) OnChannelModerateV2(onChannelModerateV2 Handler[ChannelModerateEventV2, Metadata]) {
 	c.onChannelModerateV2 = onChannelModerateV2
+}
+
+// OnChannelChatSettingsUpdate invokes when a broadcaster's chat settings are updated.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelchat_settingsupdate.
+func (c *callback[Metadata]) OnChannelChatSettingsUpdate(onChannelChatSettingsUpdate Handler[ChannelChatSettingsUpdateEvent, Metadata]) {
+	c.onChannelChatSettingsUpdate = onChannelChatSettingsUpdate
+}
+
+// OnChannelChatUserMessageHold invokes when a user is notified if their message is caught by automod.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelchatuser_message_hold.
+func (c *callback[Metadata]) OnChannelChatUserMessageHold(onChannelChatUserMessageHold Handler[ChannelChatUserMessageHoldEvent, Metadata]) {
+	c.onChannelChatUserMessageHold = onChannelChatUserMessageHold
+}
+
+// OnChannelChatUserMessageUpdate invokes when a user is notified if their message's automod status is updated.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelchatuser_message_update.
+func (c *callback[Metadata]) OnChannelChatUserMessageUpdate(onChannelChatUserMessageUpdate Handler[ChannelChatUserMessageUpdateEvent, Metadata]) {
+	c.onChannelChatUserMessageUpdate = onChannelChatUserMessageUpdate
+}
+
+// OnChannelCustomPowerUpRedemptionAdd invokes when a viewer has redeemed a custom Power-up on the specified channel.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcustom_power_up_redemptionadd.
+func (c *callback[Metadata]) OnChannelCustomPowerUpRedemptionAdd(onChannelCustomPowerUpRedemptionAdd Handler[ChannelCustomPowerUpRedemptionAddEvent, Metadata]) {
+	c.onChannelCustomPowerUpRedemptionAdd = onChannelCustomPowerUpRedemptionAdd
+}
+
+// OnChannelSharedChatSessionBegin invokes when a channel becomes active in an active shared chat session.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshared_chatbegin.
+func (c *callback[Metadata]) OnChannelSharedChatSessionBegin(onChannelSharedChatSessionBegin Handler[ChannelSharedChatSessionBeginEvent, Metadata]) {
+	c.onChannelSharedChatSessionBegin = onChannelSharedChatSessionBegin
+}
+
+// OnChannelSharedChatSessionUpdate invokes when the active shared chat session the channel is in changes.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshared_chatupdate.
+func (c *callback[Metadata]) OnChannelSharedChatSessionUpdate(onChannelSharedChatSessionUpdate Handler[ChannelSharedChatSessionUpdateEvent, Metadata]) {
+	c.onChannelSharedChatSessionUpdate = onChannelSharedChatSessionUpdate
+}
+
+// OnChannelSharedChatSessionEnd invokes when a channel leaves a shared chat session or the session ends.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshared_chatend.
+func (c *callback[Metadata]) OnChannelSharedChatSessionEnd(onChannelSharedChatSessionEnd Handler[ChannelSharedChatSessionEndEvent, Metadata]) {
+	c.onChannelSharedChatSessionEnd = onChannelSharedChatSessionEnd
+}
+
+// OnChannelSuspiciousUserMessage invokes when a chat message has been sent by a suspicious user.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelsuspicious_usermessage.
+func (c *callback[Metadata]) OnChannelSuspiciousUserMessage(onChannelSuspiciousUserMessage Handler[ChannelSuspiciousUserMessageEvent, Metadata]) {
+	c.onChannelSuspiciousUserMessage = onChannelSuspiciousUserMessage
+}
+
+// OnChannelSuspiciousUserUpdate invokes when a suspicious user has been updated.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelsuspicious_userupdate.
+func (c *callback[Metadata]) OnChannelSuspiciousUserUpdate(onChannelSuspiciousUserUpdate Handler[ChannelSuspiciousUserUpdateEvent, Metadata]) {
+	c.onChannelSuspiciousUserUpdate = onChannelSuspiciousUserUpdate
+}
+
+// OnChannelWarningAcknowledge invokes when a user acknowledges a warning.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelwarningacknowledge.
+func (c *callback[Metadata]) OnChannelWarningAcknowledge(onChannelWarningAcknowledge Handler[ChannelWarningAcknowledgeEvent, Metadata]) {
+	c.onChannelWarningAcknowledge = onChannelWarningAcknowledge
+}
+
+// OnChannelWarningSend invokes when a user is sent a warning.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelwarningsend.
+func (c *callback[Metadata]) OnChannelWarningSend(onChannelWarningSend Handler[ChannelWarningSendEvent, Metadata]) {
+	c.onChannelWarningSend = onChannelWarningSend
+}
+
+// OnChannelCheer invokes when a user cheers on the specified channel.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcheer.
+func (c *callback[Metadata]) OnChannelCheer(onChannelCheer Handler[ChannelCheerEvent, Metadata]) {
+	c.onChannelCheer = onChannelCheer
+}
+
+// OnCharityCampaignDonate invokes when a user donates to the broadcaster's charity campaign.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcharity_campaigndonate.
+func (c *callback[Metadata]) OnCharityCampaignDonate(onCharityCampaignDonate Handler[CharityCampaignDonateEvent, Metadata]) {
+	c.onCharityCampaignDonate = onCharityCampaignDonate
+}
+
+// OnCharityCampaignStart invokes when the broadcaster starts a charity campaign.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcharity_campaignstart.
+func (c *callback[Metadata]) OnCharityCampaignStart(onCharityCampaignStart Handler[CharityCampaignStartEvent, Metadata]) {
+	c.onCharityCampaignStart = onCharityCampaignStart
+}
+
+// OnCharityCampaignProgress invokes when progress is made towards the campaign's goal or when the broadcaster changes the fundraising goal.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcharity_campaignprogress.
+func (c *callback[Metadata]) OnCharityCampaignProgress(onCharityCampaignProgress Handler[CharityCampaignProgressEvent, Metadata]) {
+	c.onCharityCampaignProgress = onCharityCampaignProgress
+}
+
+// OnCharityCampaignStop invokes when the broadcaster stops a charity campaign.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelcharity_campaignstop.
+func (c *callback[Metadata]) OnCharityCampaignStop(onCharityCampaignStop Handler[CharityCampaignStopEvent, Metadata]) {
+	c.onCharityCampaignStop = onCharityCampaignStop
+}
+
+// OnDropEntitlementGrant invokes when an entitlement for a Drop is granted to a user.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#dropentitlementgrant.
+func (c *callback[Metadata]) OnDropEntitlementGrant(onDropEntitlementGrant Handler[DropEntitlementGrantEvent, Metadata]) {
+	c.onDropEntitlementGrant = onDropEntitlementGrant
+}
+
+// OnExtensionBitsTransactionCreate invokes when a Bits transaction occurred for a specified Twitch Extension.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#extensionbits_transactioncreate.
+func (c *callback[Metadata]) OnExtensionBitsTransactionCreate(onExtensionBitsTransactionCreate Handler[ExtensionBitsTransactionCreateEvent, Metadata]) {
+	c.onExtensionBitsTransactionCreate = onExtensionBitsTransactionCreate
+}
+
+// OnChannelGoalBegin invokes when a broadcaster begins a goal.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelgoalbegin.
+func (c *callback[Metadata]) OnChannelGoalBegin(onChannelGoalBegin Handler[ChannelGoalBeginEvent, Metadata]) {
+	c.onChannelGoalBegin = onChannelGoalBegin
+}
+
+// OnChannelGoalProgress invokes when progress is made towards a broadcaster's goal.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelgoalprogress.
+func (c *callback[Metadata]) OnChannelGoalProgress(onChannelGoalProgress Handler[ChannelGoalProgressEvent, Metadata]) {
+	c.onChannelGoalProgress = onChannelGoalProgress
+}
+
+// OnChannelGoalEnd invokes when a broadcaster ends a goal.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelgoalend.
+func (c *callback[Metadata]) OnChannelGoalEnd(onChannelGoalEnd Handler[ChannelGoalEndEvent, Metadata]) {
+	c.onChannelGoalEnd = onChannelGoalEnd
+}
+
+// OnHypeTrainBegin invokes when a Hype Train begins on the specified channel.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelhype_trainbegin.
+func (c *callback[Metadata]) OnHypeTrainBegin(onHypeTrainBegin Handler[HypeTrainBeginEvent, Metadata]) {
+	c.onHypeTrainBegin = onHypeTrainBegin
+}
+
+// OnHypeTrainProgress invokes when a Hype Train makes progress on the specified channel.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelhype_trainprogress.
+func (c *callback[Metadata]) OnHypeTrainProgress(onHypeTrainProgress Handler[HypeTrainProgressEvent, Metadata]) {
+	c.onHypeTrainProgress = onHypeTrainProgress
+}
+
+// OnHypeTrainEnd invokes when a Hype Train ends on the specified channel.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelhype_trainend.
+func (c *callback[Metadata]) OnHypeTrainEnd(onHypeTrainEnd Handler[HypeTrainEndEvent, Metadata]) {
+	c.onHypeTrainEnd = onHypeTrainEnd
+}
+
+// OnShieldModeBegin invokes when the broadcaster activates Shield Mode.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshield_modebegin.
+func (c *callback[Metadata]) OnShieldModeBegin(onShieldModeBegin Handler[ShieldModeBeginEvent, Metadata]) {
+	c.onShieldModeBegin = onShieldModeBegin
+}
+
+// OnShieldModeEnd invokes when the broadcaster deactivates Shield Mode.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshield_modeend.
+func (c *callback[Metadata]) OnShieldModeEnd(onShieldModeEnd Handler[ShieldModeEndEvent, Metadata]) {
+	c.onShieldModeEnd = onShieldModeEnd
+}
+
+// OnShoutoutCreate invokes when the specified broadcaster sends a Shoutout.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshoutoutcreate.
+func (c *callback[Metadata]) OnShoutoutCreate(onShoutoutCreate Handler[ShoutoutCreateEvent, Metadata]) {
+	c.onShoutoutCreate = onShoutoutCreate
+}
+
+// OnShoutoutReceive invokes when the specified broadcaster receives a Shoutout.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelshoutoutreceive.
+func (c *callback[Metadata]) OnShoutoutReceive(onShoutoutReceive Handler[ShoutoutReceiveEvent, Metadata]) {
+	c.onShoutoutReceive = onShoutoutReceive
+}
+
+// OnUserAuthorizationGrant invokes when a user's authorization has been granted to your client id.
+//
+// Note: This subscription type is only supported by webhooks, and cannot be used with websockets.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#userauthorizationgrant.
+func (c *callback[Metadata]) OnUserAuthorizationGrant(onUserAuthorizationGrant Handler[UserAuthorizationGrantEvent, Metadata]) {
+	c.onUserAuthorizationGrant = onUserAuthorizationGrant
+}
+
+// OnUserWhisperMessage invokes when a user receives a whisper.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#userwhispermessage.
+func (c *callback[Metadata]) OnUserWhisperMessage(onUserWhisperMessage Handler[WhisperReceivedEvent, Metadata]) {
+	c.onUserWhisperMessage = onUserWhisperMessage
+}
+
+// OnGuestStarSessionBegin invokes when the host began a new Guest Star session.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest_star_sessionbegin.
+func (c *callback[Metadata]) OnGuestStarSessionBegin(onGuestStarSessionBegin Handler[ChannelGuestStarSessionBeginEvent, Metadata]) {
+	c.onGuestStarSessionBegin = onGuestStarSessionBegin
+}
+
+// OnGuestStarSessionEnd invokes when a running Guest Star session has ended.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest_star_sessionend.
+func (c *callback[Metadata]) OnGuestStarSessionEnd(onGuestStarSessionEnd Handler[ChannelGuestStarSessionEndEvent, Metadata]) {
+	c.onGuestStarSessionEnd = onGuestStarSessionEnd
+}
+
+// OnGuestStarGuestUpdate invokes when a guest or a slot is updated in an active Guest Star session.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest_star_guestupdate.
+func (c *callback[Metadata]) OnGuestStarGuestUpdate(onGuestStarGuestUpdate Handler[ChannelGuestStarGuestUpdateEvent, Metadata]) {
+	c.onGuestStarGuestUpdate = onGuestStarGuestUpdate
+}
+
+// OnGuestStarSettingsUpdate invokes when the host preferences for Guest Star have been updated.
+//
+// Reference: https://dev.twitch.tv/docs/eventsub/eventsub-subscription-types/#channelguest_star_settingsupdate.
+func (c *callback[Metadata]) OnGuestStarSettingsUpdate(onGuestStarSettingsUpdate Handler[ChannelGuestStarSettingsUpdateEvent, Metadata]) {
+	c.onGuestStarSettingsUpdate = onGuestStarSettingsUpdate
 }
