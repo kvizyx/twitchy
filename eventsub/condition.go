@@ -499,3 +499,33 @@ type WhisperReceivedCondition struct {
 	// UserId is a user_id of the person receiving whispers
 	UserId string `json:"user_id"`
 }
+
+type ChannelCustomPowerUpRedemptionAddCondition struct {
+	Condition
+	// BroadcasterUserId is a broadcaster user ID for the channel you want to receive custom Power-up redemption add notifications for.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// RewardId is a reward id to only receive notifications for a specific custom Power-up, optional.
+	RewardId string `json:"reward_id,omitempty"`
+}
+
+type ChannelShieldModeCondition struct {
+	Condition
+	// BroadcasterUserId is a user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// ModeratorUserId is a user ID of the broadcaster or one of the broadcaster's moderators.
+	ModeratorUserId string `json:"moderator_user_id"`
+}
+
+type ChannelShoutoutCondition struct {
+	Condition
+	// BroadcasterUserId is a user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+	// ModeratorUserId is a user ID of the broadcaster or one of the broadcaster's moderators.
+	ModeratorUserId string `json:"moderator_user_id"`
+}
+
+type CharityCampaignCondition struct {
+	Condition
+	// BroadcasterUserId is a user ID of the broadcaster.
+	BroadcasterUserId string `json:"broadcaster_user_id"`
+}

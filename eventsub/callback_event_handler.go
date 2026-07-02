@@ -139,6 +139,74 @@ func (c *callback[Metadata]) runEventCallback(
 		case "2":
 			return runEventCallbackHandler(c.onChannelModerateV2, event, metadata)
 		}
+	case EventTypeChannelChatSettingsUpdate:
+		return runEventCallbackHandler(c.onChannelChatSettingsUpdate, event, metadata)
+	case EventTypeChannelChatUserMessageHold:
+		return runEventCallbackHandler(c.onChannelChatUserMessageHold, event, metadata)
+	case EventTypeChannelChatUserMessageUpdate:
+		return runEventCallbackHandler(c.onChannelChatUserMessageUpdate, event, metadata)
+	case EventTypeChannelCustomPowerUpRedemptionAdd:
+		return runEventCallbackHandler(c.onChannelCustomPowerUpRedemptionAdd, event, metadata)
+	case EventTypeChannelSharedChatSessionBegin:
+		return runEventCallbackHandler(c.onChannelSharedChatSessionBegin, event, metadata)
+	case EventTypeChannelSharedChatSessionUpdate:
+		return runEventCallbackHandler(c.onChannelSharedChatSessionUpdate, event, metadata)
+	case EventTypeChannelSharedChatSessionEnd:
+		return runEventCallbackHandler(c.onChannelSharedChatSessionEnd, event, metadata)
+	case EventTypeChannelSuspiciousUserMessage:
+		return runEventCallbackHandler(c.onChannelSuspiciousUserMessage, event, metadata)
+	case EventTypeChannelSuspiciousUserUpdate:
+		return runEventCallbackHandler(c.onChannelSuspiciousUserUpdate, event, metadata)
+	case EventTypeChannelWarningAcknowledge:
+		return runEventCallbackHandler(c.onChannelWarningAcknowledge, event, metadata)
+	case EventTypeChannelWarningSend:
+		return runEventCallbackHandler(c.onChannelWarningSend, event, metadata)
+	case EventTypeChannelCheer:
+		return runEventCallbackHandler(c.onChannelCheer, event, metadata)
+	case EventTypeCharityCampaignDonate:
+		return runEventCallbackHandler(c.onCharityCampaignDonate, event, metadata)
+	case EventTypeCharityCampaignStart:
+		return runEventCallbackHandler(c.onCharityCampaignStart, event, metadata)
+	case EventTypeCharityCampaignProgress:
+		return runEventCallbackHandler(c.onCharityCampaignProgress, event, metadata)
+	case EventTypeCharityCampaignStop:
+		return runEventCallbackHandler(c.onCharityCampaignStop, event, metadata)
+	case EventTypeDropEntitlementGrant:
+		return runEventCallbackHandler(c.onDropEntitlementGrant, event, metadata)
+	case EventTypeExtensionBitsTransactionCreate:
+		return runEventCallbackHandler(c.onExtensionBitsTransactionCreate, event, metadata)
+	case EventTypeChannelGoalBegin:
+		return runEventCallbackHandler(c.onChannelGoalBegin, event, metadata)
+	case EventTypeChannelGoalProgress:
+		return runEventCallbackHandler(c.onChannelGoalProgress, event, metadata)
+	case EventTypeChannelGoalEnd:
+		return runEventCallbackHandler(c.onChannelGoalEnd, event, metadata)
+	case EventTypeHypeTrainBegin:
+		return runEventCallbackHandler(c.onHypeTrainBegin, event, metadata)
+	case EventTypeHypeTrainProgress:
+		return runEventCallbackHandler(c.onHypeTrainProgress, event, metadata)
+	case EventTypeHypeTrainEnd:
+		return runEventCallbackHandler(c.onHypeTrainEnd, event, metadata)
+	case EventTypeShieldModeBegin:
+		return runEventCallbackHandler(c.onShieldModeBegin, event, metadata)
+	case EventTypeShieldModeEnd:
+		return runEventCallbackHandler(c.onShieldModeEnd, event, metadata)
+	case EventTypeShoutoutCreate:
+		return runEventCallbackHandler(c.onShoutoutCreate, event, metadata)
+	case EventTypeShoutoutReceive:
+		return runEventCallbackHandler(c.onShoutoutReceive, event, metadata)
+	case EventTypeUserAuthorizationGrant:
+		return runEventCallbackHandler(c.onUserAuthorizationGrant, event, metadata)
+	case EventTypeUserWhisperMessage:
+		return runEventCallbackHandler(c.onUserWhisperMessage, event, metadata)
+	case EventTypeGuestStarSessionBegin:
+		return runEventCallbackHandler(c.onGuestStarSessionBegin, event, metadata)
+	case EventTypeGuestStarSessionEnd:
+		return runEventCallbackHandler(c.onGuestStarSessionEnd, event, metadata)
+	case EventTypeGuestStarGuestUpdate:
+		return runEventCallbackHandler(c.onGuestStarGuestUpdate, event, metadata)
+	case EventTypeGuestStarSettingsUpdate:
+		return runEventCallbackHandler(c.onGuestStarSettingsUpdate, event, metadata)
 	default:
 		if c.onUndefinedEvent != nil {
 			go c.onUndefinedEvent(rawEvent, metadata)
