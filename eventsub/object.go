@@ -40,6 +40,7 @@ const (
 	MessageFragmentEmote     MessageFragmentType = "emote"
 	MessageFragmentCheermote MessageFragmentType = "cheermote"
 	MessageFragmentMention   MessageFragmentType = "mention"
+	MessageFragmentGif       MessageFragmentType = "gif"
 )
 
 type Mention struct {
@@ -170,6 +171,14 @@ type ChannelChatMessageEventMessageFragment struct {
 	Emote     *ChannelChatMessageEventMessageEmote `json:"emote,omitempty"`
 	Cheermote *Cheermote                           `json:"cheermote,omitempty"`
 	Mention   *Mention                             `json:"mention"`
+	Gif       *ChannelChatMessageEventMessageGif   `json:"gif,omitempty"`
+}
+
+type ChannelChatMessageEventMessageGif struct {
+	// GifId is an ID that uniquely identifies this GIF.
+	GifId string `json:"gif_id"`
+	// URL is the URL of the GIF asset. Applications rendering the GIF must use the full URL provided; it must not be modified.
+	URL string `json:"url"`
 }
 
 type ChannelChatMessageEventMessageEmote struct {
