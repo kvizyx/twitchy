@@ -970,11 +970,13 @@ type StreamOnlineEvent struct {
 }
 
 type StreamOfflineEvent struct {
-	// The broadcaster’s user id.
+	// The id of the stream.
+	Id string `json:"id"`
+	// The broadcaster's user id.
 	BroadcasterUserId string `json:"broadcaster_user_id"`
-	// The broadcaster’s user login.
+	// The broadcaster's user login.
 	BroadcasterUserLogin string `json:"broadcaster_user_login"`
-	// The broadcaster’s user display name.
+	// The broadcaster's user display name.
 	BroadcasterUserName string `json:"broadcaster_user_name"`
 }
 
