@@ -196,6 +196,8 @@ type ChannelBitsUseEvent struct {
 	Message *ChannelBitsUseEventMessage `json:"message,omitempty"`
 	// Optional. Data about Power-up.
 	PowerUp *PowerUp `json:"power_up,omitempty"`
+	// Optional. Data about a custom Power-up.
+	CustomPowerUp *ChannelBitsUseCustomPowerUp `json:"custom_power_up,omitempty"`
 }
 
 type ChannelUpdateEvent struct {
@@ -512,6 +514,18 @@ type ChannelChatNotificationEvent struct {
 	// This field has the same information as the announcement field but for a notice that happened for a channel in a shared
 	// chat session other than the broadcaster in the subscription condition.
 	SharedChatAnnouncement *ChatNotificationEventAnnouncementEvent `json:"shared_chat_announcement,omitempty"`
+	// Optional. Whether the notification is only sent to the source channel.
+	// Null if the notification is not in a shared chat session.
+	IsSourceOnly *bool `json:"is_source_only,omitempty"`
+	// Information about the watch streak event. Not presented if notice_type is not watch_streak.
+	WatchStreak *ChatNotificationEventWatchStreakEvent `json:"watch_streak,omitempty"`
+	// Information about the modiversary event. Not presented if notice_type is not modiversary.
+	Modiversary *ChatNotificationEventModiversaryEvent `json:"modiversary,omitempty"`
+	// Information about the shared_chat_modiversary event.
+	// Not presented if notice_type is not shared_chat_modiversary.
+	// This field has the same information as the modiversary field but for a notice that happened for a channel in a shared
+	// chat session other than the broadcaster in the subscription condition.
+	SharedChatModiversary *ChatNotificationEventModiversaryEvent `json:"shared_chat_modiversary,omitempty"`
 }
 
 type ChannelModeratorAddEvent struct {

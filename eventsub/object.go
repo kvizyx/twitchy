@@ -223,8 +223,9 @@ type BlockedTerm struct {
 type BitsUseType string
 
 const (
-	BitsUseCheer   BitsUseType = "cheer"
-	BitsUsePowerUp BitsUseType = "power_up"
+	BitsUseCheer         BitsUseType = "cheer"
+	BitsUsePowerUp       BitsUseType = "power_up"
+	BitsUseCustomPowerUp BitsUseType = "custom_power_up"
 )
 
 type BitsPowerUpType string
@@ -239,6 +240,13 @@ type PowerUp struct {
 	Type            BitsPowerUpType `json:"type"`
 	Emote           *RewardEmote    `json:"emote,omitempty"`
 	MessageEffectId string          `json:"message_effect_id,omitempty"`
+}
+
+type ChannelBitsUseCustomPowerUp struct {
+	// The title of the custom Power-up.
+	Title string `json:"title"`
+	// The ID of the custom Power-up.
+	RewardId string `json:"reward_id"`
 }
 
 type MessageType string
@@ -481,6 +489,20 @@ type ChatNotificationEventBitsBadgeTierEvent struct {
 	Tier int `json:"tier"`
 }
 
+// ChatNotificationEventWatchStreakEvent represents information about the watch streak event.
+type ChatNotificationEventWatchStreakEvent struct {
+	// The number of consecutive broadcasts for which the user has been watching.
+	StreakCount int `json:"streak_count"`
+	// The number of channel points awarded for the Watch Streak milestone.
+	ChannelPointsAwarded int `json:"channel_points_awarded"`
+}
+
+// ChatNotificationEventModiversaryEvent represents information about the modiversary event.
+type ChatNotificationEventModiversaryEvent struct {
+	// The number of months the user has been a moderator in this channel.
+	Months int `json:"months"`
+}
+
 type ChatNotificationEventNoticeType string
 
 const (
@@ -496,6 +518,8 @@ const (
 	ChatNotificationEventNoticeTypeAnnouncement               ChatNotificationEventNoticeType = "announcement"
 	ChatNotificationEventNoticeTypeBitsBadgeTier              ChatNotificationEventNoticeType = "bits_badge_tier"
 	ChatNotificationEventNoticeTypeCharityDonation            ChatNotificationEventNoticeType = "charity_donation"
+	ChatNotificationEventNoticeTypeWatchStreak                ChatNotificationEventNoticeType = "watch_streak"
+	ChatNotificationEventNoticeTypeModiversary                ChatNotificationEventNoticeType = "modiversary"
 	ChatNotificationEventNoticeTypeSharedChatSub              ChatNotificationEventNoticeType = "shared_chat_sub"
 	ChatNotificationEventNoticeTypeSharedChatReSub            ChatNotificationEventNoticeType = "shared_chat_resub"
 	ChatNotificationEventNoticeTypeSharedChatSubGift          ChatNotificationEventNoticeType = "shared_chat_sub_gift"
@@ -505,6 +529,8 @@ const (
 	ChatNotificationEventNoticeTypeSharedChatRaid             ChatNotificationEventNoticeType = "shared_chat_raid"
 	ChatNotificationEventNoticeTypeSharedChatPayItForward     ChatNotificationEventNoticeType = "shared_chat_pay_it_forward"
 	ChatNotificationEventNoticeTypeSharedChatAnnouncement     ChatNotificationEventNoticeType = "shared_chat_announcement"
+	ChatNotificationEventNoticeTypeSharedChatModiversary      ChatNotificationEventNoticeType = "shared_chat_modiversary"
+	ChatNotificationEventNoticeTypeUnknown                    ChatNotificationEventNoticeType = "unknown"
 )
 
 func (c ChatNotificationEventNoticeType) String() string {
