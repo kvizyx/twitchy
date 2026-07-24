@@ -336,7 +336,7 @@ type ChannelChatMessageEvent struct {
 	SourceBadges []Badge `json:"source_badges,omitempty"`
 	// Optional. Determines if a message delivered during a shared chat session is only sent to the source channel.
 	// Has no effect if the message is not sent during a shared chat session.
-	IsSourceOnly *bool `json:"is_source_only,omitempty"`
+	IsSourceOnly bool `json:"is_source_only,omitempty"`
 }
 
 type ConduitShardDisabledEvent struct {
@@ -515,8 +515,8 @@ type ChannelChatNotificationEvent struct {
 	// chat session other than the broadcaster in the subscription condition.
 	SharedChatAnnouncement *ChatNotificationEventAnnouncementEvent `json:"shared_chat_announcement,omitempty"`
 	// Optional. Whether the notification is only sent to the source channel.
-	// Null if the notification is not in a shared chat session.
-	IsSourceOnly *bool `json:"is_source_only,omitempty"`
+	// False if the notification is not in a shared chat session.
+	IsSourceOnly bool `json:"is_source_only,omitempty"`
 	// Information about the watch streak event. Not presented if notice_type is not watch_streak.
 	WatchStreak *ChatNotificationEventWatchStreakEvent `json:"watch_streak,omitempty"`
 	// Information about the modiversary event. Not presented if notice_type is not modiversary.
