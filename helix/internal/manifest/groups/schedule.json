@@ -1,0 +1,490 @@
+{
+  "schema": 1,
+  "group": "Schedule",
+  "operations": [
+    {
+      "operation_id": "get-channel-stream-schedule",
+      "anchor": "get-channel-stream-schedule",
+      "group": "Schedule",
+      "name": "Get Channel Stream Schedule",
+      "method": "GET",
+      "path": "/helix/schedule",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "start_time",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "utc_offset",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-channel-stream-schedule",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "GetChannelStreamSchedule",
+        "signature": "func (s *ScheduleService) GetChannelStreamSchedule(ctx context.Context, req GetChannelStreamScheduleRequest) (*Response[GetChannelStreamScheduleData], error)",
+        "pager_signature": "func (s *ScheduleService) GetChannelStreamSchedulePager(req GetChannelStreamScheduleRequest, opts ...PagerOption) (*Pager[GetChannelStreamScheduleData], error)",
+        "request_type": "GetChannelStreamScheduleRequest",
+        "data_type": "GetChannelStreamScheduleData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule"
+    },
+    {
+      "operation_id": "get-channel-icalendar",
+      "anchor": "get-channel-icalendar",
+      "group": "Schedule",
+      "name": "Get Channel iCalendar",
+      "method": "GET",
+      "path": "/helix/schedule/icalendar",
+      "stability": "stable",
+      "token_classes": [
+        "unknown"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "text",
+        "status": [
+          200,
+          400
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-channel-icalendar",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "GetChannelICalendar",
+        "signature": "func (s *ScheduleService) GetChannelICalendar(ctx context.Context, req GetChannelICalendarRequest) (*Response[GetChannelICalendarData], error)",
+        "pager_signature": null,
+        "request_type": "GetChannelICalendarRequest",
+        "data_type": "GetChannelICalendarData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-icalendar"
+    },
+    {
+      "operation_id": "update-channel-stream-schedule",
+      "anchor": "update-channel-stream-schedule",
+      "group": "Schedule",
+      "name": "Update Channel Stream Schedule",
+      "method": "PATCH",
+      "path": "/helix/schedule/settings",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:schedule"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "is_vacation_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "vacation_start_time",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "vacation_end_time",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "timezone",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-channel-stream-schedule",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "UpdateChannelStreamSchedule",
+        "signature": "func (s *ScheduleService) UpdateChannelStreamSchedule(ctx context.Context, req UpdateChannelStreamScheduleRequest) (*Response[UpdateChannelStreamScheduleData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateChannelStreamScheduleRequest",
+        "data_type": "UpdateChannelStreamScheduleData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-channel-stream-schedule"
+    },
+    {
+      "operation_id": "create-channel-stream-schedule-segment",
+      "anchor": "create-channel-stream-schedule-segment",
+      "group": "Schedule",
+      "name": "Create Channel Stream Schedule Segment",
+      "method": "POST",
+      "path": "/helix/schedule/segment",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:schedule"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "start_time",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "timezone",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "duration",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "is_recurring",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "category_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "create-channel-stream-schedule-segment",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "CreateChannelStreamScheduleSegment",
+        "signature": "func (s *ScheduleService) CreateChannelStreamScheduleSegment(ctx context.Context, req CreateChannelStreamScheduleSegmentRequest) (*Response[CreateChannelStreamScheduleSegmentData], error)",
+        "pager_signature": null,
+        "request_type": "CreateChannelStreamScheduleSegmentRequest",
+        "data_type": "CreateChannelStreamScheduleSegmentData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-channel-stream-schedule-segment"
+    },
+    {
+      "operation_id": "update-channel-stream-schedule-segment",
+      "anchor": "update-channel-stream-schedule-segment",
+      "group": "Schedule",
+      "name": "Update Channel Stream Schedule Segment",
+      "method": "PATCH",
+      "path": "/helix/schedule/segment",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:schedule"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "start_time",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "duration",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "category_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "is_canceled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "timezone",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-channel-stream-schedule-segment",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "UpdateChannelStreamScheduleSegment",
+        "signature": "func (s *ScheduleService) UpdateChannelStreamScheduleSegment(ctx context.Context, req UpdateChannelStreamScheduleSegmentRequest) (*Response[UpdateChannelStreamScheduleSegmentData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateChannelStreamScheduleSegmentRequest",
+        "data_type": "UpdateChannelStreamScheduleSegmentData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-channel-stream-schedule-segment"
+    },
+    {
+      "operation_id": "delete-channel-stream-schedule-segment",
+      "anchor": "delete-channel-stream-schedule-segment",
+      "group": "Schedule",
+      "name": "Delete Channel Stream Schedule Segment",
+      "method": "DELETE",
+      "path": "/helix/schedule/segment",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:schedule"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "delete-channel-stream-schedule-segment",
+        "selector": "Client.Schedule",
+        "service_type": "ScheduleService",
+        "method": "DeleteChannelStreamScheduleSegment",
+        "signature": "func (s *ScheduleService) DeleteChannelStreamScheduleSegment(ctx context.Context, req DeleteChannelStreamScheduleSegmentRequest) (*Response[DeleteChannelStreamScheduleSegmentData], error)",
+        "pager_signature": null,
+        "request_type": "DeleteChannelStreamScheduleSegmentRequest",
+        "data_type": "DeleteChannelStreamScheduleSegmentData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-channel-stream-schedule-segment"
+    }
+  ]
+}

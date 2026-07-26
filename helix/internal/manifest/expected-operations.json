@@ -1,0 +1,1348 @@
+{
+  "schema": 1,
+  "retrieved_at": "2026-07-26T20:37:12.744Z",
+  "reference_sha256": "3c5ed44ffac743027b96897a07cca4e4b1d4225dc8fa941a2aec6acc7795e926",
+  "operations": [
+    {
+      "group": "Ads",
+      "anchor": "start-commercial",
+      "name": "Start Commercial",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/channels/commercial",
+      "source": "https://dev.twitch.tv/docs/api/reference/#start-commercial"
+    },
+    {
+      "group": "Ads",
+      "anchor": "get-ad-schedule",
+      "name": "Get Ad Schedule",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels/ads",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-ad-schedule"
+    },
+    {
+      "group": "Ads",
+      "anchor": "snooze-next-ad",
+      "name": "Snooze Next Ad",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/channels/ads/schedule/snooze",
+      "source": "https://dev.twitch.tv/docs/api/reference/#snooze-next-ad"
+    },
+    {
+      "group": "Analytics",
+      "anchor": "get-extension-analytics",
+      "name": "Get Extension Analytics",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/analytics/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-analytics"
+    },
+    {
+      "group": "Analytics",
+      "anchor": "get-game-analytics",
+      "name": "Get Game Analytics",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/analytics/games",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-game-analytics"
+    },
+    {
+      "group": "Bits",
+      "anchor": "get-bits-leaderboard",
+      "name": "Get Bits Leaderboard",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/bits/leaderboard",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard"
+    },
+    {
+      "group": "Bits",
+      "anchor": "get-cheermotes",
+      "name": "Get Cheermotes",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/bits/cheermotes",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-cheermotes"
+    },
+    {
+      "group": "Bits",
+      "anchor": "get-custom-power-up",
+      "name": "Get Custom Power-up",
+      "label": "NEW",
+      "method": "GET",
+      "path": "/helix/bits/custom_power_ups",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-power-up"
+    },
+    {
+      "group": "Bits",
+      "anchor": "get-extension-transactions",
+      "name": "Get Extension Transactions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions/transactions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-transactions"
+    },
+    {
+      "group": "Channels",
+      "anchor": "get-channel-information",
+      "name": "Get Channel Information",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-information"
+    },
+    {
+      "group": "Channels",
+      "anchor": "modify-channel-information",
+      "name": "Modify Channel Information",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/channels",
+      "source": "https://dev.twitch.tv/docs/api/reference/#modify-channel-information"
+    },
+    {
+      "group": "Channels",
+      "anchor": "get-channel-editors",
+      "name": "Get Channel Editors",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels/editors",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-editors"
+    },
+    {
+      "group": "Channels",
+      "anchor": "get-followed-channels",
+      "name": "Get Followed Channels",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels/followed",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-followed-channels"
+    },
+    {
+      "group": "Channels",
+      "anchor": "get-channel-followers",
+      "name": "Get Channel Followers",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels/followers",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-followers"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "create-custom-rewards",
+      "name": "Create Custom Rewards",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/channel_points/custom_rewards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-custom-rewards"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "delete-custom-reward",
+      "name": "Delete Custom Reward",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/channel_points/custom_rewards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-custom-reward"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "get-custom-reward",
+      "name": "Get Custom Reward",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channel_points/custom_rewards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-reward"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "get-custom-reward-redemption",
+      "name": "Get Custom Reward Redemption",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channel_points/custom_rewards/redemptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-reward-redemption"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "update-custom-reward",
+      "name": "Update Custom Reward",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/channel_points/custom_rewards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-custom-reward"
+    },
+    {
+      "group": "Channel Points",
+      "anchor": "update-redemption-status",
+      "name": "Update Redemption Status",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/channel_points/custom_rewards/redemptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-redemption-status"
+    },
+    {
+      "group": "Charity",
+      "anchor": "get-charity-campaign",
+      "name": "Get Charity Campaign",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/charity/campaigns",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-charity-campaign"
+    },
+    {
+      "group": "Charity",
+      "anchor": "get-charity-campaign-donations",
+      "name": "Get Charity Campaign Donations",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/charity/donations",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-charity-campaign-donations"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-chatters",
+      "name": "Get Chatters",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/chatters",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-chatters"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-channel-emotes",
+      "name": "Get Channel Emotes",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/emotes",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-emotes"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-global-emotes",
+      "name": "Get Global Emotes",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/emotes/global",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-global-emotes"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-emote-sets",
+      "name": "Get Emote Sets",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/emotes/set",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-emote-sets"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-channel-chat-badges",
+      "name": "Get Channel Chat Badges",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/badges",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-chat-badges"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-global-chat-badges",
+      "name": "Get Global Chat Badges",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/badges/global",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-global-chat-badges"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-chat-settings",
+      "name": "Get Chat Settings",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-chat-settings"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-shared-chat-session",
+      "name": "Get Shared Chat Session",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/shared_chat/session",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-shared-chat-session"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-user-emotes",
+      "name": "Get User Emotes",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/emotes/user",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-user-emotes"
+    },
+    {
+      "group": "Chat",
+      "anchor": "update-chat-settings",
+      "name": "Update Chat Settings",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/chat/settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-chat-settings"
+    },
+    {
+      "group": "Chat",
+      "anchor": "send-chat-announcement",
+      "name": "Send Chat Announcement",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/chat/announcements",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-chat-announcement"
+    },
+    {
+      "group": "Chat",
+      "anchor": "send-a-shoutout",
+      "name": "Send a Shoutout",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/chat/shoutouts",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-a-shoutout"
+    },
+    {
+      "group": "Chat",
+      "anchor": "send-chat-message",
+      "name": "Send Chat Message",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/chat/messages",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-chat-message"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-pinned-chat-message",
+      "name": "Get Pinned Chat Message",
+      "label": "NEW",
+      "method": "GET",
+      "path": "/helix/chat/pins",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-pinned-chat-message"
+    },
+    {
+      "group": "Chat",
+      "anchor": "pin-chat-message",
+      "name": "Pin Chat Message",
+      "label": "NEW",
+      "method": "PUT",
+      "path": "/helix/chat/pins",
+      "source": "https://dev.twitch.tv/docs/api/reference/#pin-chat-message"
+    },
+    {
+      "group": "Chat",
+      "anchor": "update-pinned-chat-message",
+      "name": "Update Pinned Chat Message",
+      "label": "NEW",
+      "method": "PATCH",
+      "path": "/helix/chat/pins",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-pinned-chat-message"
+    },
+    {
+      "group": "Chat",
+      "anchor": "unpin-chat-message",
+      "name": "Unpin Chat Message",
+      "label": "NEW",
+      "method": "DELETE",
+      "path": "/helix/chat/pins",
+      "source": "https://dev.twitch.tv/docs/api/reference/#unpin-chat-message"
+    },
+    {
+      "group": "Chat",
+      "anchor": "get-user-chat-color",
+      "name": "Get User Chat Color",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/chat/color",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-user-chat-color"
+    },
+    {
+      "group": "Chat",
+      "anchor": "update-user-chat-color",
+      "name": "Update User Chat Color",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/chat/color",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-user-chat-color"
+    },
+    {
+      "group": "Clips",
+      "anchor": "create-clip",
+      "name": "Create Clip",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/clips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-clip"
+    },
+    {
+      "group": "Clips",
+      "anchor": "create-clip-from-vod",
+      "name": "Create Clip From VOD",
+      "label": "NEW",
+      "method": "POST",
+      "path": "/helix/videos/clips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-clip-from-vod"
+    },
+    {
+      "group": "Clips",
+      "anchor": "get-clips",
+      "name": "Get Clips",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/clips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-clips"
+    },
+    {
+      "group": "Clips",
+      "anchor": "get-clips-download",
+      "name": "Get Clips Download",
+      "label": "NEW",
+      "method": "GET",
+      "path": "/helix/clips/downloads",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-clips-download"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "get-conduits",
+      "name": "Get Conduits",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/eventsub/conduits",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-conduits"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "create-conduits",
+      "name": "Create Conduits",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/eventsub/conduits",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-conduits"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "update-conduits",
+      "name": "Update Conduits",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/eventsub/conduits",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-conduits"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "delete-conduit",
+      "name": "Delete Conduit",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/eventsub/conduits",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-conduit"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "get-conduit-shards",
+      "name": "Get Conduit Shards",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/eventsub/conduits/shards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-conduit-shards"
+    },
+    {
+      "group": "Conduits",
+      "anchor": "update-conduit-shards",
+      "name": "Update Conduit Shards",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/eventsub/conduits/shards",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-conduit-shards"
+    },
+    {
+      "group": "CCLs",
+      "anchor": "get-content-classification-labels",
+      "name": "Get Content Classification Labels",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/content_classification_labels",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-content-classification-labels"
+    },
+    {
+      "group": "Entitlements",
+      "anchor": "get-drops-entitlements",
+      "name": "Get Drops Entitlements",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/entitlements/drops",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-drops-entitlements"
+    },
+    {
+      "group": "Entitlements",
+      "anchor": "update-drops-entitlements",
+      "name": "Update Drops Entitlements",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/entitlements/drops",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-drops-entitlements"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-extension-configuration-segment",
+      "name": "Get Extension Configuration Segment",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions/configurations",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-configuration-segment"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "set-extension-configuration-segment",
+      "name": "Set Extension Configuration Segment",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/extensions/configurations",
+      "source": "https://dev.twitch.tv/docs/api/reference/#set-extension-configuration-segment"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "set-extension-required-configuration",
+      "name": "Set Extension Required Configuration",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/extensions/required_configuration",
+      "source": "https://dev.twitch.tv/docs/api/reference/#set-extension-required-configuration"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "send-extension-pubsub-message",
+      "name": "Send Extension PubSub Message",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/extensions/pubsub",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-extension-pubsub-message"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-extension-live-channels",
+      "name": "Get Extension Live Channels",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions/live",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-live-channels"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-extension-secrets",
+      "name": "Get Extension Secrets",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions/jwt/secrets",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-secrets"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "create-extension-secret",
+      "name": "Create Extension Secret",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/extensions/jwt/secrets",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-extension-secret"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "send-extension-chat-message",
+      "name": "Send Extension Chat Message",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/extensions/chat",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-extension-chat-message"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-extensions",
+      "name": "Get Extensions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extensions"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-released-extensions",
+      "name": "Get Released Extensions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/extensions/released",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-released-extensions"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "get-extension-bits-products",
+      "name": "Get Extension Bits Products",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/bits/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-bits-products"
+    },
+    {
+      "group": "Extensions",
+      "anchor": "update-extension-bits-product",
+      "name": "Update Extension Bits Product",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/bits/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-extension-bits-product"
+    },
+    {
+      "group": "EventSub",
+      "anchor": "create-eventsub-subscription",
+      "name": "Create EventSub Subscription",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/eventsub/subscriptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-eventsub-subscription"
+    },
+    {
+      "group": "EventSub",
+      "anchor": "delete-eventsub-subscription",
+      "name": "Delete EventSub Subscription",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/eventsub/subscriptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-eventsub-subscription"
+    },
+    {
+      "group": "EventSub",
+      "anchor": "get-eventsub-subscriptions",
+      "name": "Get EventSub Subscriptions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/eventsub/subscriptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-eventsub-subscriptions"
+    },
+    {
+      "group": "Games",
+      "anchor": "get-top-games",
+      "name": "Get Top Games",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/games/top",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-top-games"
+    },
+    {
+      "group": "Games",
+      "anchor": "get-games",
+      "name": "Get Games",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/games",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-games"
+    },
+    {
+      "group": "Goals",
+      "anchor": "get-creator-goals",
+      "name": "Get Creator Goals",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/goals",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-creator-goals"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "get-channel-guest-star-settings",
+      "name": "Get Channel Guest Star Settings",
+      "label": "BETA",
+      "method": "GET",
+      "path": "/helix/guest_star/channel_settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-guest-star-settings"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "update-channel-guest-star-settings",
+      "name": "Update Channel Guest Star Settings",
+      "label": "BETA",
+      "method": "PUT",
+      "path": "/helix/guest_star/channel_settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-channel-guest-star-settings"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "get-guest-star-session",
+      "name": "Get Guest Star Session",
+      "label": "BETA",
+      "method": "GET",
+      "path": "/helix/guest_star/session",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-guest-star-session"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "create-guest-star-session",
+      "name": "Create Guest Star Session",
+      "label": "BETA",
+      "method": "POST",
+      "path": "/helix/guest_star/session",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-guest-star-session"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "end-guest-star-session",
+      "name": "End Guest Star Session",
+      "label": "BETA",
+      "method": "DELETE",
+      "path": "/helix/guest_star/session",
+      "source": "https://dev.twitch.tv/docs/api/reference/#end-guest-star-session"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "get-guest-star-invites",
+      "name": "Get Guest Star Invites",
+      "label": "BETA",
+      "method": "GET",
+      "path": "/helix/guest_star/invites",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-guest-star-invites"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "send-guest-star-invite",
+      "name": "Send Guest Star Invite",
+      "label": "BETA",
+      "method": "POST",
+      "path": "/helix/guest_star/invites",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-guest-star-invite"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "delete-guest-star-invite",
+      "name": "Delete Guest Star Invite",
+      "label": "BETA",
+      "method": "DELETE",
+      "path": "/helix/guest_star/invites",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-guest-star-invite"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "assign-guest-star-slot",
+      "name": "Assign Guest Star Slot",
+      "label": "BETA",
+      "method": "POST",
+      "path": "/helix/guest_star/slot",
+      "source": "https://dev.twitch.tv/docs/api/reference/#assign-guest-star-slot"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "update-guest-star-slot",
+      "name": "Update Guest Star Slot",
+      "label": "BETA",
+      "method": "PATCH",
+      "path": "/helix/guest_star/slot",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-guest-star-slot"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "delete-guest-star-slot",
+      "name": "Delete Guest Star Slot",
+      "label": "BETA",
+      "method": "DELETE",
+      "path": "/helix/guest_star/slot",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-guest-star-slot"
+    },
+    {
+      "group": "Guest Star",
+      "anchor": "update-guest-star-slot-settings",
+      "name": "Update Guest Star Slot Settings",
+      "label": "BETA",
+      "method": "PATCH",
+      "path": "/helix/guest_star/slot_settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-guest-star-slot-settings"
+    },
+    {
+      "group": "Hype Train",
+      "anchor": "get-hype-train-status",
+      "name": "Get Hype Train Status",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/hypetrain/status",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-hype-train-status"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "check-automod-status",
+      "name": "Check AutoMod Status",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/enforcements/status",
+      "source": "https://dev.twitch.tv/docs/api/reference/#check-automod-status"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "manage-held-automod-messages",
+      "name": "Manage Held AutoMod Messages",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/automod/message",
+      "source": "https://dev.twitch.tv/docs/api/reference/#manage-held-automod-messages"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-automod-settings",
+      "name": "Get AutoMod Settings",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/automod/settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-automod-settings"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "update-automod-settings",
+      "name": "Update AutoMod Settings",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/moderation/automod/settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-automod-settings"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-banned-users",
+      "name": "Get Banned Users",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/banned",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-banned-users"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "ban-user",
+      "name": "Ban User",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/bans",
+      "source": "https://dev.twitch.tv/docs/api/reference/#ban-user"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "unban-user",
+      "name": "Unban User",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/moderation/bans",
+      "source": "https://dev.twitch.tv/docs/api/reference/#unban-user"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-unban-requests",
+      "name": "Get Unban Requests",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/unban_requests",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-unban-requests"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "resolve-unban-requests",
+      "name": "Resolve Unban Requests",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/moderation/unban_requests",
+      "source": "https://dev.twitch.tv/docs/api/reference/#resolve-unban-requests"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-blocked-terms",
+      "name": "Get Blocked Terms",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/blocked_terms",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-blocked-terms"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "add-blocked-term",
+      "name": "Add Blocked Term",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/blocked_terms",
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-blocked-term"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "remove-blocked-term",
+      "name": "Remove Blocked Term",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/moderation/blocked_terms",
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-blocked-term"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "delete-chat-messages",
+      "name": "Delete Chat Messages",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/moderation/chat",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-chat-messages"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-moderated-channels",
+      "name": "Get Moderated Channels",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/channels",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-moderated-channels"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-moderators",
+      "name": "Get Moderators",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/moderators",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-moderators"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "add-channel-moderator",
+      "name": "Add Channel Moderator",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/moderators",
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-channel-moderator"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "remove-channel-moderator",
+      "name": "Remove Channel Moderator",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/moderation/moderators",
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-channel-moderator"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-vips",
+      "name": "Get VIPs",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/channels/vips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-vips"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "add-channel-vip",
+      "name": "Add Channel VIP",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/channels/vips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-channel-vip"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "remove-channel-vip",
+      "name": "Remove Channel VIP",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/channels/vips",
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-channel-vip"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "update-shield-mode-status",
+      "name": "Update Shield Mode Status",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/moderation/shield_mode",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-shield-mode-status"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "get-shield-mode-status",
+      "name": "Get Shield Mode Status",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/moderation/shield_mode",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-shield-mode-status"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "warn-chat-user",
+      "name": "Warn Chat User",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/moderation/warnings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#warn-chat-user"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "add-suspicious-status-to-chat-user",
+      "name": "Add Suspicious Status to Chat User",
+      "label": "NEW",
+      "method": "POST",
+      "path": "/helix/moderation/suspicious_users",
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-suspicious-status-to-chat-user"
+    },
+    {
+      "group": "Moderation",
+      "anchor": "remove-suspicious-status-from-chat-user",
+      "name": "Remove Suspicious Status From Chat User",
+      "label": "NEW",
+      "method": "DELETE",
+      "path": "/helix/moderation/suspicious_users",
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-suspicious-status-from-chat-user"
+    },
+    {
+      "group": "Polls",
+      "anchor": "get-polls",
+      "name": "Get Polls",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/polls",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-polls"
+    },
+    {
+      "group": "Polls",
+      "anchor": "create-poll",
+      "name": "Create Poll",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/polls",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-poll"
+    },
+    {
+      "group": "Polls",
+      "anchor": "end-poll",
+      "name": "End Poll",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/polls",
+      "source": "https://dev.twitch.tv/docs/api/reference/#end-poll"
+    },
+    {
+      "group": "Predictions",
+      "anchor": "get-predictions",
+      "name": "Get Predictions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/predictions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-predictions"
+    },
+    {
+      "group": "Predictions",
+      "anchor": "create-prediction",
+      "name": "Create Prediction",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/predictions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-prediction"
+    },
+    {
+      "group": "Predictions",
+      "anchor": "end-prediction",
+      "name": "End Prediction",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/predictions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#end-prediction"
+    },
+    {
+      "group": "Raids",
+      "anchor": "start-a-raid",
+      "name": "Start a raid",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/raids",
+      "source": "https://dev.twitch.tv/docs/api/reference/#start-a-raid"
+    },
+    {
+      "group": "Raids",
+      "anchor": "cancel-a-raid",
+      "name": "Cancel a raid",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/raids",
+      "source": "https://dev.twitch.tv/docs/api/reference/#cancel-a-raid"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "get-channel-stream-schedule",
+      "name": "Get Channel Stream Schedule",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/schedule",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-stream-schedule"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "get-channel-icalendar",
+      "name": "Get Channel iCalendar",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/schedule/icalendar",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-icalendar"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "update-channel-stream-schedule",
+      "name": "Update Channel Stream Schedule",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/schedule/settings",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-channel-stream-schedule"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "create-channel-stream-schedule-segment",
+      "name": "Create Channel Stream Schedule Segment",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/schedule/segment",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-channel-stream-schedule-segment"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "update-channel-stream-schedule-segment",
+      "name": "Update Channel Stream Schedule Segment",
+      "label": "stable",
+      "method": "PATCH",
+      "path": "/helix/schedule/segment",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-channel-stream-schedule-segment"
+    },
+    {
+      "group": "Schedule",
+      "anchor": "delete-channel-stream-schedule-segment",
+      "name": "Delete Channel Stream Schedule Segment",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/schedule/segment",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-channel-stream-schedule-segment"
+    },
+    {
+      "group": "Search",
+      "anchor": "search-categories",
+      "name": "Search Categories",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/search/categories",
+      "source": "https://dev.twitch.tv/docs/api/reference/#search-categories"
+    },
+    {
+      "group": "Search",
+      "anchor": "search-channels",
+      "name": "Search Channels",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/search/channels",
+      "source": "https://dev.twitch.tv/docs/api/reference/#search-channels"
+    },
+    {
+      "group": "Streams",
+      "anchor": "get-stream-key",
+      "name": "Get Stream Key",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/streams/key",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-stream-key"
+    },
+    {
+      "group": "Streams",
+      "anchor": "get-streams",
+      "name": "Get Streams",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/streams",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-streams"
+    },
+    {
+      "group": "Streams",
+      "anchor": "get-followed-streams",
+      "name": "Get Followed Streams",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/streams/followed",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-followed-streams"
+    },
+    {
+      "group": "Streams",
+      "anchor": "create-stream-marker",
+      "name": "Create Stream Marker",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/streams/markers",
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-stream-marker"
+    },
+    {
+      "group": "Streams",
+      "anchor": "get-stream-markers",
+      "name": "Get Stream Markers",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/streams/markers",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-stream-markers"
+    },
+    {
+      "group": "Subscriptions",
+      "anchor": "get-broadcaster-subscriptions",
+      "name": "Get Broadcaster Subscriptions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/subscriptions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-broadcaster-subscriptions"
+    },
+    {
+      "group": "Subscriptions",
+      "anchor": "check-user-subscription",
+      "name": "Check User Subscription",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/subscriptions/user",
+      "source": "https://dev.twitch.tv/docs/api/reference/#check-user-subscription"
+    },
+    {
+      "group": "Tags",
+      "anchor": "get-all-stream-tags",
+      "name": "Get All Stream Tags",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/tags/streams",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-all-stream-tags"
+    },
+    {
+      "group": "Tags",
+      "anchor": "get-stream-tags",
+      "name": "Get Stream Tags",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/streams/tags",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-stream-tags"
+    },
+    {
+      "group": "Teams",
+      "anchor": "get-channel-teams",
+      "name": "Get Channel Teams",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/teams/channel",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-channel-teams"
+    },
+    {
+      "group": "Teams",
+      "anchor": "get-teams",
+      "name": "Get Teams",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/teams",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-teams"
+    },
+    {
+      "group": "Users",
+      "anchor": "get-users",
+      "name": "Get Users",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/users",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-users"
+    },
+    {
+      "group": "Users",
+      "anchor": "update-user",
+      "name": "Update User",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/users",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-user"
+    },
+    {
+      "group": "Users",
+      "anchor": "get-authorization-by-user",
+      "name": "Get Authorization By User",
+      "label": "NEW",
+      "method": "GET",
+      "path": "/helix/authorization/users",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-authorization-by-user"
+    },
+    {
+      "group": "Users",
+      "anchor": "get-user-block-list",
+      "name": "Get User Block List",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/users/blocks",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-user-block-list"
+    },
+    {
+      "group": "Users",
+      "anchor": "block-user",
+      "name": "Block User",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/users/blocks",
+      "source": "https://dev.twitch.tv/docs/api/reference/#block-user"
+    },
+    {
+      "group": "Users",
+      "anchor": "unblock-user",
+      "name": "Unblock User",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/users/blocks",
+      "source": "https://dev.twitch.tv/docs/api/reference/#unblock-user"
+    },
+    {
+      "group": "Users",
+      "anchor": "get-user-extensions",
+      "name": "Get User Extensions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/users/extensions/list",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-user-extensions"
+    },
+    {
+      "group": "Users",
+      "anchor": "get-user-active-extensions",
+      "name": "Get User Active Extensions",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/users/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-user-active-extensions"
+    },
+    {
+      "group": "Users",
+      "anchor": "update-user-extensions",
+      "name": "Update User Extensions",
+      "label": "stable",
+      "method": "PUT",
+      "path": "/helix/users/extensions",
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-user-extensions"
+    },
+    {
+      "group": "Videos",
+      "anchor": "get-videos",
+      "name": "Get Videos",
+      "label": "stable",
+      "method": "GET",
+      "path": "/helix/videos",
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-videos"
+    },
+    {
+      "group": "Videos",
+      "anchor": "delete-videos",
+      "name": "Delete Videos",
+      "label": "stable",
+      "method": "DELETE",
+      "path": "/helix/videos",
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-videos"
+    },
+    {
+      "group": "Whispers",
+      "anchor": "send-whisper",
+      "name": "Send Whisper",
+      "label": "stable",
+      "method": "POST",
+      "path": "/helix/whispers",
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-whisper"
+    }
+  ]
+}

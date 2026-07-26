@@ -1,0 +1,161 @@
+{
+  "schema": 1,
+  "group": "Entitlements",
+  "operations": [
+    {
+      "operation_id": "get-drops-entitlements",
+      "anchor": "get-drops-entitlements",
+      "group": "Entitlements",
+      "name": "Get Drops Entitlements",
+      "method": "GET",
+      "path": "/helix/entitlements/drops",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "game_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "fulfillment_status",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-drops-entitlements",
+        "selector": "Client.Entitlements",
+        "service_type": "EntitlementsService",
+        "method": "GetDropsEntitlements",
+        "signature": "func (s *EntitlementsService) GetDropsEntitlements(ctx context.Context, req GetDropsEntitlementsRequest) (*Response[GetDropsEntitlementsData], error)",
+        "pager_signature": "func (s *EntitlementsService) GetDropsEntitlementsPager(req GetDropsEntitlementsRequest, opts ...PagerOption) (*Pager[GetDropsEntitlementsData], error)",
+        "request_type": "GetDropsEntitlementsRequest",
+        "data_type": "GetDropsEntitlementsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-drops-entitlements"
+    },
+    {
+      "operation_id": "update-drops-entitlements",
+      "anchor": "update-drops-entitlements",
+      "group": "Entitlements",
+      "name": "Update Drops Entitlements",
+      "method": "PATCH",
+      "path": "/helix/entitlements/drops",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "entitlement_ids",
+              "type": "String[]",
+              "required": false
+            },
+            {
+              "name": "fulfillment_status",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-drops-entitlements",
+        "selector": "Client.Entitlements",
+        "service_type": "EntitlementsService",
+        "method": "UpdateDropsEntitlements",
+        "signature": "func (s *EntitlementsService) UpdateDropsEntitlements(ctx context.Context, req UpdateDropsEntitlementsRequest) (*Response[UpdateDropsEntitlementsData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateDropsEntitlementsRequest",
+        "data_type": "UpdateDropsEntitlementsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-drops-entitlements"
+    }
+  ]
+}

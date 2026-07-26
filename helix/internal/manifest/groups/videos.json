@@ -1,0 +1,173 @@
+{
+  "schema": 1,
+  "group": "Videos",
+  "operations": [
+    {
+      "operation_id": "get-videos",
+      "anchor": "get-videos",
+      "group": "Videos",
+      "name": "Get Videos",
+      "method": "GET",
+      "path": "/helix/videos",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "game_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "language",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "period",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "sort",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "type",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "before",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-videos",
+        "selector": "Client.Videos",
+        "service_type": "VideosService",
+        "method": "GetVideos",
+        "signature": "func (s *VideosService) GetVideos(ctx context.Context, req GetVideosRequest) (*Response[GetVideosData], error)",
+        "pager_signature": "func (s *VideosService) GetVideosPager(req GetVideosRequest, opts ...PagerOption) (*Pager[GetVideosData], error)",
+        "request_type": "GetVideosRequest",
+        "data_type": "GetVideosData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-videos"
+    },
+    {
+      "operation_id": "delete-videos",
+      "anchor": "delete-videos",
+      "group": "Videos",
+      "name": "Delete Videos",
+      "method": "DELETE",
+      "path": "/helix/videos",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:videos"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "delete-videos",
+        "selector": "Client.Videos",
+        "service_type": "VideosService",
+        "method": "DeleteVideos",
+        "signature": "func (s *VideosService) DeleteVideos(ctx context.Context, req DeleteVideosRequest) (*Response[DeleteVideosData], error)",
+        "pager_signature": null,
+        "request_type": "DeleteVideosRequest",
+        "data_type": "DeleteVideosData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-videos"
+    }
+  ]
+}

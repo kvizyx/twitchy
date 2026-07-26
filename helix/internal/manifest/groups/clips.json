@@ -1,0 +1,343 @@
+{
+  "schema": 1,
+  "group": "Clips",
+  "operations": [
+    {
+      "operation_id": "create-clip",
+      "anchor": "create-clip",
+      "group": "Clips",
+      "name": "Create Clip",
+      "method": "POST",
+      "path": "/helix/clips",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "clips:edit"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "duration",
+              "type": "Float",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          202,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "create-clip",
+        "selector": "Client.Clips",
+        "service_type": "ClipsService",
+        "method": "CreateClip",
+        "signature": "func (s *ClipsService) CreateClip(ctx context.Context, req CreateClipRequest) (*Response[CreateClipData], error)",
+        "pager_signature": null,
+        "request_type": "CreateClipRequest",
+        "data_type": "CreateClipData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-clip"
+    },
+    {
+      "operation_id": "create-clip-from-vod",
+      "anchor": "create-clip-from-vod",
+      "group": "Clips",
+      "name": "Create Clip From VOD",
+      "method": "POST",
+      "path": "/helix/videos/clips",
+      "stability": "NEW",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "editor:manage:clips",
+        "channel:manage:clips"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "editor_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "vod_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "vod_offset",
+              "type": "Integer",
+              "required": true
+            },
+            {
+              "name": "duration",
+              "type": "Float",
+              "required": false
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          202,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "create-clip-from-vod",
+        "selector": "Client.Experimental.Clips",
+        "service_type": "ExperimentalClipsService",
+        "method": "CreateClipFromVOD",
+        "signature": "func (s *ExperimentalClipsService) CreateClipFromVOD(ctx context.Context, req CreateClipFromVODRequest) (*Response[CreateClipFromVODData], error)",
+        "pager_signature": null,
+        "request_type": "CreateClipFromVODRequest",
+        "data_type": "CreateClipFromVODData",
+        "stability": "NEW"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-clip-from-vod"
+    },
+    {
+      "operation_id": "get-clips",
+      "anchor": "get-clips",
+      "group": "Clips",
+      "name": "Get Clips",
+      "method": "GET",
+      "path": "/helix/clips",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "game_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "started_at",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "ended_at",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "before",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "is_featured",
+              "type": "Boolean",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-clips",
+        "selector": "Client.Clips",
+        "service_type": "ClipsService",
+        "method": "GetClips",
+        "signature": "func (s *ClipsService) GetClips(ctx context.Context, req GetClipsRequest) (*Response[GetClipsData], error)",
+        "pager_signature": "func (s *ClipsService) GetClipsPager(req GetClipsRequest, opts ...PagerOption) (*Pager[GetClipsData], error)",
+        "request_type": "GetClipsRequest",
+        "data_type": "GetClipsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-clips"
+    },
+    {
+      "operation_id": "get-clips-download",
+      "anchor": "get-clips-download",
+      "group": "Clips",
+      "name": "Get Clips Download",
+      "method": "GET",
+      "path": "/helix/clips/downloads",
+      "stability": "NEW",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "editor:manage:clips",
+        "channel:manage:clips"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "editor_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "clip_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-clips-download",
+        "selector": "Client.Experimental.Clips",
+        "service_type": "ExperimentalClipsService",
+        "method": "GetClipsDownload",
+        "signature": "func (s *ExperimentalClipsService) GetClipsDownload(ctx context.Context, req GetClipsDownloadRequest) (*Response[GetClipsDownloadData], error)",
+        "pager_signature": null,
+        "request_type": "GetClipsDownloadRequest",
+        "data_type": "GetClipsDownloadData",
+        "stability": "NEW"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-clips-download"
+    }
+  ]
+}

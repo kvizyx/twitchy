@@ -1,0 +1,81 @@
+{
+  "schema": 1,
+  "group": "Whispers",
+  "operations": [
+    {
+      "operation_id": "send-whisper",
+      "anchor": "send-whisper",
+      "group": "Whispers",
+      "name": "Send Whisper",
+      "method": "POST",
+      "path": "/helix/whispers",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "user:manage:whispers"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "from_user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "to_user_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body_parameters": [
+            {
+              "name": "message",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          404,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "send-whisper",
+        "selector": "Client.Whispers",
+        "service_type": "WhispersService",
+        "method": "SendWhisper",
+        "signature": "func (s *WhispersService) SendWhisper(ctx context.Context, req SendWhisperRequest) (*Response[SendWhisperData], error)",
+        "pager_signature": null,
+        "request_type": "SendWhisperRequest",
+        "data_type": "SendWhisperData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#send-whisper"
+    }
+  ]
+}

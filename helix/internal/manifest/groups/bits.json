@@ -1,0 +1,284 @@
+{
+  "schema": 1,
+  "group": "Bits",
+  "operations": [
+    {
+      "operation_id": "get-bits-leaderboard",
+      "anchor": "get-bits-leaderboard",
+      "group": "Bits",
+      "name": "Get Bits Leaderboard",
+      "method": "GET",
+      "path": "/helix/bits/leaderboard",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "bits:read"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "count",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "period",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "started_at",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-bits-leaderboard",
+        "selector": "Client.Bits",
+        "service_type": "BitsService",
+        "method": "GetBitsLeaderboard",
+        "signature": "func (s *BitsService) GetBitsLeaderboard(ctx context.Context, req GetBitsLeaderboardRequest) (*Response[GetBitsLeaderboardData], error)",
+        "pager_signature": null,
+        "request_type": "GetBitsLeaderboardRequest",
+        "data_type": "GetBitsLeaderboardData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard"
+    },
+    {
+      "operation_id": "get-cheermotes",
+      "anchor": "get-cheermotes",
+      "group": "Bits",
+      "name": "Get Cheermotes",
+      "method": "GET",
+      "path": "/helix/bits/cheermotes",
+      "stability": "stable",
+      "token_classes": [
+        "unknown"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-cheermotes",
+        "selector": "Client.Bits",
+        "service_type": "BitsService",
+        "method": "GetCheermotes",
+        "signature": "func (s *BitsService) GetCheermotes(ctx context.Context, req GetCheermotesRequest) (*Response[GetCheermotesData], error)",
+        "pager_signature": null,
+        "request_type": "GetCheermotesRequest",
+        "data_type": "GetCheermotesData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-cheermotes"
+    },
+    {
+      "operation_id": "get-custom-power-up",
+      "anchor": "get-custom-power-up",
+      "group": "Bits",
+      "name": "Get Custom Power-up",
+      "method": "GET",
+      "path": "/helix/bits/custom_power_ups",
+      "stability": "NEW",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "bits:read"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-custom-power-up",
+        "selector": "Client.Experimental.Bits",
+        "service_type": "ExperimentalBitsService",
+        "method": "GetCustomPowerUp",
+        "signature": "func (s *ExperimentalBitsService) GetCustomPowerUp(ctx context.Context, req GetCustomPowerUpRequest) (*Response[GetCustomPowerUpData], error)",
+        "pager_signature": null,
+        "request_type": "GetCustomPowerUpRequest",
+        "data_type": "GetCustomPowerUpData",
+        "stability": "NEW"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-power-up"
+    },
+    {
+      "operation_id": "get-extension-transactions",
+      "anchor": "get-extension-transactions",
+      "group": "Bits",
+      "name": "Get Extension Transactions",
+      "method": "GET",
+      "path": "/helix/extensions/transactions",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "extension_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-extension-transactions",
+        "selector": "Client.Bits",
+        "service_type": "BitsService",
+        "method": "GetExtensionTransactions",
+        "signature": "func (s *BitsService) GetExtensionTransactions(ctx context.Context, req GetExtensionTransactionsRequest) (*Response[GetExtensionTransactionsData], error)",
+        "pager_signature": "func (s *BitsService) GetExtensionTransactionsPager(req GetExtensionTransactionsRequest, opts ...PagerOption) (*Pager[GetExtensionTransactionsData], error)",
+        "request_type": "GetExtensionTransactionsRequest",
+        "data_type": "GetExtensionTransactionsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-extension-transactions"
+    }
+  ]
+}

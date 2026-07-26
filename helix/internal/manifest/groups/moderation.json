@@ -1,0 +1,1925 @@
+{
+  "schema": 1,
+  "group": "Moderation",
+  "operations": [
+    {
+      "operation_id": "check-automod-status",
+      "anchor": "check-automod-status",
+      "group": "Moderation",
+      "name": "Check AutoMod Status",
+      "method": "POST",
+      "path": "/helix/moderation/enforcements/status",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderation:read"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "data",
+              "type": "Object[]",
+              "required": true
+            },
+            {
+              "name": "msg_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "msg_text",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "check-automod-status",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "CheckAutoModStatus",
+        "signature": "func (s *ModerationService) CheckAutoModStatus(ctx context.Context, req CheckAutoModStatusRequest) (*Response[CheckAutoModStatusData], error)",
+        "pager_signature": null,
+        "request_type": "CheckAutoModStatusRequest",
+        "data_type": "CheckAutoModStatusData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#check-automod-status"
+    },
+    {
+      "operation_id": "manage-held-automod-messages",
+      "anchor": "manage-held-automod-messages",
+      "group": "Moderation",
+      "name": "Manage Held AutoMod Messages",
+      "method": "POST",
+      "path": "/helix/moderation/automod/message",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:automod"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "msg_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "action",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "manage-held-automod-messages",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "ManageHeldAutoModMessages",
+        "signature": "func (s *ModerationService) ManageHeldAutoModMessages(ctx context.Context, req ManageHeldAutoModMessagesRequest) (*Response[ManageHeldAutoModMessagesData], error)",
+        "pager_signature": null,
+        "request_type": "ManageHeldAutoModMessagesRequest",
+        "data_type": "ManageHeldAutoModMessagesData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#manage-held-automod-messages"
+    },
+    {
+      "operation_id": "get-automod-settings",
+      "anchor": "get-automod-settings",
+      "group": "Moderation",
+      "name": "Get AutoMod Settings",
+      "method": "GET",
+      "path": "/helix/moderation/automod/settings",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:read:automod_settings",
+        "moderator:manage:automod_settings"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-automod-settings",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetAutoModSettings",
+        "signature": "func (s *ModerationService) GetAutoModSettings(ctx context.Context, req GetAutoModSettingsRequest) (*Response[GetAutoModSettingsData], error)",
+        "pager_signature": null,
+        "request_type": "GetAutoModSettingsRequest",
+        "data_type": "GetAutoModSettingsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-automod-settings"
+    },
+    {
+      "operation_id": "update-automod-settings",
+      "anchor": "update-automod-settings",
+      "group": "Moderation",
+      "name": "Update AutoMod Settings",
+      "method": "PUT",
+      "path": "/helix/moderation/automod/settings",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:automod_settings"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "aggression",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "bullying",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "disability",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "misogyny",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "overall_level",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "race_ethnicity_or_religion",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "sex_based_terms",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "sexuality_sex_or_gender",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "swearing",
+              "type": "Integer",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-automod-settings",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "UpdateAutoModSettings",
+        "signature": "func (s *ModerationService) UpdateAutoModSettings(ctx context.Context, req UpdateAutoModSettingsRequest) (*Response[UpdateAutoModSettingsData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateAutoModSettingsRequest",
+        "data_type": "UpdateAutoModSettingsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-automod-settings"
+    },
+    {
+      "operation_id": "get-banned-users",
+      "anchor": "get-banned-users",
+      "group": "Moderation",
+      "name": "Get Banned Users",
+      "method": "GET",
+      "path": "/helix/moderation/banned",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderation:read",
+        "moderator:manage:banned_users"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "before",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-banned-users",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetBannedUsers",
+        "signature": "func (s *ModerationService) GetBannedUsers(ctx context.Context, req GetBannedUsersRequest) (*Response[GetBannedUsersData], error)",
+        "pager_signature": "func (s *ModerationService) GetBannedUsersPager(req GetBannedUsersRequest, opts ...PagerOption) (*Pager[GetBannedUsersData], error)",
+        "request_type": "GetBannedUsersRequest",
+        "data_type": "GetBannedUsersData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-banned-users"
+    },
+    {
+      "operation_id": "ban-user",
+      "anchor": "ban-user",
+      "group": "Moderation",
+      "name": "Ban User",
+      "method": "POST",
+      "path": "/helix/moderation/bans",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:banned_users",
+        "user:bot"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "data",
+              "type": "Object",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "duration",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "reason",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          409,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "ban-user",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "BanUser",
+        "signature": "func (s *ModerationService) BanUser(ctx context.Context, req BanUserRequest) (*Response[BanUserData], error)",
+        "pager_signature": null,
+        "request_type": "BanUserRequest",
+        "data_type": "BanUserData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#ban-user"
+    },
+    {
+      "operation_id": "unban-user",
+      "anchor": "unban-user",
+      "group": "Moderation",
+      "name": "Unban User",
+      "method": "DELETE",
+      "path": "/helix/moderation/bans",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:banned_users",
+        "user:bot"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          409,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "unban-user",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "UnbanUser",
+        "signature": "func (s *ModerationService) UnbanUser(ctx context.Context, req UnbanUserRequest) (*Response[UnbanUserData], error)",
+        "pager_signature": null,
+        "request_type": "UnbanUserRequest",
+        "data_type": "UnbanUserData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#unban-user"
+    },
+    {
+      "operation_id": "get-unban-requests",
+      "anchor": "get-unban-requests",
+      "group": "Moderation",
+      "name": "Get Unban Requests",
+      "method": "GET",
+      "path": "/helix/moderation/unban_requests",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "moderator:read:unban_requests",
+        "moderator:manage:unban_requests"
+      ],
+      "subject_binding": "user_id",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-unban-requests",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetUnbanRequests",
+        "signature": "func (s *ModerationService) GetUnbanRequests(ctx context.Context, req GetUnbanRequestsRequest) (*Response[GetUnbanRequestsData], error)",
+        "pager_signature": "func (s *ModerationService) GetUnbanRequestsPager(req GetUnbanRequestsRequest, opts ...PagerOption) (*Pager[GetUnbanRequestsData], error)",
+        "request_type": "GetUnbanRequestsRequest",
+        "data_type": "GetUnbanRequestsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-unban-requests"
+    },
+    {
+      "operation_id": "resolve-unban-requests",
+      "anchor": "resolve-unban-requests",
+      "group": "Moderation",
+      "name": "Resolve Unban Requests",
+      "method": "PATCH",
+      "path": "/helix/moderation/unban_requests",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:unban_requests"
+      ],
+      "subject_binding": "user_id",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "unban_request_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "resolution_text",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "resolve-unban-requests",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "ResolveUnbanRequests",
+        "signature": "func (s *ModerationService) ResolveUnbanRequests(ctx context.Context, req ResolveUnbanRequestsRequest) (*Response[ResolveUnbanRequestsData], error)",
+        "pager_signature": null,
+        "request_type": "ResolveUnbanRequestsRequest",
+        "data_type": "ResolveUnbanRequestsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#resolve-unban-requests"
+    },
+    {
+      "operation_id": "get-blocked-terms",
+      "anchor": "get-blocked-terms",
+      "group": "Moderation",
+      "name": "Get Blocked Terms",
+      "method": "GET",
+      "path": "/helix/moderation/blocked_terms",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:read:blocked_terms",
+        "moderator:manage:blocked_terms"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-blocked-terms",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetBlockedTerms",
+        "signature": "func (s *ModerationService) GetBlockedTerms(ctx context.Context, req GetBlockedTermsRequest) (*Response[GetBlockedTermsData], error)",
+        "pager_signature": "func (s *ModerationService) GetBlockedTermsPager(req GetBlockedTermsRequest, opts ...PagerOption) (*Pager[GetBlockedTermsData], error)",
+        "request_type": "GetBlockedTermsRequest",
+        "data_type": "GetBlockedTermsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-blocked-terms"
+    },
+    {
+      "operation_id": "add-blocked-term",
+      "anchor": "add-blocked-term",
+      "group": "Moderation",
+      "name": "Add Blocked Term",
+      "method": "POST",
+      "path": "/helix/moderation/blocked_terms",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:blocked_terms"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "text",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "add-blocked-term",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "AddBlockedTerm",
+        "signature": "func (s *ModerationService) AddBlockedTerm(ctx context.Context, req AddBlockedTermRequest) (*Response[AddBlockedTermData], error)",
+        "pager_signature": null,
+        "request_type": "AddBlockedTermRequest",
+        "data_type": "AddBlockedTermData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-blocked-term"
+    },
+    {
+      "operation_id": "remove-blocked-term",
+      "anchor": "remove-blocked-term",
+      "group": "Moderation",
+      "name": "Remove Blocked Term",
+      "method": "DELETE",
+      "path": "/helix/moderation/blocked_terms",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:blocked_terms"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "remove-blocked-term",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "RemoveBlockedTerm",
+        "signature": "func (s *ModerationService) RemoveBlockedTerm(ctx context.Context, req RemoveBlockedTermRequest) (*Response[RemoveBlockedTermData], error)",
+        "pager_signature": null,
+        "request_type": "RemoveBlockedTermRequest",
+        "data_type": "RemoveBlockedTermData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-blocked-term"
+    },
+    {
+      "operation_id": "delete-chat-messages",
+      "anchor": "delete-chat-messages",
+      "group": "Moderation",
+      "name": "Delete Chat Messages",
+      "method": "DELETE",
+      "path": "/helix/moderation/chat",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:chat_messages"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "message_id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "delete-chat-messages",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "DeleteChatMessages",
+        "signature": "func (s *ModerationService) DeleteChatMessages(ctx context.Context, req DeleteChatMessagesRequest) (*Response[DeleteChatMessagesData], error)",
+        "pager_signature": null,
+        "request_type": "DeleteChatMessagesRequest",
+        "data_type": "DeleteChatMessagesData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-chat-messages"
+    },
+    {
+      "operation_id": "get-moderated-channels",
+      "anchor": "get-moderated-channels",
+      "group": "Moderation",
+      "name": "Get Moderated Channels",
+      "method": "GET",
+      "path": "/helix/moderation/channels",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "user:read:moderated_channels"
+      ],
+      "subject_binding": "user_id",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [],
+        "status_unknown": true
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-moderated-channels",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetModeratedChannels",
+        "signature": "func (s *ModerationService) GetModeratedChannels(ctx context.Context, req GetModeratedChannelsRequest) (*Response[GetModeratedChannelsData], error)",
+        "pager_signature": "func (s *ModerationService) GetModeratedChannelsPager(req GetModeratedChannelsRequest, opts ...PagerOption) (*Pager[GetModeratedChannelsData], error)",
+        "request_type": "GetModeratedChannelsRequest",
+        "data_type": "GetModeratedChannelsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-moderated-channels"
+    },
+    {
+      "operation_id": "get-moderators",
+      "anchor": "get-moderators",
+      "group": "Moderation",
+      "name": "Get Moderators",
+      "method": "GET",
+      "path": "/helix/moderation/moderators",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "moderation:read",
+        "channel:manage:moderators"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-moderators",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetModerators",
+        "signature": "func (s *ModerationService) GetModerators(ctx context.Context, req GetModeratorsRequest) (*Response[GetModeratorsData], error)",
+        "pager_signature": "func (s *ModerationService) GetModeratorsPager(req GetModeratorsRequest, opts ...PagerOption) (*Pager[GetModeratorsData], error)",
+        "request_type": "GetModeratorsRequest",
+        "data_type": "GetModeratorsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-moderators"
+    },
+    {
+      "operation_id": "add-channel-moderator",
+      "anchor": "add-channel-moderator",
+      "group": "Moderation",
+      "name": "Add Channel Moderator",
+      "method": "POST",
+      "path": "/helix/moderation/moderators",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:moderators"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          422,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "add-channel-moderator",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "AddChannelModerator",
+        "signature": "func (s *ModerationService) AddChannelModerator(ctx context.Context, req AddChannelModeratorRequest) (*Response[AddChannelModeratorData], error)",
+        "pager_signature": null,
+        "request_type": "AddChannelModeratorRequest",
+        "data_type": "AddChannelModeratorData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-channel-moderator"
+    },
+    {
+      "operation_id": "remove-channel-moderator",
+      "anchor": "remove-channel-moderator",
+      "group": "Moderation",
+      "name": "Remove Channel Moderator",
+      "method": "DELETE",
+      "path": "/helix/moderation/moderators",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:moderators"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "remove-channel-moderator",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "RemoveChannelModerator",
+        "signature": "func (s *ModerationService) RemoveChannelModerator(ctx context.Context, req RemoveChannelModeratorRequest) (*Response[RemoveChannelModeratorData], error)",
+        "pager_signature": null,
+        "request_type": "RemoveChannelModeratorRequest",
+        "data_type": "RemoveChannelModeratorData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-channel-moderator"
+    },
+    {
+      "operation_id": "get-vips",
+      "anchor": "get-vips",
+      "group": "Moderation",
+      "name": "Get VIPs",
+      "method": "GET",
+      "path": "/helix/channels/vips",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:vips",
+        "channel:manage:vips"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-vips",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetVIPs",
+        "signature": "func (s *ModerationService) GetVIPs(ctx context.Context, req GetVIPsRequest) (*Response[GetVIPsData], error)",
+        "pager_signature": "func (s *ModerationService) GetVIPsPager(req GetVIPsRequest, opts ...PagerOption) (*Pager[GetVIPsData], error)",
+        "request_type": "GetVIPsRequest",
+        "data_type": "GetVIPsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-vips"
+    },
+    {
+      "operation_id": "add-channel-vip",
+      "anchor": "add-channel-vip",
+      "group": "Moderation",
+      "name": "Add Channel VIP",
+      "method": "POST",
+      "path": "/helix/channels/vips",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:vips"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          404,
+          409,
+          422,
+          425,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "add-channel-vip",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "AddChannelVIP",
+        "signature": "func (s *ModerationService) AddChannelVIP(ctx context.Context, req AddChannelVIPRequest) (*Response[AddChannelVIPData], error)",
+        "pager_signature": null,
+        "request_type": "AddChannelVIPRequest",
+        "data_type": "AddChannelVIPData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-channel-vip"
+    },
+    {
+      "operation_id": "remove-channel-vip",
+      "anchor": "remove-channel-vip",
+      "group": "Moderation",
+      "name": "Remove Channel VIP",
+      "method": "DELETE",
+      "path": "/helix/channels/vips",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:vips"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          404,
+          422,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "remove-channel-vip",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "RemoveChannelVIP",
+        "signature": "func (s *ModerationService) RemoveChannelVIP(ctx context.Context, req RemoveChannelVIPRequest) (*Response[RemoveChannelVIPData], error)",
+        "pager_signature": null,
+        "request_type": "RemoveChannelVIPRequest",
+        "data_type": "RemoveChannelVIPData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-channel-vip"
+    },
+    {
+      "operation_id": "update-shield-mode-status",
+      "anchor": "update-shield-mode-status",
+      "group": "Moderation",
+      "name": "Update Shield Mode Status",
+      "method": "PUT",
+      "path": "/helix/moderation/shield_mode",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:shield_mode"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "is_active",
+              "type": "Boolean",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-shield-mode-status",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "UpdateShieldModeStatus",
+        "signature": "func (s *ModerationService) UpdateShieldModeStatus(ctx context.Context, req UpdateShieldModeStatusRequest) (*Response[UpdateShieldModeStatusData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateShieldModeStatusRequest",
+        "data_type": "UpdateShieldModeStatusData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-shield-mode-status"
+    },
+    {
+      "operation_id": "get-shield-mode-status",
+      "anchor": "get-shield-mode-status",
+      "group": "Moderation",
+      "name": "Get Shield Mode Status",
+      "method": "GET",
+      "path": "/helix/moderation/shield_mode",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:read:shield_mode",
+        "moderator:manage:shield_mode"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-shield-mode-status",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "GetShieldModeStatus",
+        "signature": "func (s *ModerationService) GetShieldModeStatus(ctx context.Context, req GetShieldModeStatusRequest) (*Response[GetShieldModeStatusData], error)",
+        "pager_signature": null,
+        "request_type": "GetShieldModeStatusRequest",
+        "data_type": "GetShieldModeStatusData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-shield-mode-status"
+    },
+    {
+      "operation_id": "warn-chat-user",
+      "anchor": "warn-chat-user",
+      "group": "Moderation",
+      "name": "Warn Chat User",
+      "method": "POST",
+      "path": "/helix/moderation/warnings",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:warnings"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "data",
+              "type": "Object",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "reason",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          409,
+          429,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "warn-chat-user",
+        "selector": "Client.Moderation",
+        "service_type": "ModerationService",
+        "method": "WarnChatUser",
+        "signature": "func (s *ModerationService) WarnChatUser(ctx context.Context, req WarnChatUserRequest) (*Response[WarnChatUserData], error)",
+        "pager_signature": null,
+        "request_type": "WarnChatUserRequest",
+        "data_type": "WarnChatUserData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#warn-chat-user"
+    },
+    {
+      "operation_id": "add-suspicious-status-to-chat-user",
+      "anchor": "add-suspicious-status-to-chat-user",
+      "group": "Moderation",
+      "name": "Add Suspicious Status to Chat User",
+      "method": "POST",
+      "path": "/helix/moderation/suspicious_users",
+      "stability": "NEW",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:suspicious_users"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "add-suspicious-status-to-chat-user",
+        "selector": "Client.Experimental.Moderation",
+        "service_type": "ExperimentalModerationService",
+        "method": "AddSuspiciousStatusToChatUser",
+        "signature": "func (s *ExperimentalModerationService) AddSuspiciousStatusToChatUser(ctx context.Context, req AddSuspiciousStatusToChatUserRequest) (*Response[AddSuspiciousStatusToChatUserData], error)",
+        "pager_signature": null,
+        "request_type": "AddSuspiciousStatusToChatUserRequest",
+        "data_type": "AddSuspiciousStatusToChatUserData",
+        "stability": "NEW"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#add-suspicious-status-to-chat-user"
+    },
+    {
+      "operation_id": "remove-suspicious-status-from-chat-user",
+      "anchor": "remove-suspicious-status-from-chat-user",
+      "group": "Moderation",
+      "name": "Remove Suspicious Status From Chat User",
+      "method": "DELETE",
+      "path": "/helix/moderation/suspicious_users",
+      "stability": "NEW",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "moderator:manage:suspicious_users"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "moderator_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "remove-suspicious-status-from-chat-user",
+        "selector": "Client.Experimental.Moderation",
+        "service_type": "ExperimentalModerationService",
+        "method": "RemoveSuspiciousStatusFromChatUser",
+        "signature": "func (s *ExperimentalModerationService) RemoveSuspiciousStatusFromChatUser(ctx context.Context, req RemoveSuspiciousStatusFromChatUserRequest) (*Response[RemoveSuspiciousStatusFromChatUserData], error)",
+        "pager_signature": null,
+        "request_type": "RemoveSuspiciousStatusFromChatUserRequest",
+        "data_type": "RemoveSuspiciousStatusFromChatUserData",
+        "stability": "NEW"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#remove-suspicious-status-from-chat-user"
+    }
+  ]
+}

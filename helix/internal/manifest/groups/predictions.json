@@ -1,0 +1,239 @@
+{
+  "schema": 1,
+  "group": "Predictions",
+  "operations": [
+    {
+      "operation_id": "get-predictions",
+      "anchor": "get-predictions",
+      "group": "Predictions",
+      "name": "Get Predictions",
+      "method": "GET",
+      "path": "/helix/predictions",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:predictions",
+        "channel:manage:predictions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-predictions",
+        "selector": "Client.Predictions",
+        "service_type": "PredictionsService",
+        "method": "GetPredictions",
+        "signature": "func (s *PredictionsService) GetPredictions(ctx context.Context, req GetPredictionsRequest) (*Response[GetPredictionsData], error)",
+        "pager_signature": "func (s *PredictionsService) GetPredictionsPager(req GetPredictionsRequest, opts ...PagerOption) (*Pager[GetPredictionsData], error)",
+        "request_type": "GetPredictionsRequest",
+        "data_type": "GetPredictionsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-predictions"
+    },
+    {
+      "operation_id": "create-prediction",
+      "anchor": "create-prediction",
+      "group": "Predictions",
+      "name": "Create Prediction",
+      "method": "POST",
+      "path": "/helix/predictions",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:predictions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "outcomes",
+              "type": "Object[]",
+              "required": true
+            },
+            {
+              "name": "title",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "prediction_window",
+              "type": "Integer",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "create-prediction",
+        "selector": "Client.Predictions",
+        "service_type": "PredictionsService",
+        "method": "CreatePrediction",
+        "signature": "func (s *PredictionsService) CreatePrediction(ctx context.Context, req CreatePredictionRequest) (*Response[CreatePredictionData], error)",
+        "pager_signature": null,
+        "request_type": "CreatePredictionRequest",
+        "data_type": "CreatePredictionData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-prediction"
+    },
+    {
+      "operation_id": "end-prediction",
+      "anchor": "end-prediction",
+      "group": "Predictions",
+      "name": "End Prediction",
+      "method": "PATCH",
+      "path": "/helix/predictions",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:predictions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "winning_outcome_id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "end-prediction",
+        "selector": "Client.Predictions",
+        "service_type": "PredictionsService",
+        "method": "EndPrediction",
+        "signature": "func (s *PredictionsService) EndPrediction(ctx context.Context, req EndPredictionRequest) (*Response[EndPredictionData], error)",
+        "pager_signature": null,
+        "request_type": "EndPredictionRequest",
+        "data_type": "EndPredictionData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#end-prediction"
+    }
+  ]
+}
