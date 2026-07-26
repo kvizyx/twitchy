@@ -1,0 +1,67 @@
+{
+  "schema": 1,
+  "group": "Hype Train",
+  "operations": [
+    {
+      "operation_id": "get-hype-train-status",
+      "anchor": "get-hype-train-status",
+      "group": "Hype Train",
+      "name": "Get Hype Train Status",
+      "method": "GET",
+      "path": "/helix/hypetrain/status",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:hype_train"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-hype-train-status",
+        "selector": "Client.HypeTrain",
+        "service_type": "HypeTrainService",
+        "method": "GetHypeTrainStatus",
+        "signature": "func (s *HypeTrainService) GetHypeTrainStatus(ctx context.Context, req GetHypeTrainStatusRequest) (*Response[GetHypeTrainStatusData], error)",
+        "pager_signature": null,
+        "request_type": "GetHypeTrainStatusRequest",
+        "data_type": "GetHypeTrainStatusData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-hype-train-status"
+    }
+  ]
+}

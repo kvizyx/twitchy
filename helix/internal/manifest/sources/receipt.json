@@ -1,0 +1,45 @@
+{
+  "retrieved_at": "2026-07-26T20:37:12.744Z",
+  "docs": {
+    "reference": {
+      "url": "https://dev.twitch.tv/docs/api/reference/",
+      "bytes": 1414793,
+      "sha256": "3c5ed44ffac743027b96897a07cca4e4b1d4225dc8fa941a2aec6acc7795e926"
+    },
+    "guide": {
+      "url": "https://dev.twitch.tv/docs/api/guide/",
+      "bytes": 43940,
+      "sha256": "d4053e1645c82622053e1280abd4a11960caa177a9453b8ce3d639accee9b2e3"
+    },
+    "scopes": {
+      "url": "https://dev.twitch.tv/docs/authentication/scopes/",
+      "bytes": 71407,
+      "sha256": "123a411f410edf057c2eb7aa142b7f08e4335c13964164a2a0a71396a615d55e"
+    },
+    "oauth": {
+      "url": "https://dev.twitch.tv/docs/authentication/getting-tokens-oauth/",
+      "bytes": 68056,
+      "sha256": "d20843e754c6a22b295d634df99718e6f62d23210e4c6fbdd8cf6e750f609a59"
+    },
+    "refresh": {
+      "url": "https://dev.twitch.tv/docs/authentication/refresh-tokens/",
+      "bytes": 35623,
+      "sha256": "a0f61ea5226dadb4c31b1f4b915540c246ae05df2d48ad601fcb1e3eeddb9eac"
+    },
+    "validate": {
+      "url": "https://dev.twitch.tv/docs/authentication/validate-tokens/",
+      "bytes": 32703,
+      "sha256": "26dbaa4684586580ff0281725505e4491960e9745933be3152d66f4048b75f2a"
+    },
+    "revoke": {
+      "url": "https://dev.twitch.tv/docs/authentication/revoke-tokens/",
+      "bytes": 28932,
+      "sha256": "2264dd8fe2b79107906a484dc39f2436db8c2b33a9b4fa767aa4ced4108cd3cf"
+    },
+    "authentication": {
+      "url": "https://dev.twitch.tv/docs/authentication/",
+      "bytes": 35227,
+      "sha256": "f361ed78d1e54a392042f554753439a6916cf9e213023b6a5fd1f00eb11750e5"
+    }
+  }
+}

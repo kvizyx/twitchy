@@ -1,0 +1,414 @@
+{
+  "schema": 1,
+  "group": "Conduits",
+  "operations": [
+    {
+      "operation_id": "get-conduits",
+      "anchor": "get-conduits",
+      "group": "Conduits",
+      "name": "Get Conduits",
+      "method": "GET",
+      "path": "/helix/eventsub/conduits",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "unknown": []
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-conduits",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "GetConduits",
+        "signature": "func (s *ConduitsService) GetConduits(ctx context.Context, req GetConduitsRequest) (*Response[GetConduitsData], error)",
+        "pager_signature": null,
+        "request_type": "GetConduitsRequest",
+        "data_type": "GetConduitsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-conduits"
+    },
+    {
+      "operation_id": "create-conduits",
+      "anchor": "create-conduits",
+      "group": "Conduits",
+      "name": "Create Conduits",
+      "method": "POST",
+      "path": "/helix/eventsub/conduits",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "shard_count",
+              "type": "Integer",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          429
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": false
+      },
+      "implementation": {
+        "anchor": "create-conduits",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "CreateConduits",
+        "signature": "func (s *ConduitsService) CreateConduits(ctx context.Context, req CreateConduitsRequest) (*Response[CreateConduitsData], error)",
+        "pager_signature": null,
+        "request_type": "CreateConduitsRequest",
+        "data_type": "CreateConduitsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-conduits"
+    },
+    {
+      "operation_id": "update-conduits",
+      "anchor": "update-conduits",
+      "group": "Conduits",
+      "name": "Update Conduits",
+      "method": "PATCH",
+      "path": "/helix/eventsub/conduits",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "shard_count",
+              "type": "Integer",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-conduits",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "UpdateConduits",
+        "signature": "func (s *ConduitsService) UpdateConduits(ctx context.Context, req UpdateConduitsRequest) (*Response[UpdateConduitsData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateConduitsRequest",
+        "data_type": "UpdateConduitsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-conduits"
+    },
+    {
+      "operation_id": "delete-conduit",
+      "anchor": "delete-conduit",
+      "group": "Conduits",
+      "name": "Delete Conduit",
+      "method": "DELETE",
+      "path": "/helix/eventsub/conduits",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "delete-conduit",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "DeleteConduit",
+        "signature": "func (s *ConduitsService) DeleteConduit(ctx context.Context, req DeleteConduitRequest) (*Response[DeleteConduitData], error)",
+        "pager_signature": null,
+        "request_type": "DeleteConduitRequest",
+        "data_type": "DeleteConduitData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-conduit"
+    },
+    {
+      "operation_id": "get-conduit-shards",
+      "anchor": "get-conduit-shards",
+      "group": "Conduits",
+      "name": "Get Conduit Shards",
+      "method": "GET",
+      "path": "/helix/eventsub/conduits/shards",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "conduit_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-conduit-shards",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "GetConduitShards",
+        "signature": "func (s *ConduitsService) GetConduitShards(ctx context.Context, req GetConduitShardsRequest) (*Response[GetConduitShardsData], error)",
+        "pager_signature": "func (s *ConduitsService) GetConduitShardsPager(req GetConduitShardsRequest, opts ...PagerOption) (*Pager[GetConduitShardsData], error)",
+        "request_type": "GetConduitShardsRequest",
+        "data_type": "GetConduitShardsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-conduit-shards"
+    },
+    {
+      "operation_id": "update-conduit-shards",
+      "anchor": "update-conduit-shards",
+      "group": "Conduits",
+      "name": "Update Conduit Shards",
+      "method": "PATCH",
+      "path": "/helix/eventsub/conduits/shards",
+      "stability": "stable",
+      "token_classes": [
+        "app"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "conduit_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "shards",
+              "type": "Object[]",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "transport",
+              "type": "Object",
+              "required": true
+            },
+            {
+              "name": "method",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "callback",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "secret",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "session_id",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          202,
+          400,
+          401,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-conduit-shards",
+        "selector": "Client.Conduits",
+        "service_type": "ConduitsService",
+        "method": "UpdateConduitShards",
+        "signature": "func (s *ConduitsService) UpdateConduitShards(ctx context.Context, req UpdateConduitShardsRequest) (*Response[UpdateConduitShardsData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateConduitShardsRequest",
+        "data_type": "UpdateConduitShardsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-conduit-shards"
+    }
+  ]
+}

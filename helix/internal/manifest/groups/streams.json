@@ -1,0 +1,383 @@
+{
+  "schema": 1,
+  "group": "Streams",
+  "operations": [
+    {
+      "operation_id": "get-stream-key",
+      "anchor": "get-stream-key",
+      "group": "Streams",
+      "name": "Get Stream Key",
+      "method": "GET",
+      "path": "/helix/streams/key",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:stream_key"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-stream-key",
+        "selector": "Client.Streams",
+        "service_type": "StreamsService",
+        "method": "GetStreamKey",
+        "signature": "func (s *StreamsService) GetStreamKey(ctx context.Context, req GetStreamKeyRequest) (*Response[GetStreamKeyData], error)",
+        "pager_signature": null,
+        "request_type": "GetStreamKeyRequest",
+        "data_type": "GetStreamKeyData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-stream-key"
+    },
+    {
+      "operation_id": "get-streams",
+      "anchor": "get-streams",
+      "group": "Streams",
+      "name": "Get Streams",
+      "method": "GET",
+      "path": "/helix/streams",
+      "stability": "stable",
+      "token_classes": [
+        "app",
+        "user"
+      ],
+      "scopes": [
+        "unknown"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "user_login",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "game_id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "type",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "language",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "before",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-streams",
+        "selector": "Client.Streams",
+        "service_type": "StreamsService",
+        "method": "GetStreams",
+        "signature": "func (s *StreamsService) GetStreams(ctx context.Context, req GetStreamsRequest) (*Response[GetStreamsData], error)",
+        "pager_signature": "func (s *StreamsService) GetStreamsPager(req GetStreamsRequest, opts ...PagerOption) (*Pager[GetStreamsData], error)",
+        "request_type": "GetStreamsRequest",
+        "data_type": "GetStreamsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-streams"
+    },
+    {
+      "operation_id": "get-followed-streams",
+      "anchor": "get-followed-streams",
+      "group": "Streams",
+      "name": "Get Followed Streams",
+      "method": "GET",
+      "path": "/helix/streams/followed",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "user:read:follows"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-followed-streams",
+        "selector": "Client.Streams",
+        "service_type": "StreamsService",
+        "method": "GetFollowedStreams",
+        "signature": "func (s *StreamsService) GetFollowedStreams(ctx context.Context, req GetFollowedStreamsRequest) (*Response[GetFollowedStreamsData], error)",
+        "pager_signature": "func (s *StreamsService) GetFollowedStreamsPager(req GetFollowedStreamsRequest, opts ...PagerOption) (*Pager[GetFollowedStreamsData], error)",
+        "request_type": "GetFollowedStreamsRequest",
+        "data_type": "GetFollowedStreamsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-followed-streams"
+    },
+    {
+      "operation_id": "create-stream-marker",
+      "anchor": "create-stream-marker",
+      "group": "Streams",
+      "name": "Create Stream Marker",
+      "method": "POST",
+      "path": "/helix/streams/markers",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:broadcast"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "body": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "description",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "create-stream-marker",
+        "selector": "Client.Streams",
+        "service_type": "StreamsService",
+        "method": "CreateStreamMarker",
+        "signature": "func (s *StreamsService) CreateStreamMarker(ctx context.Context, req CreateStreamMarkerRequest) (*Response[CreateStreamMarkerData], error)",
+        "pager_signature": null,
+        "request_type": "CreateStreamMarkerRequest",
+        "data_type": "CreateStreamMarkerData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-stream-marker"
+    },
+    {
+      "operation_id": "get-stream-markers",
+      "anchor": "get-stream-markers",
+      "group": "Streams",
+      "name": "Get Stream Markers",
+      "method": "GET",
+      "path": "/helix/streams/markers",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "user:read:broadcast",
+        "channel:manage:broadcast"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameter": [
+            {
+              "name": "user_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "video_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "first",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "before",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-stream-markers",
+        "selector": "Client.Streams",
+        "service_type": "StreamsService",
+        "method": "GetStreamMarkers",
+        "signature": "func (s *StreamsService) GetStreamMarkers(ctx context.Context, req GetStreamMarkersRequest) (*Response[GetStreamMarkersData], error)",
+        "pager_signature": "func (s *StreamsService) GetStreamMarkersPager(req GetStreamMarkersRequest, opts ...PagerOption) (*Pager[GetStreamMarkersData], error)",
+        "request_type": "GetStreamMarkersRequest",
+        "data_type": "GetStreamMarkersData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-stream-markers"
+    }
+  ]
+}

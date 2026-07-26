@@ -1,0 +1,591 @@
+{
+  "schema": 1,
+  "group": "Channel Points",
+  "operations": [
+    {
+      "operation_id": "create-custom-rewards",
+      "anchor": "create-custom-rewards",
+      "group": "Channel Points",
+      "name": "Create Custom Rewards",
+      "method": "POST",
+      "path": "/helix/channel_points/custom_rewards",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "cost",
+              "type": "Int64",
+              "required": true
+            },
+            {
+              "name": "prompt",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "is_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "background_color",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "is_user_input_required",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "is_max_per_stream_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "max_per_stream",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "is_max_per_user_per_stream_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "max_per_user_per_stream",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "is_global_cooldown_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "global_cooldown_seconds",
+              "type": "Integer",
+              "required": false
+            },
+            {
+              "name": "should_redemptions_skip_request_queue",
+              "type": "Boolean",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "create-custom-rewards",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "CreateCustomRewards",
+        "signature": "func (s *ChannelPointsService) CreateCustomRewards(ctx context.Context, req CreateCustomRewardsRequest) (*Response[CreateCustomRewardsData], error)",
+        "pager_signature": null,
+        "request_type": "CreateCustomRewardsRequest",
+        "data_type": "CreateCustomRewardsData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#create-custom-rewards"
+    },
+    {
+      "operation_id": "delete-custom-reward",
+      "anchor": "delete-custom-reward",
+      "group": "Channel Points",
+      "name": "Delete Custom Reward",
+      "method": "DELETE",
+      "path": "/helix/channel_points/custom_rewards",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "unknown",
+        "status": [
+          204,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "delete-custom-reward",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "DeleteCustomReward",
+        "signature": "func (s *ChannelPointsService) DeleteCustomReward(ctx context.Context, req DeleteCustomRewardRequest) (*Response[DeleteCustomRewardData], error)",
+        "pager_signature": null,
+        "request_type": "DeleteCustomRewardRequest",
+        "data_type": "DeleteCustomRewardData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#delete-custom-reward"
+    },
+    {
+      "operation_id": "get-custom-reward",
+      "anchor": "get-custom-reward",
+      "group": "Channel Points",
+      "name": "Get Custom Reward",
+      "method": "GET",
+      "path": "/helix/channel_points/custom_rewards",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:redemptions",
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "only_manageable_rewards",
+              "type": "Boolean",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-custom-reward",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "GetCustomReward",
+        "signature": "func (s *ChannelPointsService) GetCustomReward(ctx context.Context, req GetCustomRewardRequest) (*Response[GetCustomRewardData], error)",
+        "pager_signature": null,
+        "request_type": "GetCustomRewardRequest",
+        "data_type": "GetCustomRewardData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-reward"
+    },
+    {
+      "operation_id": "get-custom-reward-redemption",
+      "anchor": "get-custom-reward-redemption",
+      "group": "Channel Points",
+      "name": "Get Custom Reward Redemption",
+      "method": "GET",
+      "path": "/helix/channel_points/custom_rewards/redemptions",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:read:redemptions",
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "reward_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "sort",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "after",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "first",
+              "type": "Integer",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": true
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "cursor",
+        "cursor_parameter": "after"
+      },
+      "replay": {
+        "replayable": true,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "get-custom-reward-redemption",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "GetCustomRewardRedemption",
+        "signature": "func (s *ChannelPointsService) GetCustomRewardRedemption(ctx context.Context, req GetCustomRewardRedemptionRequest) (*Response[GetCustomRewardRedemptionData], error)",
+        "pager_signature": "func (s *ChannelPointsService) GetCustomRewardRedemptionPager(req GetCustomRewardRedemptionRequest, opts ...PagerOption) (*Pager[GetCustomRewardRedemptionData], error)",
+        "request_type": "GetCustomRewardRedemptionRequest",
+        "data_type": "GetCustomRewardRedemptionData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#get-custom-reward-redemption"
+    },
+    {
+      "operation_id": "update-custom-reward",
+      "anchor": "update-custom-reward",
+      "group": "Channel Points",
+      "name": "Update Custom Reward",
+      "method": "PATCH",
+      "path": "/helix/channel_points/custom_rewards",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "title",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "prompt",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "cost",
+              "type": "Int64",
+              "required": false
+            },
+            {
+              "name": "background_color",
+              "type": "String",
+              "required": false
+            },
+            {
+              "name": "is_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "is_user_input_required",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "is_max_per_stream_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "max_per_stream",
+              "type": "Int64",
+              "required": false
+            },
+            {
+              "name": "is_max_per_user_per_stream_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "max_per_user_per_stream",
+              "type": "Int64",
+              "required": false
+            },
+            {
+              "name": "is_global_cooldown_enabled",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "global_cooldown_seconds",
+              "type": "Int64",
+              "required": false
+            },
+            {
+              "name": "is_paused",
+              "type": "Boolean",
+              "required": false
+            },
+            {
+              "name": "should_redemptions_skip_request_queue",
+              "type": "Boolean",
+              "required": false
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-custom-reward",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "UpdateCustomReward",
+        "signature": "func (s *ChannelPointsService) UpdateCustomReward(ctx context.Context, req UpdateCustomRewardRequest) (*Response[UpdateCustomRewardData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateCustomRewardRequest",
+        "data_type": "UpdateCustomRewardData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-custom-reward"
+    },
+    {
+      "operation_id": "update-redemption-status",
+      "anchor": "update-redemption-status",
+      "group": "Channel Points",
+      "name": "Update Redemption Status",
+      "method": "PATCH",
+      "path": "/helix/channel_points/custom_rewards/redemptions",
+      "stability": "stable",
+      "token_classes": [
+        "user"
+      ],
+      "scopes": [
+        "channel:manage:redemptions"
+      ],
+      "subject_binding": "unknown",
+      "request": {
+        "locations": {
+          "query_parameters": [
+            {
+              "name": "id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "broadcaster_id",
+              "type": "String",
+              "required": true
+            },
+            {
+              "name": "reward_id",
+              "type": "String",
+              "required": true
+            }
+          ],
+          "body": [
+            {
+              "name": "status",
+              "type": "String",
+              "required": true
+            }
+          ]
+        },
+        "body_reconstructible": false
+      },
+      "response": {
+        "format": "json",
+        "status": [
+          200,
+          400,
+          401,
+          403,
+          404,
+          500
+        ],
+        "status_unknown": false
+      },
+      "pagination": {
+        "shape": "none",
+        "cursor_parameter": "unknown"
+      },
+      "replay": {
+        "replayable": false,
+        "bucket_waitable": true
+      },
+      "implementation": {
+        "anchor": "update-redemption-status",
+        "selector": "Client.ChannelPoints",
+        "service_type": "ChannelPointsService",
+        "method": "UpdateRedemptionStatus",
+        "signature": "func (s *ChannelPointsService) UpdateRedemptionStatus(ctx context.Context, req UpdateRedemptionStatusRequest) (*Response[UpdateRedemptionStatusData], error)",
+        "pager_signature": null,
+        "request_type": "UpdateRedemptionStatusRequest",
+        "data_type": "UpdateRedemptionStatusData",
+        "stability": "stable"
+      },
+      "fixtures": [
+        "sources/reference.html"
+      ],
+      "source": "https://dev.twitch.tv/docs/api/reference/#update-redemption-status"
+    }
+  ]
+}
