@@ -20,6 +20,8 @@ const (
 	ScopeChannelManageBroadcast AuthorizationScope = "channel:manage:broadcast"
 	// ScopeChannelReadCharity read charity campaign details and donations on your channel.
 	ScopeChannelReadCharity AuthorizationScope = "channel:read:charity"
+	// ScopeChannelManageClips create and manage Clips for a channel.
+	ScopeChannelManageClips AuthorizationScope = "channel:manage:clips"
 	// ScopeChannelEditCommercial run commercials on a channel.
 	ScopeChannelEditCommercial AuthorizationScope = "channel:edit:commercial"
 	// ScopeChannelReadEditors view users with editor role for a channel.
@@ -66,6 +68,8 @@ const (
 	ScopeChannelModerate AuthorizationScope = "channel:moderate"
 	// ScopeClipsEdit manage Clips for a channel.
 	ScopeClipsEdit AuthorizationScope = "clips:edit"
+	// ScopeEditorManageClips manage Clips as an editor.
+	ScopeEditorManageClips AuthorizationScope = "editor:manage:clips"
 	// ScopeModerationRead view moderation data like moderators, bans, etc.
 	ScopeModerationRead AuthorizationScope = "moderation:read"
 	// ScopeModeratorManageAnnouncements send announcements as a moderator.
@@ -112,6 +116,8 @@ const (
 	ScopeModeratorManageShoutouts AuthorizationScope = "moderator:manage:shoutouts"
 	// ScopeModeratorReadSuspiciousUsers read suspicious users and messages.
 	ScopeModeratorReadSuspiciousUsers AuthorizationScope = "moderator:read:suspicious_users"
+	// ScopeModeratorManageSuspiciousUsers manage suspicious users and messages.
+	ScopeModeratorManageSuspiciousUsers AuthorizationScope = "moderator:manage:suspicious_users"
 	// ScopeModeratorReadUnbanRequests view unban requests.
 	ScopeModeratorReadUnbanRequests AuthorizationScope = "moderator:read:unban_requests"
 	// ScopeModeratorManageUnbanRequests manage unban requests.
@@ -159,4 +165,6 @@ const (
 	ScopeChatEdit AuthorizationScope = "chat:edit"
 	// ScopeChatRead view chat messages sent in a chatroom using an IRC connection.
 	ScopeChatRead AuthorizationScope = "chat:read"
+	// ScopeWhispersRead read whispers.
+	ScopeWhispersRead AuthorizationScope = "whispers:read"
 )
