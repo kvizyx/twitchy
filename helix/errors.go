@@ -17,6 +17,7 @@ var (
 	ErrPageLimit        = errors.New("helix: pagination page limit reached")
 	ErrCredentialCommit = errors.New("helix: credential commit failed")
 	ErrInvalidSession   = errors.New("helix: invalid session")
+	ErrSessionClosed    = errors.New("helix: session is closed")
 )
 
 var (

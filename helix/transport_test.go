@@ -73,6 +73,9 @@ func (s *refreshTestSource) Refresh(context.Context, CredentialSnapshot, Refresh
 type testClock struct{ now time.Time }
 
 func (c testClock) Now() time.Time { return c.now }
+func (c testClock) NewTimer(duration time.Duration) Timer {
+	return clockTimer{timer: time.NewTimer(duration)}
+}
 
 type recordingSleeper struct {
 	durations chan time.Duration
