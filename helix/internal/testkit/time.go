@@ -21,6 +21,15 @@ func (clock *FakeClock) Now() time.Time {
 	return clock.now
 }
 
+func (clock *FakeClock) NewTimer(duration time.Duration) helix.Timer {
+	return fakeTimer{timer: time.NewTimer(duration)}
+}
+
+type fakeTimer struct{ timer *time.Timer }
+
+func (timer fakeTimer) C() <-chan time.Time { return timer.timer.C }
+func (timer fakeTimer) Stop() bool          { return timer.timer.Stop() }
+
 func (clock *FakeClock) Set(now time.Time) {
 	clock.mu.Lock()
 	clock.now = now
