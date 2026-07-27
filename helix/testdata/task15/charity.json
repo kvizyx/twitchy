@@ -1,0 +1,1 @@
+{"data":[{"id":"campaign-1","broadcaster_id":"123456","broadcaster_login":"streamer","broadcaster_name":"Streamer","charity_name":"Example Charity","charity_description":"Help","charity_logo":"https://logo.test/logo.png","charity_website":"https://charity.test","current_amount":{"value":500,"decimal_places":2,"currency":"USD"},"target_amount":null}]}
