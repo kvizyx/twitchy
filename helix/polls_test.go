@@ -12,8 +12,8 @@ import (
 )
 
 func TestPollsCreatePoll_preservesExactWireAndNestedChoices(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: task23RateHeaders(), Body: task23Fixture(t, "poll.json")})
-	client := task23Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: interactiveRateHeaders(), Body: task23Fixture(t, "poll.json")})
+	client := interactiveClient(t, transport)
 	result, err := client.Polls.CreatePoll(context.Background(), helix.CreatePollRequest{
 		BroadcasterID:              "123456",
 		Title:                      "Heads or tails?",
@@ -37,8 +37,8 @@ func TestPollsCreatePoll_preservesExactWireAndNestedChoices(t *testing.T) {
 func TestPollsGetPollsPager_sendsCursorAndPreservesUnknownStatus(t *testing.T) {
 	first := `{"data":[{"id":"poll-1","broadcaster_id":"123456","title":"Question","choices":[{"id":"choice-1","title":"Yes","votes":2,"channel_points_votes":1,"bits_votes":0}],"status":"FUTURE_STATUS","duration":60,"started_at":"2024-01-02T03:04:05Z","ended_at":null}],"pagination":{"cursor":"next"}}`
 	second := `{"data":[{"id":"poll-2","status":"ARCHIVED","started_at":"2024-01-02T03:04:05Z","ended_at":"2024-01-02T03:05:05Z"}]}`
-	transport := testkit.NewRecordingRoundTripper(task23Response(first), task23Response(second))
-	client := task23Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(interactiveResponse(first), interactiveResponse(second))
+	client := interactiveClient(t, transport)
 	pager, err := client.Polls.GetPollsPager(helix.GetPollsRequest{BroadcasterID: "123456", First: intPointer(1)})
 	if err != nil {
 		t.Fatal(err)
@@ -53,8 +53,8 @@ func TestPollsGetPollsPager_sendsCursorAndPreservesUnknownStatus(t *testing.T) {
 }
 
 func TestPollsEndPoll_isOneAttemptOn503(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusServiceUnavailable, Header: task23RateHeaders(), Body: `{"error":"Unavailable","status":503,"message":"try later"}`})
-	client := task23Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusServiceUnavailable, Header: interactiveRateHeaders(), Body: `{"error":"Unavailable","status":503,"message":"try later"}`})
+	client := interactiveClient(t, transport)
 	_, err := client.Polls.EndPoll(context.Background(), helix.EndPollRequest{BroadcasterID: "123456", ID: "poll-1", Status: helix.PollStatusTerminated})
 	var apiErr *helix.APIError
 	if !errors.As(err, &apiErr) || apiErr.StatusCode() != http.StatusServiceUnavailable || len(transport.Requests()) != 1 {
@@ -64,7 +64,7 @@ func TestPollsEndPoll_isOneAttemptOn503(t *testing.T) {
 
 func TestPollsRequireUserTokenBoundToBroadcaster(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper()
-	client := task23ClientWithUser(t, transport, "different-user")
+	client := interactiveClientWithUser(t, transport, "different-user")
 	_, err := client.Polls.GetPolls(context.Background(), helix.GetPollsRequest{BroadcasterID: "123456"})
 	var authErr *helix.AuthError
 	if !errors.As(err, &authErr) || len(transport.Requests()) != 0 {
@@ -73,8 +73,8 @@ func TestPollsRequireUserTokenBoundToBroadcaster(t *testing.T) {
 }
 
 func TestPollsGetPolls_acceptsReadScopeWithoutManageScope(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: task23RateHeaders(), Body: task23Fixture(t, "poll.json")})
-	client := task23ClientWithScopes(t, transport, "123456", helix.ScopeChannelReadPolls)
+	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: interactiveRateHeaders(), Body: task23Fixture(t, "poll.json")})
+	client := interactiveClientWithScopes(t, transport, "123456", helix.ScopeChannelReadPolls)
 	result, err := client.Polls.GetPolls(context.Background(), helix.GetPollsRequest{BroadcasterID: "123456"})
 	if err != nil || len(result.Data) != 1 {
 		t.Fatalf("read-only poll result=%#v err=%v", result, err)

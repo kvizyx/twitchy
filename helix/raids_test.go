@@ -11,8 +11,8 @@ import (
 )
 
 func TestRaidsStartRaid_preservesQueryAndResponse(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: task23RateHeaders(), Body: task23Fixture(t, "raid.json")})
-	client := task23Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusOK, Header: interactiveRateHeaders(), Body: task23Fixture(t, "raid.json")})
+	client := interactiveClient(t, transport)
 	result, err := client.Raids.StartRaid(context.Background(), helix.StartRaidRequest{FromBroadcasterID: "123456", ToBroadcasterID: "654321"})
 	if err != nil {
 		t.Fatal(err)
@@ -24,8 +24,8 @@ func TestRaidsStartRaid_preservesQueryAndResponse(t *testing.T) {
 }
 
 func TestRaidsCancelRaid_returnsEmptySuccessWithoutReplay(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusNoContent, Header: task23RateHeaders()})
-	client := task23Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.RoundTripResponse{StatusCode: http.StatusNoContent, Header: interactiveRateHeaders()})
+	client := interactiveClient(t, transport)
 	result, err := client.Raids.CancelRaid(context.Background(), helix.CancelRaidRequest{BroadcasterID: "123456"})
 	if err != nil || result == nil || result.Data != (helix.CancelRaidData{}) || len(transport.Requests()) != 1 || transport.Requests()[0].Path != "/helix/raids?broadcaster_id=123456" {
 		t.Fatalf("cancel raid result=%#v err=%v requests=%#v", result, err, transport.Requests())
@@ -34,7 +34,7 @@ func TestRaidsCancelRaid_returnsEmptySuccessWithoutReplay(t *testing.T) {
 
 func TestRaidsStartRaid_requiresManageScopeAndBroadcasterBinding(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper()
-	client := task23ClientWithScopes(t, transport, "different-user", helix.ScopeChannelReadPolls)
+	client := interactiveClientWithScopes(t, transport, "different-user", helix.ScopeChannelReadPolls)
 	_, err := client.Raids.StartRaid(context.Background(), helix.StartRaidRequest{FromBroadcasterID: "123456", ToBroadcasterID: "654321"})
 	var authErr *helix.AuthError
 	if !errors.As(err, &authErr) || len(transport.Requests()) != 0 {

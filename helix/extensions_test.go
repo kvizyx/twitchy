@@ -15,21 +15,21 @@ import (
 
 func TestExtensionsConfigurationUsesExtensionAuthorization(t *testing.T) {
 	responses := []testkit.RoundTripResponse{
-		task19Response(http.StatusOK, task19Body(t, "extension_configuration.json")),
-		task19Response(http.StatusNoContent, ""),
-		task19Response(http.StatusNoContent, ""),
-		task19Response(http.StatusNoContent, ""),
-		task19Response(http.StatusNoContent, ""),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_configuration.json")),
+		extensionResponse(http.StatusNoContent, ""),
+		extensionResponse(http.StatusNoContent, ""),
+		extensionResponse(http.StatusNoContent, ""),
+		extensionResponse(http.StatusNoContent, ""),
 	}
 	transport := testkit.NewRecordingRoundTripper(responses...)
-	client := task19Client(t, transport, helix.Credential{AccessToken: "jwt-token", ClientID: "client-id", TokenClass: helix.TokenClassExtension})
+	client := extensionClient(t, transport, helix.Credential{AccessToken: "jwt-token", ClientID: "client-id", TokenClass: helix.TokenClassExtension})
 
 	configuration, err := client.Extensions.GetExtensionConfigurationSegment(context.Background(), helix.GetExtensionConfigurationSegmentRequest{BroadcasterID: "broadcaster-1", ExtensionID: "extension-1", Segment: []string{"broadcaster", "global"}})
 	if err != nil {
 		t.Fatal(err)
 	}
-	task19MetaContract(t, "get-extension-configuration-segment", task19Fixture(
-		map[string][]string{"broadcaster_id": {"broadcaster-1"}, "extension_id": {"extension-1"}, "segment": {"broadcaster", "global"}}, "", task19Headers("Extension", "jwt-token"), testkit.ContractResponse{Status: http.StatusOK, Headers: http.Header{"Ratelimit-Limit": {"8000"}, "Ratelimit-Remaining": {"7999"}, "Ratelimit-Reset": {task19RateReset}}, Body: task19Body(t, "extension_configuration.json"), Success: true}), transport, configuration.Meta, nil)
+	extensionMetaContract(t, "get-extension-configuration-segment", extensionFixture(
+		map[string][]string{"broadcaster_id": {"broadcaster-1"}, "extension_id": {"extension-1"}, "segment": {"broadcaster", "global"}}, "", extensionHeaders("Extension", "jwt-token"), testkit.ContractResponse{Status: http.StatusOK, Headers: http.Header{"Ratelimit-Limit": {"8000"}, "Ratelimit-Remaining": {"7999"}, "Ratelimit-Reset": {extensionRateReset}}, Body: extensionBody(t, "extension_configuration.json"), Success: true}), transport, configuration.Meta, nil)
 
 	if _, err := client.Extensions.SetExtensionConfigurationSegment(context.Background(), helix.SetExtensionConfigurationSegmentRequest{ExtensionID: "extension-1", Segment: "global", Content: stringPointer("hello config"), Version: stringPointer("1")}); err != nil {
 		t.Fatal(err)
@@ -73,14 +73,14 @@ func TestExtensionsConfigurationUsesExtensionAuthorization(t *testing.T) {
 
 func TestExtensionsSecretsAndListingsUseExactSchemes(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper(
-		task19Response(http.StatusOK, task19Body(t, "extension_secrets.json")),
-		task19Response(http.StatusOK, task19Body(t, "extension_secrets.json")),
-		task19Response(http.StatusOK, task19Body(t, "extensions.json")),
-		task19Response(http.StatusOK, task19Body(t, "extensions.json")),
-		task19Response(http.StatusOK, task19Body(t, "extension_bits_products.json")),
-		task19Response(http.StatusOK, task19Body(t, "extension_bits_products.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_secrets.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_secrets.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extensions.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extensions.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_bits_products.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_bits_products.json")),
 	)
-	client := task19Client(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
+	client := extensionClient(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
 
 	if _, err := client.Extensions.GetExtensionSecrets(context.Background(), helix.GetExtensionSecretsRequest{ExtensionID: "extension-1"}); err == nil {
 		t.Fatal("app token was accepted for extension-secret auth")
@@ -89,7 +89,7 @@ func TestExtensionsSecretsAndListingsUseExactSchemes(t *testing.T) {
 		t.Fatal("unsupported extension auth reached network")
 	}
 
-	client = task19Client(t, transport, helix.Credential{AccessToken: "jwt-token", ClientID: "client-id", TokenClass: helix.TokenClassExtension})
+	client = extensionClient(t, transport, helix.Credential{AccessToken: "jwt-token", ClientID: "client-id", TokenClass: helix.TokenClassExtension})
 	secrets, err := client.Extensions.GetExtensionSecrets(context.Background(), helix.GetExtensionSecretsRequest{ExtensionID: "extension-1"})
 	if err != nil || len(secrets.Data) != 1 || secrets.Data[0].Secrets[0].Content != "secret-value" {
 		t.Fatalf("secrets = %#v, err = %v", secrets, err)
@@ -100,7 +100,7 @@ func TestExtensionsSecretsAndListingsUseExactSchemes(t *testing.T) {
 	if _, err := client.Extensions.GetExtensions(context.Background(), helix.GetExtensionsRequest{ExtensionID: "extension-1", ExtensionVersion: stringPointer("1")}); err != nil {
 		t.Fatal(err)
 	}
-	appClient := task19Client(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
+	appClient := extensionClient(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
 	if _, err := appClient.Extensions.GetReleasedExtensions(context.Background(), helix.GetReleasedExtensionsRequest{ExtensionID: "extension-1"}); err != nil {
 		t.Fatal(err)
 	}
@@ -126,10 +126,10 @@ func TestExtensionsSecretsAndListingsUseExactSchemes(t *testing.T) {
 
 func TestExtensionsLiveChannelsStringPagination(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper(
-		task19Response(http.StatusOK, task19Body(t, "extension_live_channels_page_1.json")),
-		task19Response(http.StatusOK, task19Body(t, "extension_live_channels_page_2.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_live_channels_page_1.json")),
+		extensionResponse(http.StatusOK, extensionBody(t, "extension_live_channels_page_2.json")),
 	)
-	client := task19Client(t, transport, helix.Credential{AccessToken: "user-token", ClientID: "client-id", TokenClass: helix.TokenClassUser})
+	client := extensionClient(t, transport, helix.Credential{AccessToken: "user-token", ClientID: "client-id", TokenClass: helix.TokenClassUser})
 	pager, err := client.Extensions.GetExtensionLiveChannelsPager(helix.GetExtensionLiveChannelsRequest{ExtensionID: "extension-1", First: intPointer(1)})
 	if err != nil {
 		t.Fatal(err)
@@ -148,7 +148,7 @@ func TestExtensionsLiveChannelsStringPagination(t *testing.T) {
 
 func TestExtensionsRejectsUnsupportedAuthBeforeNetwork(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper()
-	client := task19Client(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
+	client := extensionClient(t, transport, helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp})
 	_, err := client.Extensions.GetExtensionConfigurationSegment(context.Background(), helix.GetExtensionConfigurationSegmentRequest{ExtensionID: "extension-1", Segment: []string{"global"}})
 	var authErr *helix.AuthError
 	if !errors.As(err, &authErr) || len(transport.Requests()) != 0 {
@@ -196,7 +196,7 @@ func TestExtensionsSecretTokenIsRedactedFromErrors(t *testing.T) {
 		StatusCode: http.StatusBadRequest,
 		Body:       `{"error":"Bad Request","status":400,"message":"` + secret + ` rejected"}`,
 	})
-	client := task19Client(t, transport, helix.Credential{AccessToken: secret, ClientID: "client-id", TokenClass: helix.TokenClassExtension})
+	client := extensionClient(t, transport, helix.Credential{AccessToken: secret, ClientID: "client-id", TokenClass: helix.TokenClassExtension})
 	_, err := client.Extensions.GetExtensionSecrets(context.Background(), helix.GetExtensionSecretsRequest{ExtensionID: "extension-1"})
 	if err == nil || strings.Contains(err.Error(), secret) || !strings.Contains(err.Error(), "[redacted]") {
 		t.Fatalf("secret error = %v, want redacted token", err)
