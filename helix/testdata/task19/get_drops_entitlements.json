@@ -1,0 +1,1 @@
+{"data":[{"id":"entitlement-1","benefit_id":"benefit-1","timestamp":"2025-01-01T00:00:00Z","user_id":"user-1","game_id":"game-1","fulfillment_status":"FUTURE_STATUS","last_updated":"2025-01-02T00:00:00Z"}],"pagination":{"cursor":"next-cursor"}}
