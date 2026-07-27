@@ -28,8 +28,8 @@ type DeleteChannelStreamScheduleSegmentRequest struct {
 	ID            string `query:"id" json:"-"`
 }
 
-func (s *ScheduleService) CreateChannelStreamScheduleSegment(ctx context.Context, req CreateChannelStreamScheduleSegmentRequest) (*Response[CreateChannelStreamScheduleData], error) {
-	return executeTask24Endpoint[CreateChannelStreamScheduleData](s.client, ctx, "create-channel-stream-schedule-segment", req, req, req.BroadcasterID)
+func (s *ScheduleService) CreateChannelStreamScheduleSegment(ctx context.Context, req CreateChannelStreamScheduleSegmentRequest) (*Response[CreateChannelStreamScheduleSegmentData], error) {
+	return executeTask24Endpoint[CreateChannelStreamScheduleSegmentData](s.client, ctx, "create-channel-stream-schedule-segment", req, req, req.BroadcasterID)
 }
 
 func (s *ScheduleService) UpdateChannelStreamScheduleSegment(ctx context.Context, req UpdateChannelStreamScheduleSegmentRequest) (*Response[UpdateChannelStreamScheduleSegmentData], error) {

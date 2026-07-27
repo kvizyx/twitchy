@@ -58,7 +58,7 @@ type scheduleData struct {
 
 type GetChannelStreamScheduleData scheduleData
 type UpdateChannelStreamScheduleData struct{}
-type CreateChannelStreamScheduleData scheduleData
+type CreateChannelStreamScheduleSegmentData scheduleData
 type UpdateChannelStreamScheduleSegmentData scheduleData
 type DeleteChannelStreamScheduleSegmentData struct{}
 type GetChannelICalendarData []byte
