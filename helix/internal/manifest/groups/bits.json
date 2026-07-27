@@ -70,7 +70,11 @@
         "pager_signature": null,
         "request_type": "GetBitsLeaderboardRequest",
         "data_type": "GetBitsLeaderboardData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-bits-leaderboard",
+           "TestManifestConformance/negative/get-bits-leaderboard"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -129,7 +133,11 @@
         "pager_signature": null,
         "request_type": "GetCheermotesRequest",
         "data_type": "GetCheermotesData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-cheermotes",
+           "TestManifestConformance/negative/get-cheermotes"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -197,7 +205,11 @@
         "pager_signature": null,
         "request_type": "GetCustomPowerUpRequest",
         "data_type": "GetCustomPowerUpData",
-        "stability": "NEW"
+         "stability": "NEW",
+         "test_ids": [
+           "TestManifestConformance/happy/get-custom-power-up",
+           "TestManifestConformance/negative/get-custom-power-up"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -273,7 +285,11 @@
         "pager_signature": "func (s *BitsService) GetExtensionTransactionsPager(req GetExtensionTransactionsRequest, opts ...PagerOption) (*Pager[GetExtensionTransactionsData], error)",
         "request_type": "GetExtensionTransactionsRequest",
         "data_type": "GetExtensionTransactionsData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-extension-transactions",
+           "TestManifestConformance/negative/get-extension-transactions"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
