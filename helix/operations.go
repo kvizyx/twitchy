@@ -19,8 +19,6 @@ type GetBitsLeaderboardRequest = emptyRequest
 type GetBitsLeaderboardData = emptyData
 type GetCheermotesRequest = emptyRequest
 type GetCheermotesData = emptyData
-type GetCustomPowerUpRequest = emptyRequest
-type GetCustomPowerUpData = emptyData
 type GetExtensionTransactionsRequest = emptyRequest
 type GetExtensionTransactionsData = emptyData
 type GetChannelInformationRequest = emptyRequest
@@ -145,8 +143,6 @@ type GetEventSubSubscriptionsRequest = emptyRequest
 type GetEventSubSubscriptionsData = emptyData
 type GetTopGamesRequest = emptyRequest
 type GetTopGamesData = emptyData
-type GetGamesRequest = emptyRequest
-type GetGamesData = emptyData
 type GetCreatorGoalsRequest = emptyRequest
 type GetCreatorGoalsData = emptyData
 type GetChannelGuestStarSettingsRequest = emptyRequest
@@ -330,9 +326,6 @@ func (s *BitsService) GetBitsLeaderboard(context.Context, GetBitsLeaderboardRequ
 	return nil, ErrInvalidClient
 }
 func (s *BitsService) GetCheermotes(context.Context, GetCheermotesRequest) (*Response[GetCheermotesData], error) {
-	return nil, ErrInvalidClient
-}
-func (s *ExperimentalBitsService) GetCustomPowerUp(context.Context, GetCustomPowerUpRequest) (*Response[GetCustomPowerUpData], error) {
 	return nil, ErrInvalidClient
 }
 func (s *BitsService) GetExtensionTransactions(context.Context, GetExtensionTransactionsRequest) (*Response[GetExtensionTransactionsData], error) {
@@ -558,9 +551,6 @@ func (s *GamesService) GetTopGames(context.Context, GetTopGamesRequest) (*Respon
 	return nil, ErrInvalidClient
 }
 func (s *GamesService) GetTopGamesPager(GetTopGamesRequest, ...PagerOption) (*Pager[GetTopGamesData], error) {
-	return nil, ErrInvalidClient
-}
-func (s *GamesService) GetGames(context.Context, GetGamesRequest) (*Response[GetGamesData], error) {
 	return nil, ErrInvalidClient
 }
 func (s *GoalsService) GetCreatorGoals(context.Context, GetCreatorGoalsRequest) (*Response[GetCreatorGoalsData], error) {

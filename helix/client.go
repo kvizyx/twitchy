@@ -53,6 +53,7 @@ type Client struct {
 	tokenSource     TokenSource
 	staticToken     *Credential
 	rateLimitPolicy RateLimitPolicy
+	executor        *transportExecutor
 	valid           bool
 }
 
@@ -80,6 +81,11 @@ func New(options ...Option) (*Client, error) {
 	if client.httpClient == nil || client.baseURL == nil {
 		return nil, ErrInvalidClient
 	}
+	source := client.tokenSource
+	if client.staticToken != nil {
+		source = NewStaticTokenSource(*client.staticToken)
+	}
+	client.executor = newTransportExecutor(client.httpClient, source, client.rateLimitPolicy, nil, nil)
 	initializeServices(client)
 	client.valid = true
 	return client, nil

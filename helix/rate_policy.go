@@ -13,6 +13,12 @@ const (
 
 type Clock interface {
 	Now() time.Time
+	NewTimer(time.Duration) Timer
+}
+
+type Timer interface {
+	C() <-chan time.Time
+	Stop() bool
 }
 
 type Sleeper interface {
@@ -22,6 +28,14 @@ type Sleeper interface {
 type wallClock struct{}
 
 func (wallClock) Now() time.Time { return time.Now() }
+func (wallClock) NewTimer(duration time.Duration) Timer {
+	return clockTimer{timer: time.NewTimer(duration)}
+}
+
+type clockTimer struct{ timer *time.Timer }
+
+func (timer clockTimer) C() <-chan time.Time { return timer.timer.C }
+func (timer clockTimer) Stop() bool          { return timer.timer.Stop() }
 
 type timerSleeper struct{}
 
