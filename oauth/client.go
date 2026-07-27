@@ -27,6 +27,14 @@ type Client struct {
 type wallClock struct{}
 
 func (wallClock) Now() time.Time { return time.Now() }
+func (wallClock) NewTimer(duration time.Duration) helix.Timer {
+	return timerAdapter{timer: time.NewTimer(duration)}
+}
+
+type timerAdapter struct{ timer *time.Timer }
+
+func (timer timerAdapter) C() <-chan time.Time { return timer.timer.C }
+func (timer timerAdapter) Stop() bool          { return timer.timer.Stop() }
 
 func New(options ...Option) (*Client, error) {
 	baseURL, err := url.Parse(defaultBaseURL)
