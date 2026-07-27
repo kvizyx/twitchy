@@ -1,0 +1,1 @@
+{"data":[{"user_id":"1","user_name":"Alpha","user_login":"alpha","scopes":["user:read:email"],"has_authorized":true},{"user_id":"2","user_name":"Beta","user_login":"beta","scopes":[],"has_authorized":false}]}
