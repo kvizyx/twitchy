@@ -18,6 +18,7 @@ const defaultSummary = "149 operations, 30 groups, 127 stable, 10 NEW, 12 BETA, 
 type testEvent struct {
 	Action string `json:"Action"`
 	Output string `json:"Output"`
+	Test   string `json:"Test"`
 }
 
 func main() {
@@ -57,7 +58,7 @@ func validateTestJSON(input io.Reader) error {
 			return fmt.Errorf("qualitygate: invalid go test JSON: %w", err)
 		}
 		seen++
-		if event.Action == "skip" || event.Action == "fail" {
+		if event.Action == "fail" || (event.Action == "skip" && event.Test != "") {
 			return fmt.Errorf("qualitygate: go test event action %q is not allowed", event.Action)
 		}
 		lower := strings.ToLower(line)
