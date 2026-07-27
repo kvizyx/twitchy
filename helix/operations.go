@@ -2,9 +2,6 @@ package helix
 
 import "context"
 
-type Pager[T any] struct{}
-type PagerOption func()
-
 type emptyRequest struct{}
 type emptyData struct{}
 
