@@ -11,23 +11,23 @@ import (
 )
 
 func TestChannelsGetChannelInformation(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(task15Response(`{"data":[{"broadcaster_id":"111","broadcaster_login":"alpha","broadcaster_name":"Alpha","broadcaster_language":"en","game_name":"Game","game_id":"42","title":"Live","delay":0,"tags":["tag"],"content_classification_labels":["Gambling"],"is_branded_content":false}]}`))
-	client := task15Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(channelResponse(`{"data":[{"broadcaster_id":"111","broadcaster_login":"alpha","broadcaster_name":"Alpha","broadcaster_language":"en","game_name":"Game","game_id":"42","title":"Live","delay":0,"tags":["tag"],"content_classification_labels":["Gambling"],"is_branded_content":false}]}`))
+	client := channelClient(t, transport)
 
 	result, err := client.Channels.GetChannelInformation(context.Background(), helix.GetChannelInformationRequest{BroadcasterIDs: []string{"111", "222"}})
-	fixture := task15Fixture(urlValues("broadcaster_id", "111", "broadcaster_id", "222"), "", task15Success(`{"data":[{"broadcaster_id":"111","broadcaster_login":"alpha","broadcaster_name":"Alpha","broadcaster_language":"en","game_name":"Game","game_id":"42","title":"Live","delay":0,"tags":["tag"],"content_classification_labels":["Gambling"],"is_branded_content":false}]}`))
+	fixture := channelFixture(urlValues("broadcaster_id", "111", "broadcaster_id", "222"), "", channelSuccess(`{"data":[{"broadcaster_id":"111","broadcaster_login":"alpha","broadcaster_name":"Alpha","broadcaster_language":"en","game_name":"Game","game_id":"42","title":"Live","delay":0,"tags":["tag"],"content_classification_labels":["Gambling"],"is_branded_content":false}]}`))
 	if err != nil {
 		t.Fatal(err)
 	}
-	task15Contract(t, "get-channel-information", fixture, transport, result.Meta, nil)
+	channelContract(t, "get-channel-information", fixture, transport, result.Meta, nil)
 	if len(result.Data) != 1 || result.Data[0].GameID != "42" || result.Data[0].Delay != 0 {
 		t.Fatalf("channel information = %#v", result.Data)
 	}
 }
 
 func TestChannelsModifyChannelInformation_preservesExplicitZeroFalseAndEmpty(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.ResponseFromFixture(task15NoContent()))
-	client := task15Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.ResponseFromFixture(channelNoContent()))
+	client := channelClient(t, transport)
 	tags := []string{}
 	labels := []helix.ChannelClassificationLabel{}
 	request := helix.ModifyChannelInformationRequest{
@@ -55,8 +55,8 @@ func TestChannelsModifyChannelInformation_preservesExplicitZeroFalseAndEmpty(t *
 }
 
 func TestChannelsModifyChannelInformation_omitsUnsetFields(t *testing.T) {
-	transport := testkit.NewRecordingRoundTripper(testkit.ResponseFromFixture(task15NoContent()))
-	client := task15Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(testkit.ResponseFromFixture(channelNoContent()))
+	client := channelClient(t, transport)
 	_, err := client.Channels.ModifyChannelInformation(context.Background(), helix.ModifyChannelInformationRequest{BroadcasterID: "123456"})
 	if err != nil {
 		t.Fatal(err)
@@ -68,11 +68,11 @@ func TestChannelsModifyChannelInformation_omitsUnsetFields(t *testing.T) {
 
 func TestChannelsGetChannelEditors(t *testing.T) {
 	body := `{"data":[{"user_id":"9","user_name":"editor","created_at":"2024-01-02T03:04:05Z"}]}`
-	transport := testkit.NewRecordingRoundTripper(task15Response(body))
-	client := task15Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(channelResponse(body))
+	client := channelClient(t, transport)
 	result, err := client.Channels.GetChannelEditors(context.Background(), helix.GetChannelEditorsRequest{BroadcasterID: "123456"})
-	fixture := task15Fixture(urlValues("broadcaster_id", "123456"), "", task15Success(body))
-	task15Contract(t, "get-channel-editors", fixture, transport, result.Meta, err)
+	fixture := channelFixture(urlValues("broadcaster_id", "123456"), "", channelSuccess(body))
+	channelContract(t, "get-channel-editors", fixture, transport, result.Meta, err)
 	if len(result.Data) != 1 || result.Data[0].UserID != "9" {
 		t.Fatalf("editors = %#v", result.Data)
 	}
@@ -81,8 +81,8 @@ func TestChannelsGetChannelEditors(t *testing.T) {
 func TestChannelsGetFollowedChannelsPager(t *testing.T) {
 	first := `{"data":[{"broadcaster_id":"9","broadcaster_login":"alpha","broadcaster_name":"Alpha","followed_at":"2024-01-02T03:04:05Z"}],"pagination":{"cursor":"next"}}`
 	second := `{"data":[{"broadcaster_id":"10","broadcaster_login":"beta","broadcaster_name":"Beta","followed_at":"2024-01-03T03:04:05Z"}]}`
-	transport := testkit.NewRecordingRoundTripper(task15Response(first), task15Response(second))
-	client := task15Client(t, transport)
+	transport := testkit.NewRecordingRoundTripper(channelResponse(first), channelResponse(second))
+	client := channelClient(t, transport)
 	pager, err := client.Channels.GetFollowedChannelsPager(helix.GetFollowedChannelsRequest{UserID: "123456", First: intPointer(1)})
 	if err != nil {
 		t.Fatal(err)
@@ -98,7 +98,7 @@ func TestChannelsGetFollowedChannelsPager(t *testing.T) {
 
 func TestChannelsGetChannelFollowers_rejectsMismatchedUserIDBeforeNetwork(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper()
-	client := task15Client(t, transport)
+	client := channelClient(t, transport)
 	_, err := client.Channels.GetChannelFollowers(context.Background(), helix.GetChannelFollowersRequest{UserID: stringPointer("wrong"), BroadcasterID: "123456"})
 	var authErr *helix.AuthError
 	if !errors.As(err, &authErr) {
