@@ -52,4 +52,15 @@
 // TransportError, ProtocolError, OAuthError, and DeviceAuthorizationError
 // preserve structured operation/status/code information. Use errors.Is and
 // errors.As for branching; error strings are not a compatibility contract.
+//
+// Anchor: credential-registry
+//
+// Registry manages credentials for many users at once. AddUser starts a
+// RefreshingTokenSource with a ManagedSession per user and tags the
+// credential with arbitrary helix.Intent labels. The registry implements
+// helix.CredentialResolver, so a root helix.Client built with
+// helix.WithCredentialResolver can derive per-user or per-intent clients
+// with AsUser and AsIntent. Derived clients share the root HTTP transport
+// and perform no network I/O at derivation time; the registry owns every
+// session and Close shuts them all down.
 package oauth

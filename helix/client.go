@@ -52,6 +52,7 @@ type Client struct {
 	userAgent       string
 	tokenSource     TokenSource
 	staticToken     *Credential
+	resolver        CredentialResolver
 	rateLimitPolicy RateLimitPolicy
 	executor        *transportExecutor
 	valid           bool

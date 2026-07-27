@@ -125,6 +125,38 @@ See [`examples/helix-experimental`](examples/helix-experimental) for a runnable
 offline version. When Twitch promotes an endpoint out of NEW/BETA, it moves to
 the corresponding stable service in the next release.
 
+## Multiple users and bots
+
+A bot serving many channels keeps one credential per user. `oauth.Registry`
+runs a managed session for every registered user (proactive refresh, hourly
+validation, rotation hooks) and implements `helix.CredentialResolver`, so a
+single root client can switch context explicitly:
+
+```go
+registry, err := oauth.NewRegistry(oauthClient)
+if err != nil {
+	return err
+}
+defer registry.Close() // closes every user session
+
+err = registry.AddUser(ctx, broadcasterID, pair, hook,
+	helix.Intent("chat"), helix.Intent("eventsub"))
+
+client, err := helix.New(helix.WithCredentialResolver(registry))
+
+// A derived client that always acts as one specific user:
+asBroadcaster, err := client.AsUser(broadcasterID)
+
+// A derived client acting as any registered user covering the intents:
+asChatBot, err := client.AsIntent(helix.Intent("chat"))
+```
+
+Derived clients share the root HTTP transport, perform no network I/O when
+created, and keep all pre-network credential checks (token class, scopes,
+subject binding). Intents are opaque labels — the registry resolves the first
+user (by sorted ID) whose intents cover the request, skipping terminated
+sessions.
+
 ## Contributing
 
 You are more than welcome to contribute! Where it's possible, please include unit-tests for any code that is introduced
