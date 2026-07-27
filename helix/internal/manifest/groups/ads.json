@@ -63,7 +63,11 @@
         "pager_signature": null,
         "request_type": "StartCommercialRequest",
         "data_type": "StartCommercialData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/start-commercial",
+           "TestManifestConformance/negative/start-commercial"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -124,7 +128,11 @@
         "pager_signature": null,
         "request_type": "GetAdScheduleRequest",
         "data_type": "GetAdScheduleData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-ad-schedule",
+           "TestManifestConformance/negative/get-ad-schedule"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -186,7 +194,11 @@
         "pager_signature": null,
         "request_type": "SnoozeNextAdRequest",
         "data_type": "SnoozeNextAdData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/snooze-next-ad",
+           "TestManifestConformance/negative/snooze-next-ad"
+         ]
       },
       "fixtures": [
         "sources/reference.html"

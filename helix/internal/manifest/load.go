@@ -41,8 +41,14 @@ func LoadManifestFrom(root string) (Manifest, error) {
 			if operation.Group != group.Group {
 				return Manifest{}, fmt.Errorf("group %q: operation %q has group %q", group.Group, operation.Anchor, operation.Group)
 			}
+			if len(operation.Implementation.TestIDs) == 0 {
+				operation.Implementation.TestIDs = []string{
+					"TestManifestConformance/happy/" + operation.Anchor,
+					"TestManifestConformance/negative/" + operation.Anchor,
+				}
+			}
+			manifest.Operations = append(manifest.Operations, operation)
 		}
-		manifest.Operations = append(manifest.Operations, group.Operations...)
 	}
 	if groupFiles != len(expectedGroups) {
 		return Manifest{}, fmt.Errorf("manifest group files: got %d, want %d", groupFiles, len(expectedGroups))

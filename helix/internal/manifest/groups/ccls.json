@@ -52,7 +52,11 @@
         "pager_signature": null,
         "request_type": "GetContentClassificationLabelsRequest",
         "data_type": "GetContentClassificationLabelsData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-content-classification-labels",
+           "TestManifestConformance/negative/get-content-classification-labels"
+         ]
       },
       "fixtures": [
         "sources/reference.html"

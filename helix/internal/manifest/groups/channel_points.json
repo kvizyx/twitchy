@@ -124,7 +124,11 @@
         "pager_signature": null,
         "request_type": "CreateCustomRewardsRequest",
         "data_type": "CreateCustomRewardsData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/create-custom-rewards",
+           "TestManifestConformance/negative/create-custom-rewards"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -192,7 +196,11 @@
         "pager_signature": null,
         "request_type": "DeleteCustomRewardRequest",
         "data_type": "DeleteCustomRewardData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/delete-custom-reward",
+           "TestManifestConformance/negative/delete-custom-reward"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -266,7 +274,11 @@
         "pager_signature": null,
         "request_type": "GetCustomRewardRequest",
         "data_type": "GetCustomRewardData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-custom-reward",
+           "TestManifestConformance/negative/get-custom-reward"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -360,7 +372,11 @@
         "pager_signature": "func (s *ChannelPointsService) GetCustomRewardRedemptionPager(req GetCustomRewardRedemptionRequest, opts ...PagerOption) (*Pager[GetCustomRewardRedemptionData], error)",
         "request_type": "GetCustomRewardRedemptionRequest",
         "data_type": "GetCustomRewardRedemptionData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-custom-reward-redemption",
+           "TestManifestConformance/negative/get-custom-reward-redemption"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -500,7 +516,11 @@
         "pager_signature": null,
         "request_type": "UpdateCustomRewardRequest",
         "data_type": "UpdateCustomRewardData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/update-custom-reward",
+           "TestManifestConformance/negative/update-custom-reward"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -580,7 +600,11 @@
         "pager_signature": null,
         "request_type": "UpdateRedemptionStatusRequest",
         "data_type": "UpdateRedemptionStatusData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/update-redemption-status",
+           "TestManifestConformance/negative/update-redemption-status"
+         ]
       },
       "fixtures": [
         "sources/reference.html"

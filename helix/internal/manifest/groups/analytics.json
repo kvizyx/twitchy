@@ -81,7 +81,11 @@
         "pager_signature": "func (s *AnalyticsService) GetExtensionAnalyticsPager(req GetExtensionAnalyticsRequest, opts ...PagerOption) (*Pager[GetExtensionAnalyticsData], error)",
         "request_type": "GetExtensionAnalyticsRequest",
         "data_type": "GetExtensionAnalyticsData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-extension-analytics",
+           "TestManifestConformance/negative/get-extension-analytics"
+         ]
       },
       "fixtures": [
         "sources/reference.html"
@@ -167,7 +171,11 @@
         "pager_signature": "func (s *AnalyticsService) GetGameAnalyticsPager(req GetGameAnalyticsRequest, opts ...PagerOption) (*Pager[GetGameAnalyticsData], error)",
         "request_type": "GetGameAnalyticsRequest",
         "data_type": "GetGameAnalyticsData",
-        "stability": "stable"
+         "stability": "stable",
+         "test_ids": [
+           "TestManifestConformance/happy/get-game-analytics",
+           "TestManifestConformance/negative/get-game-analytics"
+         ]
       },
       "fixtures": [
         "sources/reference.html"

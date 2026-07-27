@@ -92,6 +92,7 @@ type ImplementationSpec struct {
 	RequestType    string    `json:"request_type"`
 	DataType       string    `json:"data_type"`
 	Stability      Stability `json:"stability"`
+	TestIDs        []string  `json:"test_ids"`
 }
 
 var expectedGroups = map[string]int{
@@ -223,7 +224,7 @@ func (operation Operation) validate() error {
 			return fmt.Errorf("operation %q: endpoint-specific 429 cannot be bucket-waitable", operation.Anchor)
 		}
 	}
-	if operation.Implementation.Anchor != operation.Anchor || operation.Implementation.Selector == "" || operation.Implementation.ServiceType == "" || operation.Implementation.Method == "" || operation.Implementation.Signature == "" || operation.Implementation.RequestType == "" || operation.Implementation.DataType == "" {
+	if operation.Implementation.Anchor != operation.Anchor || operation.Implementation.Selector == "" || operation.Implementation.ServiceType == "" || operation.Implementation.Method == "" || operation.Implementation.Signature == "" || operation.Implementation.RequestType == "" || operation.Implementation.DataType == "" || len(operation.Implementation.TestIDs) != 2 {
 		return fmt.Errorf("operation %q: implementation symbol is incomplete", operation.Anchor)
 	}
 	return nil
