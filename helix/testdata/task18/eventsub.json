@@ -1,1 +1,0 @@
-{"data":[{"id":"subscription-1","status":"enabled","type":"user.update","version":"1","condition":{"user_id":"1234"},"created_at":"2020-11-10T14:32:18.730260295Z","transport":{"method":"webhook","callback":"https://callback.test"},"cost":1}],"total":1,"total_cost":1,"max_total_cost":10000}

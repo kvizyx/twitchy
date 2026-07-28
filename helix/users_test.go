@@ -23,11 +23,20 @@ func task26Ptr[T any](value T) *T {
 	return &value
 }
 
+var task26Bodies = map[string]string{
+	"active_extensions.json":     `{"data":{"panel":{"1":{"active":true,"id":"panel-id","version":"1.0","name":"Panel"}},"overlay":{"1":{"active":true,"id":"overlay-id","version":"2.0","name":"Overlay"}},"component":{"1":{"active":true,"id":"component-id","version":"3.0","name":"Component","x":3,"y":4}}}}`,
+	"authorization_by_user.json": `{"data":[{"user_id":"1","user_name":"Alpha","user_login":"alpha","scopes":["user:read:email"],"has_authorized":true},{"user_id":"2","user_name":"Beta","user_login":"beta","scopes":[],"has_authorized":false}]}`,
+	"user_blocks.json":           `{"data":[{"user_id":"blocked","user_login":"blocked","display_name":"Blocked"}],"pagination":{"cursor":"cursor-b"}}`,
+	"user_extensions.json":       `{"data":[{"id":"panel-id","version":"1.0","name":"Panel","can_activate":true,"type":["panel"]}]}`,
+	"users.json":                 `{"data":[{"id":"1","login":"alpha","display_name":"Alpha","type":"","broadcaster_type":"affiliate","description":"first","profile_image_url":"https://example.test/alpha.png","offline_image_url":"https://example.test/alpha-offline.png","view_count":0,"email":"alpha@example.test","created_at":"2024-01-02T03:04:05Z"},{"id":"2","login":"beta","display_name":"Beta","type":"staff","broadcaster_type":"partner","description":"second","profile_image_url":"https://example.test/beta.png","offline_image_url":"https://example.test/beta-offline.png","view_count":1,"created_at":"2024-02-03T04:05:06Z"}]}`,
+	"videos.json":                `{"data":[{"id":"video-a","stream_id":null,"user_id":"owner","user_login":"owner","user_name":"Owner","title":"Video","description":"Description","created_at":"2024-01-02T03:04:05Z","published_at":"2024-01-02T04:05:06Z","url":"https://example.test/videos/video-a","thumbnail_url":"https://example.test/thumb/%{width}x%{height}.jpg","viewable":"public","view_count":42,"language":"en","type":"archive","duration":"3m21s","muted_segments":[{"duration":30,"offset":120}]}],"pagination":{"cursor":"cursor-b"}}`,
+}
+
 func task26Body(t *testing.T, name string) string {
 	t.Helper()
-	body, err := testkit.LoadText("testdata/task26", name)
-	if err != nil {
-		t.Fatal(err)
+	body, ok := task26Bodies[name]
+	if !ok {
+		t.Fatalf("unknown task26 fixture %q", name)
 	}
 	return body
 }

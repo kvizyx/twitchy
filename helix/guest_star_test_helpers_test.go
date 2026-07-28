@@ -27,11 +27,17 @@ func guestStarClient(t *testing.T, transport *testkit.RecordingRoundTripper, cre
 	)
 }
 
+var guestStarBodies = map[string]string{
+	"invites.json":  `{"data":[{"user_id":"9012","invited_at":"2026-07-27T12:00:00Z","status":"READY","is_video_enabled":true,"is_audio_enabled":false,"is_video_available":true,"is_audio_available":true}]}`,
+	"session.json":  `{"data":[{"id":"session-1","guests":[{"slot_id":"1","user_id":"9012","user_display_name":"Guest","user_login":"guest","is_live":true,"volume":75,"assigned_at":"2026-07-27T12:00:00Z","audio_settings":{"is_available":true,"is_host_enabled":true,"is_guest_enabled":false},"video_settings":{"is_available":true,"is_host_enabled":true,"is_guest_enabled":true}}]}]}`,
+	"settings.json": `{"data":[{"is_moderator_send_live_enabled":true,"slot_count":4,"is_browser_source_audio_enabled":false,"group_layout":"SCREENSHARE_LAYOUT","browser_source_token":"browser-token"}]}`,
+}
+
 func guestStarBody(t *testing.T, name string) string {
 	t.Helper()
-	body, err := testkit.LoadText("testdata/task21", name)
-	if err != nil {
-		t.Fatal(err)
+	body, ok := guestStarBodies[name]
+	if !ok {
+		t.Fatalf("unknown guest star fixture %q", name)
 	}
 	return body
 }

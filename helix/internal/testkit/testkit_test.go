@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"net/http"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 	"time"
@@ -50,7 +52,11 @@ func TestFakeSleeperAdvancesFakeClockWithoutWallSleep(t *testing.T) {
 }
 
 func TestFixtureLoaderReportsMalformedJSONPath(t *testing.T) {
-	_, err := LoadJSON[map[string]string]("testdata", "malformed.json")
+	root := t.TempDir()
+	if err := os.WriteFile(filepath.Join(root, "malformed.json"), []byte(`{"fixture":`), 0o600); err != nil {
+		t.Fatal(err)
+	}
+	_, err := LoadJSON[map[string]string](root, "malformed.json")
 	if err == nil || !strings.Contains(err.Error(), "malformed.json") || !strings.Contains(err.Error(), "decode JSON") {
 		t.Fatalf("LoadJSON() error = %v, want fixture path and decode context", err)
 	}

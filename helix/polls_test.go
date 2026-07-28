@@ -4,7 +4,6 @@ import (
 	"context"
 	"errors"
 	"net/http"
-	"os"
 	"testing"
 
 	"github.com/kvizyx/twitchy/helix"
@@ -81,11 +80,17 @@ func TestPollsGetPolls_acceptsReadScopeWithoutManageScope(t *testing.T) {
 	}
 }
 
+var task23Fixtures = map[string]string{
+	"poll.json":       `{"data":[{"id":"poll-1","broadcaster_id":"123456","broadcaster_name":"Streamer","broadcaster_login":"streamer","title":"Heads or tails?","choices":[{"id":"choice-1","title":"Heads","votes":0,"channel_points_votes":0,"bits_votes":0},{"id":"choice-2","title":"Tails","votes":0,"channel_points_votes":0,"bits_votes":0}],"bits_voting_enabled":false,"bits_per_vote":0,"channel_points_voting_enabled":true,"channel_points_per_vote":100,"status":"ACTIVE","duration":600,"started_at":"2024-01-02T03:04:05Z","ended_at":null}]}`,
+	"prediction.json": `{"data":[{"id":"prediction-1","broadcaster_id":"123456","broadcaster_name":"Streamer","broadcaster_login":"streamer","title":"Will it rain?","winning_outcome_id":null,"outcomes":[{"id":"outcome-1","title":"Yes","users":0,"channel_points":0,"top_predictors":null,"color":"BLUE"},{"id":"outcome-2","title":"No","users":0,"channel_points":0,"top_predictors":null,"color":"PINK"}],"prediction_window":120,"status":"ACTIVE","created_at":"2024-01-02T03:04:05Z","ended_at":null,"locked_at":null}]}`,
+	"raid.json":       `{"data":[{"created_at":"2024-01-02T03:04:05Z","is_mature":false}]}`,
+}
+
 func task23Fixture(t *testing.T, name string) string {
 	t.Helper()
-	data, err := os.ReadFile("testdata/task23/" + name)
-	if err != nil {
-		t.Fatal(err)
+	data, ok := task23Fixtures[name]
+	if !ok {
+		t.Fatalf("unknown task23 fixture %q", name)
 	}
-	return string(data)
+	return data
 }

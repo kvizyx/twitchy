@@ -1,1 +1,0 @@
-{"data":[{"id":"session-1","guests":[{"slot_id":"1","user_id":"9012","user_display_name":"Guest","user_login":"guest","is_live":true,"volume":75,"assigned_at":"2026-07-27T12:00:00Z","audio_settings":{"is_available":true,"is_host_enabled":true,"is_guest_enabled":false},"video_settings":{"is_available":true,"is_host_enabled":true,"is_guest_enabled":true}}]}]}
