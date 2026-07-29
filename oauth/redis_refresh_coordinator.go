@@ -14,6 +14,7 @@ import (
 const (
 	defaultRefreshLeaseTTL     = 30 * time.Second
 	defaultRefreshLeaseRenewal = 10 * time.Second
+	defaultRedisIOTimeout      = time.Second
 	acquireRetryFloor          = 10 * time.Millisecond
 	acquireRetryCeiling        = 50 * time.Millisecond
 )
@@ -25,8 +26,9 @@ type RefreshLeaseKeyBuilder func(userID string) string
 type RedisRefreshCoordinatorOption func(*redisRefreshCoordinatorOptions) error
 
 type redisRefreshCoordinatorOptions struct {
-	ttl     time.Duration
-	renewal time.Duration
+	ttl       time.Duration
+	renewal   time.Duration
+	ioTimeout time.Duration
 }
 
 // WithRefreshLeaseTTL sets the Redis lease duration.
@@ -51,6 +53,19 @@ func WithRefreshLeaseRenewal(renewal time.Duration) RedisRefreshCoordinatorOptio
 	}
 }
 
+// WithRedisIOTimeout bounds lease renewal and release socket I/O. The
+// coordinator uses a lease-scoped client that shares the supplied client's pool
+// and hooks; it never closes or changes the supplied client.
+func WithRedisIOTimeout(timeout time.Duration) RedisRefreshCoordinatorOption {
+	return func(options *redisRefreshCoordinatorOptions) error {
+		if timeout <= 0 {
+			return ErrInvalidOption
+		}
+		options.ioTimeout = timeout
+		return nil
+	}
+}
+
 // RedisRefreshCoordinator coordinates one refresh lease per user through Redis.
 type RedisRefreshCoordinator struct {
 	client  *redis.Client
@@ -59,6 +74,9 @@ type RedisRefreshCoordinator struct {
 	renewal time.Duration
 }
 
+// NewRedisRefreshCoordinator derives a bounded lease client from client. The
+// derived client shares the supplied client's pool and installed hooks, and is
+// not closed by the coordinator.
 func NewRedisRefreshCoordinator(
 	client *redis.Client,
 	key RefreshLeaseKeyBuilder,
@@ -82,8 +100,16 @@ func NewRedisRefreshCoordinator(
 	if configuration.renewal > configuration.ttl/3 {
 		return nil, ErrInvalidOption
 	}
+	if configuration.ioTimeout == 0 {
+		configuration.ioTimeout = min(defaultRedisIOTimeout, configuration.ttl/3)
+	}
+	if configuration.ioTimeout <= 0 || configuration.ioTimeout > configuration.ttl/3 {
+		return nil, ErrInvalidOption
+	}
+	leaseClient := client.WithTimeout(configuration.ioTimeout)
+	leaseClient.Options().ContextTimeoutEnabled = true
 	return &RedisRefreshCoordinator{
-		client:  client,
+		client:  leaseClient,
 		key:     key,
 		ttl:     configuration.ttl,
 		renewal: configuration.renewal,

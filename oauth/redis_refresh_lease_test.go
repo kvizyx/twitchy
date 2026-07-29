@@ -62,6 +62,34 @@ func TestRedisRefreshCoordinator_releaseUsesCallerDeadlineWhenRedisDead(t *testi
 	}
 }
 
+func TestRedisRefreshCoordinator_derivesBoundedContextAwareClient(t *testing.T) {
+	source := redis.NewClient(&redis.Options{
+		Addr:         "127.0.0.1:1",
+		ReadTimeout:  -1,
+		WriteTimeout: -1,
+	})
+	t.Cleanup(func() { _ = source.Close() })
+	coordinator, err := NewRedisRefreshCoordinator(
+		source,
+		func(string) string { return "bounded-client" },
+		WithRefreshLeaseTTL(300*time.Millisecond),
+		WithRefreshLeaseRenewal(100*time.Millisecond),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !coordinator.client.Options().ContextTimeoutEnabled {
+		t.Fatal("lease client does not honor context deadlines")
+	}
+	leaseOptions := coordinator.client.Options()
+	if leaseOptions.ReadTimeout <= 0 || leaseOptions.WriteTimeout <= 0 {
+		t.Fatalf("lease timeouts = %s/%s, want finite values", leaseOptions.ReadTimeout, leaseOptions.WriteTimeout)
+	}
+	if source.Options().ContextTimeoutEnabled || source.Options().ReadTimeout != 0 || source.Options().WriteTimeout != 0 {
+		t.Fatal("source client options were modified")
+	}
+}
+
 func TestRedisRefreshCoordinator_concurrentReleaseDuringRenewal(t *testing.T) {
 	fixture := newRedisCoordinatorFixture(t)
 	lease, err := fixture.coordinator.Acquire(context.Background(), "concurrent-release")

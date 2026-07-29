@@ -157,7 +157,9 @@ func TestRedisRefreshCoordinatorContracts(t *testing.T) {
 	for _, options := range [][]RedisRefreshCoordinatorOption{
 		{WithRefreshLeaseTTL(0)},
 		{WithRefreshLeaseRenewal(0)},
+		{WithRedisIOTimeout(0)},
 		{WithRefreshLeaseTTL(time.Second), WithRefreshLeaseRenewal(time.Second)},
+		{WithRefreshLeaseTTL(time.Second), WithRedisIOTimeout(time.Second)},
 		{nil},
 	} {
 		if _, err := NewRedisRefreshCoordinator(client, key, options...); !errors.Is(err, ErrInvalidOption) {

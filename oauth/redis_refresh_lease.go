@@ -2,6 +2,7 @@ package oauth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"sync"
 	"time"
@@ -78,7 +79,15 @@ func (lease *redisRefreshLease) Release(ctx context.Context) error {
 	lease.release.Do(func() {
 		close(lease.stop)
 		lease.cancel()
-		<-lease.done
+		select {
+		case <-lease.done:
+		case <-ctx.Done():
+			lease.releaseErr = errors.Join(
+				fmt.Errorf("%w: wait for renewal: %w", ErrRefreshCoordinator, ctx.Err()),
+				lease.Err(),
+			)
+			return
+		}
 		lease.mu.Lock()
 		lost := lease.lost
 		lossErr := lease.lossErr
