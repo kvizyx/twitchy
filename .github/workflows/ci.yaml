@@ -23,7 +23,7 @@ jobs:
         uses: golangci/golangci-lint-action@v6
         with:
           skip-cache: true
-          args: --timeout=5m --config=.golangci.yaml
+          args: --timeout=5m --config=.golangci.yaml --new-from-rev=${{ github.event_name == 'push' && github.event.before || github.event.pull_request.base.sha }}
 
   test:
     name: Tests and coverage report
