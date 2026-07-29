@@ -14,7 +14,8 @@ type CredentialHook func(context.Context, TokenPair) error
 type SourceOption func(*sourceOptions) error
 
 type sourceOptions struct {
-	refreshSkew time.Duration
+	refreshSkew  time.Duration
+	coordination *sourceCoordination
 }
 
 func WithRefreshSkew(skew time.Duration) SourceOption {
@@ -55,6 +56,7 @@ func (source *RefreshingTokenSource) refreshGeneration(ctx context.Context, gene
 		source.mu.Unlock()
 		return snapshot, nil
 	}
+	coordination := source.coordination
 	if source.flight != nil {
 		flight := source.flight
 		source.mu.Unlock()
@@ -68,6 +70,23 @@ func (source *RefreshingTokenSource) refreshGeneration(ctx context.Context, gene
 	flight := &refreshFlight{generation: generation, done: make(chan struct{})}
 	source.flight = flight
 	source.mu.Unlock()
+
+	if coordination != nil {
+		snapshot, err := source.performCoordinatedRefresh(ctx, generation, reason)
+		source.mu.Lock()
+		if source.closed {
+			snapshot = helix.CredentialSnapshot{}
+			err = errors.Join(helix.ErrSessionClosed, err)
+		}
+		flight.snapshot = snapshot
+		flight.err = err
+		if source.flight == flight {
+			source.flight = nil
+		}
+		close(flight.done)
+		source.mu.Unlock()
+		return snapshot, err
+	}
 
 	snapshot, rotated, err := source.performRefresh(reason)
 	source.mu.Lock()
@@ -166,9 +185,25 @@ func (source *RefreshingTokenSource) RetryCommit(ctx context.Context) error {
 		return helix.ErrCredentialCommit
 	}
 	pending := *source.pending
+	coordination := source.coordination
 	flight := &commitFlight{done: make(chan struct{})}
 	source.commitFlight = flight
 	source.mu.Unlock()
+
+	if coordination != nil {
+		err := source.performCoordinatedRetryCommit(ctx, pending)
+		source.mu.Lock()
+		if source.closed {
+			err = errors.Join(helix.ErrSessionClosed, err)
+		}
+		flight.err = err
+		if source.commitFlight == flight && err != nil {
+			source.commitFlight = nil
+		}
+		close(flight.done)
+		source.mu.Unlock()
+		return err
+	}
 
 	err := error(nil)
 	if source.hook != nil {

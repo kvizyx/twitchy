@@ -33,7 +33,8 @@ func NewCoordinatedRegistry(client *Client, coordinator RefreshCoordinator) (*Co
 }
 
 // AddCoordinatedUser loads the authoritative persisted pair after it acquires
-// the user's lease, then registers the user through the legacy registry path.
+// the user's lease, then registers a source that retains coordination for its
+// complete refresh and commit lifecycle.
 func (registry *CoordinatedRegistry) AddCoordinatedUser(
 	ctx context.Context,
 	userID string,
@@ -51,10 +52,18 @@ func (registry *CoordinatedRegistry) AddCoordinatedUser(
 	if isNilCoordinatorValue(lease) {
 		return ErrInvalidOption
 	}
+	var registeredEntry *registryEntry
 	defer func() {
 		releaseContext, cancel := context.WithTimeout(context.WithoutCancel(ctx), coordinatedReleaseTimeout)
 		defer cancel()
-		returnErr = errors.Join(returnErr, lease.Release(releaseContext))
+		releaseErr := lease.Release(releaseContext)
+		if releaseErr != nil && registeredEntry != nil {
+			rollbackErr := registry.registry.removeUserEntry(userID, registeredEntry)
+			registeredEntry = nil
+			returnErr = errors.Join(returnErr, releaseErr, rollbackErr)
+			return
+		}
+		returnErr = errors.Join(returnErr, releaseErr)
 	}()
 
 	leaseContext := lease.Context()
@@ -63,9 +72,26 @@ func (registry *CoordinatedRegistry) AddCoordinatedUser(
 	}
 	pair, loaderErr := loader(leaseContext, userID)
 	if leaseErr := lease.Err(); loaderErr != nil || leaseErr != nil {
-		return errors.Join(loaderErr, leaseErr)
+		return errors.Join(wrapCoordinatedLoadError(loaderErr), leaseErr)
 	}
-	return errors.Join(registry.registry.AddUser(ctx, userID, pair, hook, intents...), lease.Err())
+	coordination := &sourceCoordination{userID: userID, coordinator: registry.coordinator, loader: loader}
+	registeredEntry, err = registry.registry.addUser(registryUserRegistration{
+		ctx:           ctx,
+		userID:        userID,
+		pair:          pair,
+		hook:          hook,
+		intents:       intents,
+		sourceOptions: []SourceOption{withSourceCoordination(coordination)},
+	})
+	if err != nil {
+		return errors.Join(err, lease.Err())
+	}
+	if leaseErr := lease.Err(); leaseErr != nil {
+		rollbackErr := registry.registry.removeUserEntry(userID, registeredEntry)
+		registeredEntry = nil
+		return errors.Join(leaseErr, rollbackErr)
+	}
+	return nil
 }
 
 func (registry *CoordinatedRegistry) SourceForUser(userID string) (helix.TokenSource, error) {

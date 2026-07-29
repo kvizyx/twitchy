@@ -20,6 +20,15 @@ type registryEntry struct {
 	intents map[helix.Intent]struct{}
 }
 
+type registryUserRegistration struct {
+	ctx           context.Context
+	userID        string
+	pair          TokenPair
+	hook          CredentialHook
+	intents       []helix.Intent
+	sourceOptions []SourceOption
+}
+
 // Registry is a multi-tenant credential store. Each registered user gets a
 // RefreshingTokenSource with a ManagedSession (proactive refresh, hourly
 // validation), and the registry as a whole implements
@@ -48,31 +57,47 @@ func NewRegistry(client *Client) (*Registry, error) {
 // rotation hook, starts a managed session for it, and tags it with intents.
 // The first validation happens synchronously, so an invalid pair fails here.
 func (r *Registry) AddUser(ctx context.Context, userID string, pair TokenPair, hook CredentialHook, intents ...helix.Intent) error {
-	if ctx == nil || userID == "" || hook == nil {
-		return ErrInvalidOption
+	_, err := r.addUser(registryUserRegistration{
+		ctx:     ctx,
+		userID:  userID,
+		pair:    pair,
+		hook:    hook,
+		intents: intents,
+	})
+	return err
+}
+
+func (r *Registry) addUser(registration registryUserRegistration) (*registryEntry, error) {
+	if registration.ctx == nil || registration.userID == "" || registration.hook == nil {
+		return nil, ErrInvalidOption
 	}
 	r.mu.Lock()
 	if r.closed {
 		r.mu.Unlock()
-		return ErrRegistryClosed
+		return nil, ErrRegistryClosed
 	}
-	if _, exists := r.users[userID]; exists {
+	if _, exists := r.users[registration.userID]; exists {
 		r.mu.Unlock()
-		return ErrUserExists
+		return nil, ErrUserExists
 	}
 	r.mu.Unlock()
 
-	source, err := NewRefreshingTokenSource(r.client, pair, hook)
+	source, err := NewRefreshingTokenSource(
+		r.client,
+		registration.pair,
+		registration.hook,
+		registration.sourceOptions...,
+	)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	session, err := NewManagedSession(ctx, source)
+	session, err := NewManagedSession(registration.ctx, source)
 	if err != nil {
 		_ = source.Close()
-		return err
+		return nil, err
 	}
-	set := make(map[helix.Intent]struct{}, len(intents))
-	for _, intent := range intents {
+	set := make(map[helix.Intent]struct{}, len(registration.intents))
+	for _, intent := range registration.intents {
 		set[intent] = struct{}{}
 	}
 
@@ -80,14 +105,27 @@ func (r *Registry) AddUser(ctx context.Context, userID string, pair TokenPair, h
 	defer r.mu.Unlock()
 	if r.closed {
 		_ = session.Close()
-		return ErrRegistryClosed
+		return nil, ErrRegistryClosed
 	}
-	if _, exists := r.users[userID]; exists {
+	if _, exists := r.users[registration.userID]; exists {
 		_ = session.Close()
-		return ErrUserExists
+		return nil, ErrUserExists
 	}
-	r.users[userID] = &registryEntry{source: source, session: session, intents: set}
-	return nil
+	entry := &registryEntry{source: source, session: session, intents: set}
+	r.users[registration.userID] = entry
+	return entry, nil
+}
+
+func (r *Registry) removeUserEntry(userID string, expected *registryEntry) error {
+	r.mu.Lock()
+	entry, exists := r.users[userID]
+	if !exists || entry != expected {
+		r.mu.Unlock()
+		return nil
+	}
+	delete(r.users, userID)
+	r.mu.Unlock()
+	return entry.session.Close()
 }
 
 // RemoveUser closes the user's session and drops the credential.

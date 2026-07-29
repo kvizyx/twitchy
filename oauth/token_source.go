@@ -11,10 +11,11 @@ import (
 const defaultRefreshSkew = time.Minute
 
 type RefreshingTokenSource struct {
-	client *Client
-	hook   CredentialHook
-	clock  helix.Clock
-	skew   time.Duration
+	client       *Client
+	hook         CredentialHook
+	clock        helix.Clock
+	skew         time.Duration
+	coordination *sourceCoordination
 
 	mu           sync.Mutex
 	current      helix.CredentialSnapshot
@@ -46,14 +47,15 @@ func NewRefreshingTokenSource(client *Client, pair TokenPair, hook CredentialHoo
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	source := &RefreshingTokenSource{
-		client: client,
-		hook:   hook,
-		clock:  client.clock,
-		skew:   configuration.refreshSkew,
-		pair:   pair,
-		ctx:    ctx,
-		cancel: cancel,
-		done:   make(chan struct{}),
+		client:       client,
+		hook:         hook,
+		clock:        client.clock,
+		skew:         configuration.refreshSkew,
+		coordination: configuration.coordination,
+		pair:         pair,
+		ctx:          ctx,
+		cancel:       cancel,
+		done:         make(chan struct{}),
 	}
 	source.current = source.snapshotForPair(pair, 0)
 	return source, nil
