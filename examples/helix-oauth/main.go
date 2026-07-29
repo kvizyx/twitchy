@@ -6,9 +6,11 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"time"
 
 	"github.com/kvizyx/twitchy/oauth"
+	"github.com/redis/go-redis/v9"
 )
 
 func main() {
@@ -69,6 +71,59 @@ func main() {
 		panic(err)
 	}
 	fmt.Println("managed session validated hourly by default and closed explicitly")
+
+	runCoordinatedExample(client)
+}
+
+func runCoordinatedExample(client *oauth.Client) {
+	address := os.Getenv("TWITCHY_EXAMPLE_REDIS_ADDR")
+	if address == "" {
+		fmt.Println("coordinated registry example skipped: set TWITCHY_EXAMPLE_REDIS_ADDR to run it")
+		return
+	}
+	redisClient := redis.NewClient(&redis.Options{Addr: address})
+	defer redisClient.Close()
+
+	coordinator, err := oauth.NewRedisRefreshCoordinator(redisClient,
+		func(userID string) string { return "twitchy:example:refresh:" + userID })
+	if err != nil {
+		panic(err)
+	}
+	registry, err := oauth.NewCoordinatedRegistry(client, coordinator)
+	if err != nil {
+		panic(err)
+	}
+	defer registry.Close()
+
+	var stored oauth.TokenPair
+	loader := func(context.Context, string) (oauth.TokenPair, error) {
+		if stored.AccessToken == "" {
+			return oauth.TokenPair{
+				AccessToken:  "initial-access-placeholder",
+				RefreshToken: "initial-refresh-placeholder",
+				ExpiresIn:    time.Minute,
+				TokenType:    "bearer",
+			}, nil
+		}
+		return stored, nil
+	}
+	hook := func(_ context.Context, pair oauth.TokenPair) error {
+		stored = pair
+		fmt.Printf("coordinated hook: type=%s expires=%s scopes=%d\n", pair.TokenType, pair.ExpiresIn, len(pair.Scopes))
+		return nil
+	}
+	ctx := context.Background()
+	if err := registry.AddCoordinatedUser(ctx, "example-user", loader, hook, "chat"); err != nil {
+		panic(err)
+	}
+	source, err := registry.SourceForUser("example-user")
+	if err != nil {
+		panic(err)
+	}
+	if _, err := source.Token(ctx); err != nil {
+		panic(err)
+	}
+	fmt.Println("coordinated registry rotated and committed one credential under the Redis lease")
 }
 
 func writeJSON(writer http.ResponseWriter, value any) {

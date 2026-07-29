@@ -157,6 +157,51 @@ subject binding). Intents are opaque labels — the registry resolves the first
 user (by sorted ID) whose intents cover the request, skipping terminated
 sessions.
 
+## Coordinated registries across processes
+
+`oauth.Registry` coordinates refreshes within one process only. When several
+replicas share the same credentials, build a `CoordinatedRegistry` with a
+`RefreshCoordinator` so only one process rotates a refresh token at a time:
+
+```go
+redisClient := redis.NewClient(&redis.Options{Addr: "localhost:6379"})
+coordinator, err := oauth.NewRedisRefreshCoordinator(redisClient,
+	func(userID string) string { return "myapp:twitch:refresh:" + userID })
+
+registry, err := oauth.NewCoordinatedRegistry(oauthClient, coordinator)
+defer registry.Close()
+
+loader := func(ctx context.Context, userID string) (oauth.TokenPair, error) {
+	return loadPairFromDatabase(ctx, userID) // ExpiresIn = remaining lifetime
+}
+hook := func(ctx context.Context, pair oauth.TokenPair) error {
+	return savePairToDatabase(ctx, pair) // persist the rotated pair
+}
+
+err = registry.AddCoordinatedUser(ctx, broadcasterID, loader, hook,
+	helix.Intent("chat"))
+```
+
+While a process holds the lease it reloads the durable pair, adopts it when
+another process already rotated it, refreshes otherwise, commits through the
+hook, and only then activates the credential. Waiters take the lease next,
+reload, and adopt — one remote refresh per rotation across the fleet. The
+loader must return the pair's *remaining* lifetime in `ExpiresIn`. Lease keys
+must contain user IDs only, never token material. The Redis implementation
+derives a bounded, context-aware client from the supplied one (shared pool,
+finite lease I/O timeouts) and never closes the caller's client.
+
+Failure semantics matter because Twitch rotates the refresh token itself:
+
+- A failed durable commit keeps the rotated pair pending; `RetryCommit`
+  reacquires the lease, reloads, adopts a pair committed by another process,
+  or retries the same hook.
+- If the process dies after Twitch rotated the token but before the hook
+  persisted it, the credential is unrecoverable and the user must
+  reauthorize — `CredentialRotationError` marks this terminal state.
+- Caller cancellation and definitive OAuth rejections are safe: the source
+  stays usable and the next attempt reloads the durable pair.
+
 ## Contributing
 
 You are more than welcome to contribute! Where it's possible, please include unit-tests for any code that is introduced
