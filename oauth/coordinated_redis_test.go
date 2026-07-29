@@ -49,6 +49,40 @@ func TestCoordinatedRefresh_realRedisSerializesSources(t *testing.T) {
 	t.Logf("REMOTE_REFRESHES=%d DURABLE_COMMITS=%d ACTIVE_SOURCES=2", server.refreshes.Load(), store.hooks.Load())
 }
 
+func TestCoordinatedLifecycle_wrongOwnerReplacementInHookPreventsActivation(t *testing.T) {
+	fixture := newRedisCoordinatorFixture(t)
+	clock := newTestClock(time.Unix(190_000, 0))
+	server := newCoordinatedOAuthServer(t)
+	store := newCoordinatedTestStore(TokenPair{
+		AccessToken:  "old-access",
+		RefreshToken: "old-refresh",
+		ExpiresIn:    time.Hour,
+	})
+	key := fixture.key("42")
+	source := newCoordinatedSource(t, clock, server, fixture.coordinator, store)
+	store.mu.Lock()
+	store.hookFn = func(ctx context.Context, pair TokenPair) error {
+		if err := fixture.client.Set(context.Background(), key, "replacement-owner", time.Second).Err(); err != nil {
+			return err
+		}
+		store.setPair(pair)
+		return nil
+	}
+	store.mu.Unlock()
+	t.Cleanup(func() { _ = fixture.client.Del(context.Background(), key).Err() })
+	clock.Advance(time.Hour - defaultRefreshSkew)
+
+	_, err := source.Token(context.Background())
+	if !errors.Is(err, ErrRefreshLeaseLost) {
+		t.Fatalf("refresh error = %v, want lease loss", err)
+	}
+	requireNoActivation(t, source, "old-access")
+	if got := store.hooks.Load(); got != 1 {
+		t.Fatalf("durable commits = %d, want 1", got)
+	}
+	t.Logf("REMOTE_REFRESHES=%d DURABLE_COMMITS=%d ACTIVATIONS=0", server.refreshes.Load(), store.hooks.Load())
+}
+
 func TestCoordinatedLifecycle_realRedisLossDuringHTTPPreventsCommitAndActivation(t *testing.T) {
 	fixture := newRedisCoordinatorFixture(t)
 	clock := newTestClock(time.Unix(180_000, 0))

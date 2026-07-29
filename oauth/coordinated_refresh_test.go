@@ -3,6 +3,8 @@ package oauth
 import (
 	"context"
 	"errors"
+	"io"
+	"net/http"
 	"sync"
 	"testing"
 	"time"
@@ -197,6 +199,100 @@ func TestCoordinatedRefresh_reloadFailureDoesNotRefreshCommitOrActivate(t *testi
 		t.Fatalf("durable commits = %d, want 0", got)
 	}
 	requireNoActivation(t, source, "unchanged-access")
+}
+
+func TestCoordinatedRefresh_callerCancellationDoesNotTerminalize(t *testing.T) {
+	clock := newTestClock(time.Unix(55_000, 0))
+	server := newCoordinatedOAuthServer(t)
+	server.setRefreshFn(func(writer http.ResponseWriter, request *http.Request, _ int32) {
+		select {
+		case <-request.Context().Done():
+			return
+		case <-time.After(time.Second):
+			_, _ = io.WriteString(writer, coordinatedRotationResponse)
+		}
+	})
+	coordinator := newMemoryRefreshCoordinator()
+	store := newCoordinatedTestStore(TokenPair{
+		AccessToken:  "old-access",
+		RefreshToken: "old-refresh",
+		ExpiresIn:    time.Hour,
+	})
+	source := newCoordinatedSource(t, clock, server, coordinator, store)
+	drainCoordinatedRegistration(t, coordinator)
+	clock.Advance(time.Hour - defaultRefreshSkew)
+
+	callerContext, cancel := context.WithCancel(context.Background())
+	result := make(chan error, 1)
+	go func() {
+		_, err := source.Token(callerContext)
+		result <- err
+	}()
+	select {
+	case <-server.refreshStarted:
+	case <-time.After(time.Second):
+		t.Fatal("remote refresh did not start")
+	}
+	cancel()
+	err := waitLifecycleResult(t, result)
+	if !errors.Is(err, context.Canceled) {
+		t.Fatalf("refresh error = %v, want caller cancellation", err)
+	}
+	var terminal reauthorizationRequiredError
+	if errors.As(err, &terminal) {
+		t.Fatalf("caller cancellation terminalized the source: %v", err)
+	}
+
+	snapshot, err := source.Token(context.Background())
+	if err != nil {
+		t.Fatalf("source unusable after caller cancellation: %v", err)
+	}
+	if got := snapshot.AccessToken(); got != "rotated-access" {
+		t.Fatalf("active access token = %q, want rotated pair", got)
+	}
+}
+
+func TestCoordinatedRefresh_oauthRejectionDoesNotTerminalize(t *testing.T) {
+	clock := newTestClock(time.Unix(57_000, 0))
+	server := newCoordinatedOAuthServer(t)
+	server.setRefreshFn(func(writer http.ResponseWriter, _ *http.Request, count int32) {
+		if count == 1 {
+			writer.WriteHeader(http.StatusBadRequest)
+			_, _ = io.WriteString(writer, `{"error":"invalid_grant","error_description":"bad refresh token"}`)
+			return
+		}
+		_, _ = io.WriteString(writer, coordinatedRotationResponse)
+	})
+	coordinator := newMemoryRefreshCoordinator()
+	store := newCoordinatedTestStore(TokenPair{
+		AccessToken:  "old-access",
+		RefreshToken: "old-refresh",
+		ExpiresIn:    time.Hour,
+	})
+	source := newCoordinatedSource(t, clock, server, coordinator, store)
+	drainCoordinatedRegistration(t, coordinator)
+	clock.Advance(time.Hour - defaultRefreshSkew)
+
+	_, err := source.Token(context.Background())
+	var oauthErr *OAuthError
+	if !errors.As(err, &oauthErr) {
+		t.Fatalf("refresh error = %v (%T), want OAuthError", err, err)
+	}
+	var terminal reauthorizationRequiredError
+	if errors.As(err, &terminal) {
+		t.Fatalf("definitive OAuth rejection terminalized the source: %v", err)
+	}
+
+	snapshot, err := source.Token(context.Background())
+	if err != nil {
+		t.Fatalf("source unusable after OAuth rejection: %v", err)
+	}
+	if got := snapshot.AccessToken(); got != "rotated-access" {
+		t.Fatalf("active access token = %q, want rotated pair", got)
+	}
+	if got := server.refreshes.Load(); got != 2 {
+		t.Fatalf("remote refreshes = %d, want 2", got)
+	}
 }
 
 func TestCoordinatedRefresh_doesNotRetryOldRefreshTokenAfterCommitFailure(t *testing.T) {

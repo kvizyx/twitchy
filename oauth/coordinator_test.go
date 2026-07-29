@@ -38,6 +38,10 @@ func (lease *contractLease) Err() error {
 	return lease.err
 }
 
+func (lease *contractLease) AssertOwnership(context.Context) error {
+	return lease.err
+}
+
 func (lease *contractLease) Release(context.Context) error {
 	lease.releaseCalls++
 	return lease.releaseErr

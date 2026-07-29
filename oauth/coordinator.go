@@ -24,5 +24,9 @@ type RefreshCoordinator interface {
 type RefreshLease interface {
 	Context() context.Context
 	Err() error
+	// AssertOwnership performs a fresh ownership check against the backing
+	// store instead of relying on renewal observations. Coordinated sources
+	// call it immediately before activating a rotated credential.
+	AssertOwnership(context.Context) error
 	Release(context.Context) error
 }

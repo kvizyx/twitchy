@@ -72,6 +72,28 @@ func (lease *redisRefreshLease) Err() error {
 	return lease.ctx.Err()
 }
 
+func (lease *redisRefreshLease) AssertOwnership(ctx context.Context) error {
+	if ctx == nil {
+		return ErrInvalidOption
+	}
+	if err := lease.Err(); err != nil {
+		return err
+	}
+	owner, err := lease.coordinator.client.Get(ctx, lease.key).Result()
+	if errors.Is(err, redis.Nil) {
+		lease.markLost(ErrRefreshLeaseLost)
+		return ErrRefreshLeaseLost
+	}
+	if err != nil {
+		return fmt.Errorf("%w: assert lease ownership: %w", ErrRefreshCoordinator, err)
+	}
+	if owner != lease.owner {
+		lease.markLost(ErrRefreshLeaseLost)
+		return ErrRefreshLeaseLost
+	}
+	return nil
+}
+
 func (lease *redisRefreshLease) Release(ctx context.Context) error {
 	if ctx == nil {
 		return ErrInvalidOption

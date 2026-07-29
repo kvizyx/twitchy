@@ -27,6 +27,8 @@ func (lease *sequencedContractLease) Err() error {
 	return err
 }
 
+func (lease *sequencedContractLease) AssertOwnership(context.Context) error { return nil }
+
 func (lease *sequencedContractLease) Release(context.Context) error {
 	lease.releaseCalls++
 	return lease.releaseErr

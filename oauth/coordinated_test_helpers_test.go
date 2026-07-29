@@ -91,6 +91,8 @@ type memoryRefreshLease struct {
 
 func (lease *memoryRefreshLease) Context() context.Context { return lease.ctx }
 
+func (lease *memoryRefreshLease) AssertOwnership(context.Context) error { return lease.Err() }
+
 func (lease *memoryRefreshLease) Err() error {
 	lease.mu.Lock()
 	defer lease.mu.Unlock()

@@ -127,9 +127,7 @@ func (source *RefreshingTokenSource) refreshCoordinatedDurable(
 		RefreshToken: request.durable.RefreshToken,
 	})
 	if err != nil {
-		return helix.CredentialSnapshot{}, source.coordinatedRotationFailure(
-			errors.Join(err, guard.lease.Err()),
-		)
+		return helix.CredentialSnapshot{}, source.coordinatedRefreshFailure(guard.workCtx, guard.lease, err)
 	}
 	rotatedPair := cloneCoordinatedPair(*rotated)
 	if len(rotatedPair.Scopes) == 0 {

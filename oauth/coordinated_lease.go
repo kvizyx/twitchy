@@ -135,6 +135,11 @@ func (source *RefreshingTokenSource) activateCoordinatedCandidate(
 	if err := source.coordinatedOwnershipError(lease); err != nil {
 		return helix.CredentialSnapshot{}, err
 	}
+	assertContext, cancel := context.WithTimeout(lease.Context(), coordinatedReleaseTimeout)
+	defer cancel()
+	if err := lease.AssertOwnership(assertContext); err != nil {
+		return helix.CredentialSnapshot{}, err
+	}
 	source.mu.Lock()
 	defer source.mu.Unlock()
 	if source.closed {
@@ -188,6 +193,30 @@ func (source *RefreshingTokenSource) coordinatedRotationFailure(cause error) err
 	}
 	source.terminal = rotationErr
 	return rotationErr
+}
+
+// coordinatedRefreshFailure classifies remote refresh errors. Lease loss and
+// unknown transport outcomes can mean Twitch already rotated the token, so
+// they terminalize and require reauthorization. Caller cancellation and
+// definitive OAuth rejections are safe: the source stays usable and the next
+// attempt reloads the durable pair under a fresh lease.
+func (source *RefreshingTokenSource) coordinatedRefreshFailure(
+	ctx context.Context,
+	lease RefreshLease,
+	cause error,
+) error {
+	if leaseErr := lease.Err(); leaseErr != nil &&
+		(errors.Is(leaseErr, ErrRefreshLeaseLost) || errors.Is(leaseErr, ErrRefreshCoordinator)) {
+		return source.coordinatedRotationFailure(errors.Join(cause, leaseErr))
+	}
+	if ctxErr := ctx.Err(); ctxErr != nil {
+		return errors.Join(cause, ctxErr)
+	}
+	var oauthErr *OAuthError
+	if errors.As(cause, &oauthErr) {
+		return cause
+	}
+	return source.coordinatedRotationFailure(cause)
 }
 
 func cloneCoordinatedPair(pair TokenPair) TokenPair {
