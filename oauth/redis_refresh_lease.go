@@ -77,6 +77,7 @@ func (lease *redisRefreshLease) Release(ctx context.Context) error {
 	}
 	lease.release.Do(func() {
 		close(lease.stop)
+		lease.cancel()
 		<-lease.done
 		lease.mu.Lock()
 		lost := lease.lost
@@ -97,7 +98,6 @@ func (lease *redisRefreshLease) Release(ctx context.Context) error {
 			lease.markLost(lease.releaseErr)
 			return
 		}
-		lease.cancel()
 	})
 	return lease.releaseErr
 }

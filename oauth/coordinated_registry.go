@@ -2,8 +2,10 @@ package oauth
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"reflect"
+	"time"
 
 	"github.com/kvizyx/twitchy/helix"
 )
@@ -16,6 +18,8 @@ type CoordinatedRegistry struct {
 }
 
 var _ helix.CredentialResolver = (*CoordinatedRegistry)(nil)
+
+const coordinatedReleaseTimeout = time.Second
 
 func NewCoordinatedRegistry(client *Client, coordinator RefreshCoordinator) (*CoordinatedRegistry, error) {
 	if isNilCoordinatorValue(coordinator) {
@@ -44,24 +48,24 @@ func (registry *CoordinatedRegistry) AddCoordinatedUser(
 	if err != nil {
 		return fmt.Errorf("acquire refresh lease: %w", err)
 	}
-	if isNilCoordinatorValue(lease) || lease.Context() == nil {
+	if isNilCoordinatorValue(lease) {
 		return ErrInvalidOption
 	}
 	defer func() {
-		releaseErr := lease.Release(context.WithoutCancel(ctx))
-		if returnErr == nil && releaseErr != nil {
-			returnErr = fmt.Errorf("release refresh lease: %w", releaseErr)
-		}
+		releaseContext, cancel := context.WithTimeout(context.WithoutCancel(ctx), coordinatedReleaseTimeout)
+		defer cancel()
+		returnErr = errors.Join(returnErr, lease.Release(releaseContext))
 	}()
 
-	pair, err := loader(lease.Context(), userID)
-	if err := lease.Err(); err != nil {
-		return err
+	leaseContext := lease.Context()
+	if leaseContext == nil {
+		return ErrInvalidOption
 	}
-	if err != nil {
-		return fmt.Errorf("load persisted credential: %w", err)
+	pair, loaderErr := loader(leaseContext, userID)
+	if leaseErr := lease.Err(); loaderErr != nil || leaseErr != nil {
+		return errors.Join(loaderErr, leaseErr)
 	}
-	return registry.registry.AddUser(ctx, userID, pair, hook, intents...)
+	return errors.Join(registry.registry.AddUser(ctx, userID, pair, hook, intents...), lease.Err())
 }
 
 func (registry *CoordinatedRegistry) SourceForUser(userID string) (helix.TokenSource, error) {
