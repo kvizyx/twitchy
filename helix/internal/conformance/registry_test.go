@@ -95,9 +95,9 @@ func verifyMethodType(operation manifest.Operation, got reflect.Type) error {
 	return nil
 }
 
-func verifyServiceSurface(loaded manifest.Manifest) error {
-	expected := make(map[string]struct{}, len(loaded.Operations))
-	for _, operation := range loaded.Operations {
+func verifyServiceSurface(operations []manifest.Operation) error {
+	expected := make(map[string]struct{}, len(operations))
+	for _, operation := range operations {
 		expected[operation.Implementation.ServiceType+"."+operation.Implementation.Method] = struct{}{}
 	}
 	actual := make(map[string]struct{}, len(expected))

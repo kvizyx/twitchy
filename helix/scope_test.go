@@ -1,7 +1,6 @@
 package helix_test
 
 import (
-	"encoding/json"
 	"fmt"
 	"os"
 	"os/exec"
@@ -17,11 +16,95 @@ type scopeDefinition struct {
 	value helix.AuthorizationScope
 }
 
-type scopeDescriptor struct {
-	Scopes struct {
-		RequiredValues   []string          `json:"required_values"`
-		NewConstantNames map[string]string `json:"new_constant_names"`
-	} `json:"scopes"`
+var requiredScopeValues = []string{
+	"analytics:read:extensions",
+	"analytics:read:games",
+	"bits:read",
+	"channel:bot",
+	"channel:manage:ads",
+	"channel:read:ads",
+	"channel:manage:broadcast",
+	"channel:read:charity",
+	"channel:manage:clips",
+	"channel:edit:commercial",
+	"channel:read:editors",
+	"channel:manage:extensions",
+	"channel:read:goals",
+	"channel:read:guest_star",
+	"channel:manage:guest_star",
+	"channel:read:hype_train",
+	"channel:manage:moderators",
+	"channel:read:polls",
+	"channel:manage:polls",
+	"channel:read:predictions",
+	"channel:manage:predictions",
+	"channel:manage:raids",
+	"channel:read:redemptions",
+	"channel:manage:redemptions",
+	"channel:manage:schedule",
+	"channel:read:stream_key",
+	"channel:read:subscriptions",
+	"channel:manage:videos",
+	"channel:read:vips",
+	"channel:manage:vips",
+	"channel:moderate",
+	"clips:edit",
+	"editor:manage:clips",
+	"moderation:read",
+	"moderator:manage:announcements",
+	"moderator:manage:automod",
+	"moderator:read:automod_settings",
+	"moderator:manage:automod_settings",
+	"moderator:read:banned_users",
+	"moderator:manage:banned_users",
+	"moderator:read:blocked_terms",
+	"moderator:manage:blocked_terms",
+	"moderator:read:chat_messages",
+	"moderator:manage:chat_messages",
+	"moderator:read:chat_settings",
+	"moderator:manage:chat_settings",
+	"moderator:read:chatters",
+	"moderator:read:followers",
+	"moderator:read:guest_star",
+	"moderator:manage:guest_star",
+	"moderator:read:moderators",
+	"moderator:read:shield_mode",
+	"moderator:manage:shield_mode",
+	"moderator:read:shoutouts",
+	"moderator:manage:shoutouts",
+	"moderator:read:suspicious_users",
+	"moderator:manage:suspicious_users",
+	"moderator:read:unban_requests",
+	"moderator:manage:unban_requests",
+	"moderator:read:vips",
+	"moderator:read:warnings",
+	"moderator:manage:warnings",
+	"user:bot",
+	"user:edit",
+	"user:edit:broadcast",
+	"user:read:blocked_users",
+	"user:manage:blocked_users",
+	"user:read:broadcast",
+	"user:read:chat",
+	"user:manage:chat_color",
+	"user:read:email",
+	"user:read:emotes",
+	"user:read:follows",
+	"user:read:moderated_channels",
+	"user:read:subscriptions",
+	"user:read:whispers",
+	"user:manage:whispers",
+	"user:write:chat",
+	"chat:edit",
+	"chat:read",
+	"whispers:read",
+}
+
+var scopeConstantNames = map[string]string{
+	"channel:manage:clips":              "ScopeChannelManageClips",
+	"editor:manage:clips":               "ScopeEditorManageClips",
+	"moderator:manage:suspicious_users": "ScopeModeratorManageSuspiciousUsers",
+	"whispers:read":                     "ScopeWhispersRead",
 }
 
 var declaredScopes = []scopeDefinition{
@@ -109,15 +192,7 @@ var declaredScopes = []scopeDefinition{
 }
 
 func TestScopes(t *testing.T) {
-	// Given the copied core/OAuth descriptor and the exported scope table.
-	bytes, err := os.ReadFile(filepath.Join("internal", "manifest", "core-oauth-descriptor.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	var descriptor scopeDescriptor
-	if err := json.Unmarshal(bytes, &descriptor); err != nil {
-		t.Fatal(err)
-	}
+	// Given the required scope table and the exported scope constants.
 
 	// When converting both tables to sets.
 	actual := make([]string, len(declaredScopes))
@@ -125,7 +200,7 @@ func TestScopes(t *testing.T) {
 		actual[index] = string(scope.value)
 	}
 	actualSet, actualDuplicate := uniqueValues(actual)
-	requiredSet, requiredDuplicate := uniqueValues(descriptor.Scopes.RequiredValues)
+	requiredSet, requiredDuplicate := uniqueValues(requiredScopeValues)
 
 	// Then every descriptor value is represented exactly once and no extra value exists.
 	if actualDuplicate != "" {
@@ -148,7 +223,7 @@ func TestScopes(t *testing.T) {
 		}
 	}
 
-	for value, name := range descriptor.Scopes.NewConstantNames {
+	for value, name := range scopeConstantNames {
 		found := false
 		for _, scope := range declaredScopes {
 			if scope.name == name {

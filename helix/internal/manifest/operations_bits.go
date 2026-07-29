@@ -1,0 +1,130 @@
+package manifest
+
+import "net/http"
+
+var bitsOperations = operationsForGroup("Bits",
+	defineOperation("get-bits-leaderboard", Operation{
+		Name:           "Get Bits Leaderboard",
+		Method:         http.MethodGet,
+		Path:           "/helix/bits/leaderboard",
+		Stability:      StabilityStable,
+		TokenClasses:   []TokenClass{TokenClassUser},
+		Scopes:         []string{"bits:read"},
+		SubjectBinding: "unknown",
+		Request: RequestSpec{
+			Locations: map[string][]RequestField{
+				"query_parameters": {
+					{Name: "count", Type: "Integer"},
+					{Name: "period", Type: "String"},
+					{Name: "started_at", Type: "String"},
+					{Name: "user_id", Type: "String"},
+				},
+			},
+			BodyReconstructible: true,
+		},
+		Response:   ResponseSpec{Format: "json", Status: []int{200, 400, 401}},
+		Pagination: PaginationSpec{Shape: "none", CursorParameter: "unknown"},
+		Replay:     ReplaySpec{BucketWaitable: true},
+		Implementation: ImplementationSpec{
+			Selector:    "Client.Bits",
+			ServiceType: "BitsService",
+			Method:      "GetBitsLeaderboard",
+			Signature:   "func (s *BitsService) GetBitsLeaderboard(ctx context.Context, req GetBitsLeaderboardRequest) (*Response[GetBitsLeaderboardData], error)",
+			RequestType: "GetBitsLeaderboardRequest",
+			DataType:    "GetBitsLeaderboardData",
+		},
+		Source: "https://dev.twitch.tv/docs/api/reference/#get-bits-leaderboard",
+	}),
+	defineOperation("get-cheermotes", Operation{
+		Name:           "Get Cheermotes",
+		Method:         http.MethodGet,
+		Path:           "/helix/bits/cheermotes",
+		Stability:      StabilityStable,
+		TokenClasses:   []TokenClass{TokenClassUnknown},
+		Scopes:         []string{"unknown"},
+		SubjectBinding: "unknown",
+		Request: RequestSpec{
+			Locations: map[string][]RequestField{
+				"query_parameters": {
+					{Name: "broadcaster_id", Type: "String"},
+				},
+			},
+			BodyReconstructible: true,
+		},
+		Response:   ResponseSpec{Format: "json", Status: []int{200, 401}},
+		Pagination: PaginationSpec{Shape: "none", CursorParameter: "unknown"},
+		Replay:     ReplaySpec{BucketWaitable: true},
+		Implementation: ImplementationSpec{
+			Selector:    "Client.Bits",
+			ServiceType: "BitsService",
+			Method:      "GetCheermotes",
+			Signature:   "func (s *BitsService) GetCheermotes(ctx context.Context, req GetCheermotesRequest) (*Response[GetCheermotesData], error)",
+			RequestType: "GetCheermotesRequest",
+			DataType:    "GetCheermotesData",
+		},
+		Source: "https://dev.twitch.tv/docs/api/reference/#get-cheermotes",
+	}),
+	defineOperation("get-custom-power-up", Operation{
+		Name:           "Get Custom Power-up",
+		Method:         http.MethodGet,
+		Path:           "/helix/bits/custom_power_ups",
+		Stability:      StabilityNew,
+		TokenClasses:   []TokenClass{TokenClassUser},
+		Scopes:         []string{"bits:read"},
+		SubjectBinding: "unknown",
+		Request: RequestSpec{
+			Locations: map[string][]RequestField{
+				"query_parameters": {
+					{Name: "broadcaster_id", Type: "String", Required: true},
+					{Name: "id", Type: "String"},
+				},
+			},
+			BodyReconstructible: true,
+		},
+		Response:   ResponseSpec{Format: "json", Status: []int{200, 400, 401, 403, 404, 500}},
+		Pagination: PaginationSpec{Shape: "none", CursorParameter: "unknown"},
+		Replay:     ReplaySpec{BucketWaitable: true},
+		Implementation: ImplementationSpec{
+			Selector:    "Client.Experimental.Bits",
+			ServiceType: "ExperimentalBitsService",
+			Method:      "GetCustomPowerUp",
+			Signature:   "func (s *ExperimentalBitsService) GetCustomPowerUp(ctx context.Context, req GetCustomPowerUpRequest) (*Response[GetCustomPowerUpData], error)",
+			RequestType: "GetCustomPowerUpRequest",
+			DataType:    "GetCustomPowerUpData",
+		},
+		Source: "https://dev.twitch.tv/docs/api/reference/#get-custom-power-up",
+	}),
+	defineOperation("get-extension-transactions", Operation{
+		Name:           "Get Extension Transactions",
+		Method:         http.MethodGet,
+		Path:           "/helix/extensions/transactions",
+		Stability:      StabilityStable,
+		TokenClasses:   []TokenClass{TokenClassApp},
+		Scopes:         []string{"unknown"},
+		SubjectBinding: "unknown",
+		Request: RequestSpec{
+			Locations: map[string][]RequestField{
+				"query_parameters": {
+					{Name: "extension_id", Type: "String", Required: true},
+					{Name: "id", Type: "String"},
+					{Name: "first", Type: "Integer"},
+					{Name: "after", Type: "String"},
+				},
+			},
+			BodyReconstructible: true,
+		},
+		Response:   ResponseSpec{Format: "json", Status: []int{200, 400, 401, 404}},
+		Pagination: PaginationSpec{Shape: "cursor", CursorParameter: "after"},
+		Replay:     ReplaySpec{BucketWaitable: true},
+		Implementation: ImplementationSpec{
+			Selector:       "Client.Bits",
+			ServiceType:    "BitsService",
+			Method:         "GetExtensionTransactions",
+			Signature:      "func (s *BitsService) GetExtensionTransactions(ctx context.Context, req GetExtensionTransactionsRequest) (*Response[GetExtensionTransactionsData], error)",
+			PagerSignature: pagerSignature("func (s *BitsService) GetExtensionTransactionsPager(req GetExtensionTransactionsRequest, opts ...PagerOption) (*Pager[GetExtensionTransactionsData], error)"),
+			RequestType:    "GetExtensionTransactionsRequest",
+			DataType:       "GetExtensionTransactionsData",
+		},
+		Source: "https://dev.twitch.tv/docs/api/reference/#get-extension-transactions",
+	}),
+)

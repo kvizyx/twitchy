@@ -1,7 +1,6 @@
 package conformance
 
 import (
-	"encoding/json"
 	"go/ast"
 	"go/doc"
 	"go/parser"
@@ -12,20 +11,17 @@ import (
 	"runtime"
 	"strings"
 	"testing"
+
+	"github.com/kvizyx/twitchy/helix/internal/manifest"
 )
 
-type documentationContract struct {
-	Schema int           `json:"schema"`
-	Rows   []contractRow `json:"rows"`
-}
-
 type contractRow struct {
-	ID        string `json:"id"`
-	Kind      string `json:"kind"`
-	Package   string `json:"package"`
-	Symbol    string `json:"symbol"`
-	Anchor    string `json:"anchor"`
-	Stability string `json:"stability"`
+	ID        string
+	Kind      string
+	Package   string
+	Symbol    string
+	Anchor    string
+	Stability string
 }
 
 type packageDocumentation struct {
@@ -33,28 +29,13 @@ type packageDocumentation struct {
 	symbols map[string]struct{}
 }
 
-type descriptor struct {
-	Operations []struct {
-		Anchor      string `json:"anchor"`
-		ServiceType string `json:"service_type"`
-		Method      string `json:"method"`
-		RequestType string `json:"request_type"`
-		DataType    string `json:"data_type"`
-		Stability   string `json:"stability"`
-	} `json:"operations"`
-}
-
 func TestDocumentationContract(t *testing.T) {
 	root := repositoryRoot(t)
-	contract := readDocumentationContract(t, filepath.Join(root, "helix", "internal", "conformance", "public_contract.json"))
-	if contract.Schema != 1 {
-		t.Fatalf("contract schema = %d, want 1", contract.Schema)
-	}
 	docs := map[string]packageDocumentation{
 		"helix": loadPackageDocumentation(t, filepath.Join(root, "helix"), "helix"),
 		"oauth": loadPackageDocumentation(t, filepath.Join(root, "oauth"), "oauth"),
 	}
-	for _, row := range contract.Rows {
+	for _, row := range documentationContractRows {
 		documentation, ok := docs[row.Package]
 		if !ok {
 			t.Fatalf("%s: unknown package %q", row.ID, row.Package)
@@ -69,7 +50,7 @@ func TestDocumentationContract(t *testing.T) {
 				t.Fatalf("%s: exported symbol %q is missing from go/doc", row.ID, row.Symbol)
 			}
 		case "descriptor-surface":
-			verifyDescriptorSurface(t, root, documentation, row)
+			verifyDescriptorSurface(t, documentation, row)
 		default:
 			t.Fatalf("%s: unknown contract kind %q", row.ID, row.Kind)
 		}
@@ -83,22 +64,6 @@ func repositoryRoot(t *testing.T) string {
 		t.Fatal("cannot locate documentation contract test")
 	}
 	return filepath.Clean(filepath.Join(filepath.Dir(filename), "..", "..", ".."))
-}
-
-func readDocumentationContract(t *testing.T, filename string) documentationContract {
-	t.Helper()
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var contract documentationContract
-	if err := json.Unmarshal(data, &contract); err != nil {
-		t.Fatal(err)
-	}
-	if len(contract.Rows) == 0 {
-		t.Fatal("documentation contract has no rows")
-	}
-	return contract
 }
 
 func loadPackageDocumentation(t *testing.T, directory, packageName string) packageDocumentation {
@@ -154,46 +119,39 @@ func loadPackageDocumentation(t *testing.T, directory, packageName string) packa
 	return packageDocumentation{doc: packageDoc.Doc, symbols: symbols}
 }
 
-func verifyDescriptorSurface(t *testing.T, root string, documentation packageDocumentation, row contractRow) {
+func verifyDescriptorSurface(t *testing.T, documentation packageDocumentation, row contractRow) {
 	t.Helper()
-	data, err := os.ReadFile(filepath.Join(root, "helix", "internal", "manifest", "public-descriptor.json"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	var descriptorFile descriptor
-	if err := json.Unmarshal(data, &descriptorFile); err != nil {
-		t.Fatal(err)
-	}
 	wantExperimental := row.Stability == "experimental"
 	matched := 0
-	for _, operation := range descriptorFile.Operations {
-		isExperimental := operation.Stability != "stable"
+	for _, operation := range manifest.Operations() {
+		implementation := operation.Implementation
+		isExperimental := operation.Stability != manifest.StabilityStable
 		if isExperimental != wantExperimental {
 			continue
 		}
 		matched++
-		methodSymbol := operation.ServiceType + "." + operation.Method
+		methodSymbol := implementation.ServiceType + "." + implementation.Method
 		if _, ok := documentation.symbols[methodSymbol]; !ok {
 			t.Fatalf("%s: operation %s is missing from go/doc", row.ID, methodSymbol)
 		}
-		if _, ok := documentation.symbols[operation.ServiceType]; !ok {
-			t.Fatalf("%s: service type %s is missing from go/doc", row.ID, operation.ServiceType)
+		if _, ok := documentation.symbols[implementation.ServiceType]; !ok {
+			t.Fatalf("%s: service type %s is missing from go/doc", row.ID, implementation.ServiceType)
 		}
-		if _, ok := documentation.symbols[operation.RequestType]; !ok {
-			t.Fatalf("%s: request type %s is missing from go/doc", row.ID, operation.RequestType)
+		if _, ok := documentation.symbols[implementation.RequestType]; !ok {
+			t.Fatalf("%s: request type %s is missing from go/doc", row.ID, implementation.RequestType)
 		}
-		if _, ok := documentation.symbols[operation.DataType]; !ok {
-			serviceType, ok := serviceTypes[operation.ServiceType]
+		if _, ok := documentation.symbols[implementation.DataType]; !ok {
+			serviceType, ok := serviceTypes[implementation.ServiceType]
 			if !ok {
-				t.Fatalf("%s: service type %s is missing from compiled API", row.ID, operation.ServiceType)
+				t.Fatalf("%s: service type %s is missing from compiled API", row.ID, implementation.ServiceType)
 			}
-			method, ok := serviceType.MethodByName(operation.Method)
+			method, ok := serviceType.MethodByName(implementation.Method)
 			if !ok || method.Type.NumOut() != 2 {
 				t.Fatalf("%s: cannot resolve return type for %s", row.ID, methodSymbol)
 			}
 			actualDataType := responseDataType(method.Type.Out(0))
 			if _, ok := documentation.symbols[actualDataType]; !ok {
-				t.Fatalf("%s: descriptor data type %s and compiled data type %s are missing from go/doc", row.ID, operation.DataType, actualDataType)
+				t.Fatalf("%s: descriptor data type %s and compiled data type %s are missing from go/doc", row.ID, implementation.DataType, actualDataType)
 			}
 		}
 	}

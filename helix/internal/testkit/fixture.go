@@ -40,14 +40,6 @@ func LoadFixture(root, name string) (Fixture, error) {
 	return Fixture{Name: name, Data: data}, nil
 }
 
-func LoadText(root, name string) (string, error) {
-	fixture, err := LoadFixture(root, name)
-	if err != nil {
-		return "", err
-	}
-	return string(fixture.Data), nil
-}
-
 func LoadJSON[T any](root, name string) (T, error) {
 	var value T
 	fixture, err := LoadFixture(root, name)

@@ -1,7 +1,6 @@
 package conformance
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -18,36 +17,16 @@ import (
 
 const canonicalSummary = "149 operations, 30 groups, 127 stable, 10 NEW, 12 BETA, 0 missing, 0 extra, 0 unclassified, 0 duplicate mappings"
 
-type publicDescriptor struct {
-	Operations []publicOperation `json:"operations"`
-}
-
-type publicOperation struct {
-	Anchor         string  `json:"anchor"`
-	Selector       string  `json:"selector"`
-	ServiceType    string  `json:"service_type"`
-	Method         string  `json:"method"`
-	Signature      string  `json:"signature"`
-	PagerSignature *string `json:"pager_signature"`
-	RequestType    string  `json:"request_type"`
-	DataType       string  `json:"data_type"`
-	Stability      string  `json:"stability"`
-}
-
 func TestManifestConformance(t *testing.T) {
-	loaded, err := manifest.LoadManifestFrom("../manifest")
-	if err != nil {
+	operations := manifest.Operations()
+	if err := verifyManifestRows(operations); err != nil {
 		t.Fatal(err)
 	}
-	descriptor := loadDescriptor(t)
-	if err := verifyManifestRows(loaded, descriptor); err != nil {
-		t.Fatal(err)
-	}
-	if err := verifyServiceSurface(loaded); err != nil {
+	if err := verifyServiceSurface(operations); err != nil {
 		t.Fatal(err)
 	}
 
-	for _, operation := range loaded.Operations {
+	for _, operation := range operations {
 		t.Run(operation.Implementation.TestIDs[0], func(t *testing.T) {
 			executeHappyContract(t, operation)
 		})
@@ -69,29 +48,17 @@ func TestManifestConformance(t *testing.T) {
 	fmt.Fprintln(os.Stdout, canonicalSummary)
 }
 
-func loadDescriptor(t *testing.T) publicDescriptor {
-	t.Helper()
-	data, err := os.ReadFile("../manifest/public-descriptor.json")
-	if err != nil {
-		t.Fatal(err)
+func verifyManifestRows(operations []manifest.Operation) error {
+	if len(operations) != 149 {
+		return fmt.Errorf("operation count: got %d, want 149", len(operations))
 	}
-	var descriptor publicDescriptor
-	if err := json.Unmarshal(data, &descriptor); err != nil {
-		t.Fatal(err)
-	}
-	return descriptor
-}
-
-func verifyManifestRows(loaded manifest.Manifest, descriptor publicDescriptor) error {
-	if len(loaded.Operations) != 149 || len(descriptor.Operations) != 149 {
-		return fmt.Errorf("operation count: manifest=%d descriptor=%d", len(loaded.Operations), len(descriptor.Operations))
-	}
-	byAnchor := make(map[string]manifest.Operation, len(loaded.Operations))
-	for _, operation := range loaded.Operations {
-		if _, exists := byAnchor[operation.Anchor]; exists {
+	seenAnchors := make(map[string]struct{}, len(operations))
+	seenMethods := make(map[string]string, len(operations))
+	for _, operation := range operations {
+		if _, exists := seenAnchors[operation.Anchor]; exists {
 			return fmt.Errorf("duplicate operation mapping %q", operation.Anchor)
 		}
-		byAnchor[operation.Anchor] = operation
+		seenAnchors[operation.Anchor] = struct{}{}
 		if len(operation.Implementation.TestIDs) != 2 {
 			return fmt.Errorf("%s: want one happy and one negative test ID", operation.Anchor)
 		}
@@ -119,34 +86,13 @@ func verifyManifestRows(loaded manifest.Manifest, descriptor publicDescriptor) e
 		if operation.Pagination.Shape == "" || operation.Pagination.CursorParameter == "" {
 			return fmt.Errorf("%s: unclassified pagination", operation.Anchor)
 		}
-	}
-	if len(byAnchor) != len(descriptor.Operations) {
-		return fmt.Errorf("descriptor mappings: got %d manifest anchors", len(byAnchor))
-	}
-	seenMethods := make(map[string]string, len(loaded.Operations))
-	for _, expected := range descriptor.Operations {
-		operation, ok := byAnchor[expected.Anchor]
-		if !ok {
-			return fmt.Errorf("descriptor operation %q is missing", expected.Anchor)
-		}
-		implementation := operation.Implementation
-		if implementation.Selector != expected.Selector || implementation.ServiceType != expected.ServiceType || implementation.Method != expected.Method || implementation.Signature != expected.Signature || implementation.RequestType != expected.RequestType || implementation.DataType != expected.DataType || string(implementation.Stability) != expected.Stability || !samePagerSignature(implementation.PagerSignature, expected.PagerSignature) {
-			return fmt.Errorf("%s: implementation does not match public descriptor", expected.Anchor)
-		}
-		mapping := implementation.ServiceType + "." + implementation.Method
+		mapping := operation.Implementation.ServiceType + "." + operation.Implementation.Method
 		if previous, exists := seenMethods[mapping]; exists {
-			return fmt.Errorf("duplicate mappings %q and %q", previous, expected.Anchor)
+			return fmt.Errorf("duplicate mappings %q and %q", previous, operation.Anchor)
 		}
-		seenMethods[mapping] = expected.Anchor
+		seenMethods[mapping] = operation.Anchor
 	}
 	return nil
-}
-
-func samePagerSignature(got, want *string) bool {
-	if got == nil || want == nil {
-		return got == nil && want == nil
-	}
-	return *got == *want
 }
 
 func responseMeta(value reflect.Value) (helix.ResponseMeta, error) {

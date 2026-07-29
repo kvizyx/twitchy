@@ -48,17 +48,11 @@ func TestVerticalSlice_manifestRowsMapOneToOne(t *testing.T) {
 
 func manifestOperation(t *testing.T, anchor string) manifest.Operation {
 	t.Helper()
-	loaded, err := manifest.LoadManifestFrom("internal/manifest")
+	operation, err := manifest.OperationByAnchor(anchor)
 	if err != nil {
 		t.Fatal(err)
 	}
-	for _, operation := range loaded.Operations {
-		if operation.Anchor == anchor {
-			return operation
-		}
-	}
-	t.Fatalf("manifest operation %q not found", anchor)
-	return manifest.Operation{}
+	return operation
 }
 
 func urlValues(items ...string) map[string][]string {
