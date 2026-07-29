@@ -66,23 +66,34 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 	if err := writeSubprocessPair(storePath, initial); err != nil {
 		t.Fatal(err)
 	}
-	leasePrefix := fmt.Sprintf("oauth:subprocess:%d:", time.Now().UnixNano())
+	commands := startSubprocessChildren(t, directory, storePath, server.URL, address)
+	openSubprocessStartGate(t, directory)
+	results := waitSubprocessChildren(t, directory, commands)
+	assertSubprocessOutcome(t, storePath, results, refreshes.Load())
+}
 
-	results := make([]subprocessResult, 2)
-	commands := make([]*exec.Cmd, 2)
+func startSubprocessChildren(
+	t *testing.T,
+	directory string,
+	storePath string,
+	serverURL string,
+	address string,
+) []*exec.Cmd {
+	t.Helper()
 	self, err := os.Executable()
 	if err != nil {
 		t.Fatal(err)
 	}
+	leasePrefix := fmt.Sprintf("oauth:subprocess:%d:", time.Now().UnixNano())
+	commands := make([]*exec.Cmd, 2)
 	for index, role := range []string{"first", "second"} {
-		resultPath := filepath.Join(directory, role+".json")
 		command := exec.Command(self, "-test.run", "^TestCoordinatedRefreshSubprocess$", "-test.count=1")
 		command.Env = append(os.Environ(),
 			subprocessChildEnv+"=1",
-			"TWITCHY_SUBPROCESS_SERVER="+server.URL,
+			"TWITCHY_SUBPROCESS_SERVER="+serverURL,
 			"TWITCHY_SUBPROCESS_REDIS="+address,
 			"TWITCHY_SUBPROCESS_STORE="+storePath,
-			"TWITCHY_SUBPROCESS_RESULT="+resultPath,
+			"TWITCHY_SUBPROCESS_RESULT="+filepath.Join(directory, role+".json"),
 			"TWITCHY_SUBPROCESS_PREFIX="+leasePrefix,
 			"TWITCHY_SUBPROCESS_READY="+filepath.Join(directory, role+".ready"),
 			"TWITCHY_SUBPROCESS_GO="+filepath.Join(directory, "go"),
@@ -92,6 +103,11 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 		}
 		commands[index] = command
 	}
+	return commands
+}
+
+func openSubprocessStartGate(t *testing.T, directory string) {
+	t.Helper()
 	deadline := time.Now().Add(30 * time.Second)
 	for _, role := range []string{"first", "second"} {
 		readyPath := filepath.Join(directory, role+".ready")
@@ -108,12 +124,16 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(directory, "go"), []byte("go"), 0o600); err != nil {
 		t.Fatal(err)
 	}
+}
+
+func waitSubprocessChildren(t *testing.T, directory string, commands []*exec.Cmd) []subprocessResult {
+	t.Helper()
+	results := make([]subprocessResult, 2)
 	for index, role := range []string{"first", "second"} {
 		if err := commands[index].Wait(); err != nil {
 			t.Fatalf("%s child failed: %v", role, err)
 		}
-		resultPath := filepath.Join(directory, role+".json")
-		payload, err := os.ReadFile(resultPath)
+		payload, err := os.ReadFile(filepath.Join(directory, role+".json"))
 		if err != nil {
 			t.Fatalf("read %s result: %v", role, err)
 		}
@@ -121,7 +141,11 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 			t.Fatalf("decode %s result: %v", role, err)
 		}
 	}
+	return results
+}
 
+func assertSubprocessOutcome(t *testing.T, storePath string, results []subprocessResult, refreshes int32) {
+	t.Helper()
 	if results[0].PID == results[1].PID || results[0].PID == os.Getpid() {
 		t.Fatalf("child PIDs = %d/%d, parent = %d", results[0].PID, results[1].PID, os.Getpid())
 	}
@@ -133,8 +157,8 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 			t.Fatalf("child %d access token = %q, want rotated pair", result.PID, result.AccessToken)
 		}
 	}
-	if got := refreshes.Load(); got != 1 {
-		t.Fatalf("remote refreshes = %d, want 1", got)
+	if refreshes != 1 {
+		t.Fatalf("remote refreshes = %d, want 1", refreshes)
 	}
 	pair, err := readSubprocessPair(storePath)
 	if err != nil {
@@ -143,7 +167,7 @@ func TestCoordinatedRefreshSubprocess(t *testing.T) {
 	if pair.RefreshToken != "rotated-refresh" {
 		t.Fatalf("durable refresh token = %q, want one committed rotation", pair.RefreshToken)
 	}
-	t.Logf("DISTINCT_PIDS=true REMOTE_REFRESHES=%d DURABLE_COMMITS=1", refreshes.Load())
+	t.Logf("DISTINCT_PIDS=true REMOTE_REFRESHES=%d DURABLE_COMMITS=1", refreshes)
 }
 
 func runCoordinatedSubprocessChild() int {
