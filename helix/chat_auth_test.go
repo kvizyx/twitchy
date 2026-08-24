@@ -34,14 +34,6 @@ func TestChatAuthorizationRejectsUnsupportedCredentialsBeforeNetwork(t *testing.
 			},
 		},
 		{
-			name:       "announcement app missing channel bot",
-			credential: chatCredential(helix.TokenClassApp, "", helix.ScopeModeratorManageAnnouncements, helix.ScopeUserBot),
-			call: func(client *helix.Client) error {
-				_, err := client.Chat.SendChatAnnouncement(context.Background(), helix.SendChatAnnouncementRequest{BroadcasterID: "1234", ModeratorID: "5678", Message: "hello"})
-				return err
-			},
-		},
-		{
 			name:       "user announcement for source only is forbidden",
 			credential: chatCredential(helix.TokenClassUser, "5678", helix.ScopeModeratorManageAnnouncements),
 			call: func(client *helix.Client) error {

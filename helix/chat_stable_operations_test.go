@@ -142,6 +142,36 @@ func TestChatStableOperations(t *testing.T) {
 	}
 }
 
+func TestChatSendChatMessageAllowsScopelessAppToken(t *testing.T) {
+	// Given a message request authorized by a scope-less app access token.
+	testCase := chatOperationCase{
+		anchor:     "send-chat-message",
+		fixture:    chatRequestBodyFixture(chatSuccessFixture(urlValues(), http.StatusOK, `{"data":[{"message_id":"message-1","is_sent":true}]}`), `{"broadcaster_id":"1234","sender_id":"5678","message":"hello"}`),
+		credential: chatCredential(helix.TokenClassApp, ""),
+		call: func(client *helix.Client) (helix.ResponseMeta, error) {
+			return chatMeta(client.Chat.SendChatMessage(context.Background(), helix.SendChatMessageRequest{BroadcasterID: "1234", SenderID: "5678", Message: "hello"}))
+		},
+	}
+
+	// When the message is sent.
+	runChatOperation(t, testCase)
+}
+
+func TestChatSendChatAnnouncementAllowsScopelessAppToken(t *testing.T) {
+	// Given an announcement request authorized by a scope-less app access token.
+	testCase := chatOperationCase{
+		anchor:     "send-chat-announcement",
+		fixture:    chatRequestBodyFixture(chatSuccessFixture(urlValues("broadcaster_id", "1234", "moderator_id", "5678"), http.StatusNoContent, ""), `{"message":"hello"}`),
+		credential: chatCredential(helix.TokenClassApp, ""),
+		call: func(client *helix.Client) (helix.ResponseMeta, error) {
+			return chatMeta(client.Chat.SendChatAnnouncement(context.Background(), helix.SendChatAnnouncementRequest{BroadcasterID: "1234", ModeratorID: "5678", Message: "hello"}))
+		},
+	}
+
+	// When the announcement is sent.
+	runChatOperation(t, testCase)
+}
+
 func TestChatSendChatMessageOmitsUnsetSourceAndPin(t *testing.T) {
 	// Given a message request without the optional source or pin flags.
 	testCase := chatOperationCase{
