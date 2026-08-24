@@ -98,8 +98,10 @@ func (s *ChatService) SendChatAnnouncement(ctx context.Context, req SendChatAnno
 		query:  req,
 		body:   req,
 		auth: chatAuthorization{
+			// App access tokens carry no scopes: Twitch authorizes them through the
+			// moderator's moderator:manage:announcements + user:bot grants and the
+			// broadcaster's channel:bot grant, so there is nothing to check locally.
 			userScopeSets:           chatReadScopes(ScopeModeratorManageAnnouncements),
-			appScopeSets:            chatBotScopes(ScopeModeratorManageAnnouncements),
 			subjectID:               req.ModeratorID,
 			rejectForSourceOnlyUser: req.ForSourceOnly != nil,
 		},
@@ -122,13 +124,8 @@ func (s *ChatService) SendShoutout(ctx context.Context, req SendShoutoutRequest)
 
 func (s *ChatService) SendChatMessage(ctx context.Context, req SendChatMessageRequest) (*Response[SendChatMessageData], error) {
 	userScopeSets := chatReadScopes(ScopeUserWriteChat)
-	appScopeSets := [][]AuthorizationScope{{ScopeUserWriteChat, ScopeUserBot}, {ScopeUserWriteChat, ScopeUserBot, ScopeChannelBot}}
 	if req.Pin != nil && *req.Pin {
 		userScopeSets = [][]AuthorizationScope{{ScopeUserWriteChat, ScopeModeratorManageChatMessages}}
-		appScopeSets = [][]AuthorizationScope{
-			{ScopeUserWriteChat, ScopeModeratorManageChatMessages, ScopeUserBot},
-			{ScopeUserWriteChat, ScopeModeratorManageChatMessages, ScopeUserBot, ScopeChannelBot},
-		}
 	}
 	return executeChatEndpoint[SendChatMessageData](chatEndpointSpec{
 		client: s.client,
@@ -136,8 +133,10 @@ func (s *ChatService) SendChatMessage(ctx context.Context, req SendChatMessageRe
 		anchor: "send-chat-message",
 		body:   req,
 		auth: chatAuthorization{
+			// App access tokens carry no scopes: Twitch authorizes them through the
+			// sender's user:write:chat + user:bot grants and the broadcaster's
+			// channel:bot grant, so there is nothing to check locally.
 			userScopeSets:           userScopeSets,
-			appScopeSets:            appScopeSets,
 			subjectID:               req.SenderID,
 			rejectForSourceOnlyUser: req.ForSourceOnly != nil,
 		},
