@@ -21,6 +21,7 @@ type RefreshingTokenSource struct {
 	current      helix.CredentialSnapshot
 	pair         TokenPair
 	clientID     string
+	clientSecret string
 	userID       string
 	flight       *refreshFlight
 	commitFlight *commitFlight
@@ -51,6 +52,7 @@ func NewRefreshingTokenSource(client *Client, pair TokenPair, hook CredentialHoo
 		hook:         hook,
 		clock:        client.clock,
 		skew:         configuration.refreshSkew,
+		clientSecret: configuration.clientSecret,
 		coordination: configuration.coordination,
 		pair:         pair,
 		ctx:          ctx,

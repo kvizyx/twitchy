@@ -20,6 +20,25 @@ type registryEntry struct {
 	intents map[helix.Intent]struct{}
 }
 
+type RegistryOption func(*registryOptions) error
+
+type registryOptions struct {
+	clientSecret string
+}
+
+// WithClientSecret supplies the OAuth client secret used when managed
+// credentials rotate their user tokens. Twitch rejects refresh requests
+// without a client secret for confidential (secret-bearing) applications.
+func WithClientSecret(secret string) RegistryOption {
+	return func(options *registryOptions) error {
+		if secret == "" {
+			return ErrInvalidOption
+		}
+		options.clientSecret = secret
+		return nil
+	}
+}
+
 type registryUserRegistration struct {
 	ctx           context.Context
 	userID        string
@@ -35,7 +54,8 @@ type registryUserRegistration struct {
 // helix.CredentialResolver so a root helix.Client can derive per-user or
 // per-intent clients via AsUser and AsIntent.
 type Registry struct {
-	client *Client
+	client       *Client
+	clientSecret string
 
 	mu      sync.RWMutex
 	users   map[string]*registryEntry
@@ -43,14 +63,23 @@ type Registry struct {
 	closeEr error
 }
 
-func NewRegistry(client *Client) (*Registry, error) {
+func NewRegistry(client *Client, options ...RegistryOption) (*Registry, error) {
 	if client == nil {
 		return nil, ErrInvalidOption
 	}
 	if err := client.validClient(); err != nil {
 		return nil, err
 	}
-	return &Registry{client: client, users: make(map[string]*registryEntry)}, nil
+	configuration := registryOptions{}
+	for _, option := range options {
+		if option == nil {
+			return nil, ErrInvalidOption
+		}
+		if err := option(&configuration); err != nil {
+			return nil, err
+		}
+	}
+	return &Registry{client: client, clientSecret: configuration.clientSecret, users: make(map[string]*registryEntry)}, nil
 }
 
 // AddUser registers a user credential with its initial token pair and
@@ -82,11 +111,16 @@ func (r *Registry) addUser(registration registryUserRegistration) (*registryEntr
 	}
 	r.mu.Unlock()
 
+	sourceOptions := registration.sourceOptions
+	if r.clientSecret != "" {
+		sourceOptions = append([]SourceOption{WithSourceClientSecret(r.clientSecret)}, sourceOptions...)
+	}
+
 	source, err := NewRefreshingTokenSource(
 		r.client,
 		registration.pair,
 		registration.hook,
-		registration.sourceOptions...,
+		sourceOptions...,
 	)
 	if err != nil {
 		return nil, err

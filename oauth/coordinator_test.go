@@ -48,7 +48,7 @@ func (lease *contractLease) Release(context.Context) error {
 }
 
 func TestLegacyRegistryFunctionTypes(t *testing.T) {
-	var _ func(*Client) (*Registry, error) = NewRegistry
+	var _ func(*Client, ...RegistryOption) (*Registry, error) = NewRegistry
 	var _ func(*Registry, context.Context, string, TokenPair, CredentialHook, ...helix.Intent) error = (*Registry).AddUser
 }
 

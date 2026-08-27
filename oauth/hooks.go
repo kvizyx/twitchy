@@ -15,6 +15,7 @@ type SourceOption func(*sourceOptions) error
 
 type sourceOptions struct {
 	refreshSkew  time.Duration
+	clientSecret string
 	coordination *sourceCoordination
 }
 
@@ -24,6 +25,19 @@ func WithRefreshSkew(skew time.Duration) SourceOption {
 			return ErrInvalidOption
 		}
 		options.refreshSkew = skew
+		return nil
+	}
+}
+
+// WithSourceClientSecret supplies the OAuth client secret used when the source
+// rotates its user token. Twitch rejects refresh requests without a client
+// secret for confidential (secret-bearing) applications.
+func WithSourceClientSecret(secret string) SourceOption {
+	return func(options *sourceOptions) error {
+		if secret == "" {
+			return ErrInvalidOption
+		}
+		options.clientSecret = secret
 		return nil
 	}
 }
@@ -135,7 +149,7 @@ func (source *RefreshingTokenSource) performRefresh(reason helix.RefreshReason) 
 		clientID = validation.ClientID
 		source.applyValidation(*validation)
 	}
-	rotated, err := source.client.Refresh(source.ctx, RefreshRequest{ClientID: clientID, RefreshToken: pair.RefreshToken})
+	rotated, err := source.client.Refresh(source.ctx, RefreshRequest{ClientID: clientID, ClientSecret: source.clientSecret, RefreshToken: pair.RefreshToken})
 	if err != nil {
 		return helix.CredentialSnapshot{}, TokenPair{}, err
 	}

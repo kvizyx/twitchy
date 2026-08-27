@@ -124,6 +124,7 @@ func (source *RefreshingTokenSource) refreshCoordinatedDurable(
 	// remote rotation and before the durable hook requires user reauthorization.
 	rotated, err := source.client.Refresh(guard.lease.Context(), RefreshRequest{
 		ClientID:     request.identity.clientID,
+		ClientSecret: source.clientSecret,
 		RefreshToken: request.durable.RefreshToken,
 	})
 	if err != nil {

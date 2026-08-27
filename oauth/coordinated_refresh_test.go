@@ -321,3 +321,49 @@ func TestCoordinatedRefresh_doesNotRetryOldRefreshTokenAfterCommitFailure(t *tes
 	}
 	requireNoActivation(t, source, "old-access")
 }
+
+func TestCoordinatedRefresh_sendsClientSecretWhenConfigured(t *testing.T) {
+	clock := newTestClock(time.Unix(60_000, 0))
+	server := newCoordinatedOAuthServer(t)
+	coordinator := newMemoryRefreshCoordinator()
+	store := newCoordinatedTestStore(TokenPair{
+		AccessToken:  "initial-access",
+		RefreshToken: "initial-refresh",
+		ExpiresIn:    time.Hour,
+		TokenType:    "bearer",
+	})
+	secrets := make(chan string, 1)
+	server.setRefreshFn(func(writer http.ResponseWriter, request *http.Request, _ int32) {
+		secrets <- request.Form.Get("client_secret")
+		_, _ = io.WriteString(writer, coordinatedRotationResponse)
+	})
+	client, err := New(WithBaseURL(server.server.URL), WithHTTPClient(server.server.Client()), WithClock(clock))
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry, err := NewCoordinatedRegistry(client, coordinator, WithClientSecret("registry-secret"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = registry.Close() })
+	if err := registry.AddCoordinatedUser(context.Background(), "42", store.load, store.hook, "chat"); err != nil {
+		t.Fatal(err)
+	}
+	source, err := registry.SourceForUser("42")
+	if err != nil {
+		t.Fatal(err)
+	}
+	clock.Advance(time.Hour)
+
+	if _, err := source.Token(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case secret := <-secrets:
+		if secret != "registry-secret" {
+			t.Fatalf("refresh client_secret = %q, want %q", secret, "registry-secret")
+		}
+	case <-time.After(time.Second):
+		t.Fatal("refresh did not run")
+	}
+}

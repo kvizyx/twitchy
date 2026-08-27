@@ -196,3 +196,66 @@ func TestRefreshingTokenSource_doesNotRefreshAppToken(t *testing.T) {
 }
 
 var _ helix.RefreshableTokenSource = (*RefreshingTokenSource)(nil)
+
+func TestRefreshingTokenSource_sendsClientSecretWhenConfigured(t *testing.T) {
+	clock := newTestClock(time.Unix(70_000, 0))
+	secrets := make(chan string, 1)
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		if err := request.ParseForm(); err != nil {
+			http.Error(writer, "invalid form", http.StatusBadRequest)
+			return
+		}
+		switch request.URL.Path {
+		case "/oauth2/validate":
+			_, _ = io.WriteString(writer, `{"client_id":"client","login":"streamer","scopes":[],"user_id":"42","expires_in":3600}`)
+		case "/oauth2/token":
+			secrets <- request.Form.Get("client_secret")
+			_, _ = io.WriteString(writer, `{"access_token":"rotated","refresh_token":"rotated-refresh","expires_in":3600,"token_type":"bearer"}`)
+		default:
+			http.Error(writer, "unexpected path", http.StatusNotFound)
+		}
+	}))
+	defer server.Close()
+	client, err := New(WithBaseURL(server.URL), WithClock(clock))
+	if err != nil {
+		t.Fatal(err)
+	}
+	pair := TokenPair{AccessToken: "old", RefreshToken: "old-refresh", ExpiresIn: time.Hour, TokenType: "bearer"}
+	source, err := NewRefreshingTokenSource(
+		client,
+		pair,
+		func(context.Context, TokenPair) error { return nil },
+		WithSourceClientSecret("source-secret"),
+	)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer source.Close()
+	clock.Advance(time.Hour)
+
+	if _, err := source.Token(context.Background()); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case secret := <-secrets:
+		if secret != "source-secret" {
+			t.Fatalf("refresh client_secret = %q, want %q", secret, "source-secret")
+		}
+	case <-time.After(time.Second):
+		t.Fatal("refresh did not run")
+	}
+}
+
+func TestRefreshingTokenSource_rejectsEmptyClientSecret(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
+	defer server.Close()
+	client, err := New(WithBaseURL(server.URL))
+	if err != nil {
+		t.Fatal(err)
+	}
+	pair := TokenPair{AccessToken: "old", RefreshToken: "old-refresh", ExpiresIn: time.Hour, TokenType: "bearer"}
+	_, err = NewRefreshingTokenSource(client, pair, func(context.Context, TokenPair) error { return nil }, WithSourceClientSecret(""))
+	if !errors.Is(err, ErrInvalidOption) {
+		t.Fatalf("empty client secret error = %v, want ErrInvalidOption", err)
+	}
+}

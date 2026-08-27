@@ -216,3 +216,72 @@ func TestRegistry_concurrentAccess(t *testing.T) {
 	}
 	wg.Wait()
 }
+
+func TestNewRegistry_clientSecretOptionValidation(t *testing.T) {
+	server := registryServer(t)
+	client, err := New(WithBaseURL(server.URL), WithHTTPClient(server.Client()))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if _, err := NewRegistry(client, WithClientSecret("")); !errors.Is(err, ErrInvalidOption) {
+		t.Fatalf("empty client secret error = %v, want ErrInvalidOption", err)
+	}
+	if _, err := NewRegistry(client, nil); !errors.Is(err, ErrInvalidOption) {
+		t.Fatalf("nil option error = %v, want ErrInvalidOption", err)
+	}
+	if _, err := NewCoordinatedRegistry(client, newMemoryRefreshCoordinator(), WithClientSecret("")); !errors.Is(err, ErrInvalidOption) {
+		t.Fatalf("coordinated empty client secret error = %v, want ErrInvalidOption", err)
+	}
+}
+
+func TestRegistryAddUser_forwardsClientSecretToRefresh(t *testing.T) {
+	clock := newTestClock(time.Unix(80_000, 0))
+	secrets := make(chan string, 1)
+	server := httptest.NewServer(http.HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
+		writer.Header().Set("Content-Type", "application/json")
+		if err := request.ParseForm(); err != nil {
+			http.Error(writer, "invalid form", http.StatusBadRequest)
+			return
+		}
+		switch request.URL.Path {
+		case "/oauth2/validate":
+			_, _ = io.WriteString(writer, `{"client_id":"client","login":"streamer","scopes":[],"user_id":"111","expires_in":3600}`)
+		case "/oauth2/token":
+			secrets <- request.Form.Get("client_secret")
+			_, _ = io.WriteString(writer, `{"access_token":"rotated","refresh_token":"rotated-refresh","expires_in":3600,"token_type":"bearer"}`)
+		default:
+			writer.WriteHeader(http.StatusNotFound)
+		}
+	}))
+	t.Cleanup(server.Close)
+	client, err := New(WithBaseURL(server.URL), WithHTTPClient(server.Client()), WithClock(clock))
+	if err != nil {
+		t.Fatal(err)
+	}
+	registry, err := NewRegistry(client, WithClientSecret("registry-secret"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	t.Cleanup(func() { _ = registry.Close() })
+	ctx := context.Background()
+	if err := registry.AddUser(ctx, "111", registryPair("one"), noopHook, "chat"); err != nil {
+		t.Fatal(err)
+	}
+	source, err := registry.SourceForUser("111")
+	if err != nil {
+		t.Fatal(err)
+	}
+	clock.Advance(time.Hour)
+
+	if _, err := source.Token(ctx); err != nil {
+		t.Fatal(err)
+	}
+	select {
+	case secret := <-secrets:
+		if secret != "registry-secret" {
+			t.Fatalf("refresh client_secret = %q, want %q", secret, "registry-secret")
+		}
+	case <-time.After(time.Second):
+		t.Fatal("refresh did not run")
+	}
+}

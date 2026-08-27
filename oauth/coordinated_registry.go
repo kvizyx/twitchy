@@ -21,11 +21,11 @@ var _ helix.CredentialResolver = (*CoordinatedRegistry)(nil)
 
 const coordinatedReleaseTimeout = time.Second
 
-func NewCoordinatedRegistry(client *Client, coordinator RefreshCoordinator) (*CoordinatedRegistry, error) {
+func NewCoordinatedRegistry(client *Client, coordinator RefreshCoordinator, options ...RegistryOption) (*CoordinatedRegistry, error) {
 	if isNilCoordinatorValue(coordinator) {
 		return nil, ErrInvalidOption
 	}
-	registry, err := NewRegistry(client)
+	registry, err := NewRegistry(client, options...)
 	if err != nil {
 		return nil, err
 	}
