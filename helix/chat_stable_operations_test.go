@@ -142,6 +142,21 @@ func TestChatStableOperations(t *testing.T) {
 	}
 }
 
+func TestChatGetChattersAllowsScopelessAppToken(t *testing.T) {
+	// Given a chatters request authorized by a scope-less app access token.
+	testCase := chatOperationCase{
+		anchor:     "get-chatters",
+		fixture:    chatSuccessFixture(urlValues("broadcaster_id", "1234", "moderator_id", "5678"), http.StatusOK, `{"data":[{"user_id":"1","user_login":"viewer","user_name":"Viewer"}]}`),
+		credential: chatCredential(helix.TokenClassApp, ""),
+		call: func(client *helix.Client) (helix.ResponseMeta, error) {
+			return chatMeta(client.Chat.GetChatters(context.Background(), helix.GetChattersRequest{BroadcasterID: "1234", ModeratorID: "5678"}))
+		},
+	}
+
+	// When the chatters are fetched.
+	runChatOperation(t, testCase)
+}
+
 func TestChatSendChatMessageAllowsScopelessAppToken(t *testing.T) {
 	// Given a message request authorized by a scope-less app access token.
 	testCase := chatOperationCase{

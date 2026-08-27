@@ -80,7 +80,6 @@ func (s *ChatService) UpdateChatSettings(ctx context.Context, req UpdateChatSett
 		body:   req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorManageChatSettings),
-			appScopeSets:  chatReadScopes(ScopeModeratorManageChatSettings),
 			subjectID:     req.ModeratorID,
 		},
 	})

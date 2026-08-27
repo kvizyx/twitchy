@@ -50,7 +50,7 @@ type BanUserData []Ban
 
 func (s *ModerationService) GetBannedUsers(ctx context.Context, req GetBannedUsersRequest) (*Response[GetBannedUsersData], error) {
 	scopes := [][]AuthorizationScope{{ScopeModerationRead}, {ScopeModeratorManageBannedUsers}}
-	return executeModerationEndpoint[GetBannedUsersData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-banned-users", query: req, auth: moderationAuthorization{userScopeSets: scopes, appScopeSets: scopes, subjectIDs: []string{req.BroadcasterID}}})
+	return executeModerationEndpoint[GetBannedUsersData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-banned-users", query: req, auth: moderationAuthorization{userScopeSets: scopes, subjectIDs: []string{req.BroadcasterID}}})
 }
 
 func (s *ModerationService) GetBannedUsersPager(req GetBannedUsersRequest, opts ...PagerOption) (*Pager[GetBannedUsersData], error) {
@@ -71,5 +71,5 @@ func (s *ModerationService) GetBannedUsersPager(req GetBannedUsersRequest, opts 
 }
 
 func (s *ModerationService) BanUser(ctx context.Context, req BanUserRequest) (*Response[BanUserData], error) {
-	return executeModerationEndpoint[BanUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "ban-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBannedUsers), appScopeSets: [][]AuthorizationScope{{ScopeModeratorManageBannedUsers, ScopeUserBot}}, subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[BanUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "ban-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBannedUsers), subjectIDs: []string{req.ModeratorID}}})
 }

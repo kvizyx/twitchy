@@ -77,7 +77,7 @@ type RemoveChannelVIPRequest struct {
 type RemoveChannelVIPData struct{}
 
 func (s *ModerationService) GetModeratedChannels(ctx context.Context, req GetModeratedChannelsRequest) (*Response[GetModeratedChannelsData], error) {
-	return executeModerationEndpoint[GetModeratedChannelsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-moderated-channels", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeUserReadModeratedChannels), appScopeSets: chatReadScopes(ScopeUserReadModeratedChannels), subjectIDs: []string{req.UserID}}})
+	return executeModerationEndpoint[GetModeratedChannelsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-moderated-channels", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeUserReadModeratedChannels), subjectIDs: []string{req.UserID}}})
 }
 
 func (s *ModerationService) GetModeratedChannelsPager(req GetModeratedChannelsRequest, opts ...PagerOption) (*Pager[GetModeratedChannelsData], error) {

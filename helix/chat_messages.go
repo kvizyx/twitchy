@@ -116,7 +116,6 @@ func (s *ChatService) SendShoutout(ctx context.Context, req SendShoutoutRequest)
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorManageShoutouts),
-			appScopeSets:  chatBotScopes(ScopeModeratorManageShoutouts),
 			subjectID:     req.ModeratorID,
 		},
 	})

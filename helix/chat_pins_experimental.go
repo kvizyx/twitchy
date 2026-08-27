@@ -90,7 +90,6 @@ func (s *ExperimentalChatService) GetPinnedChatMessage(ctx context.Context, req 
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: [][]AuthorizationScope{{ScopeModeratorManageChatMessages}, {ScopeModeratorReadChatMessages}},
-			appScopeSets:  [][]AuthorizationScope{{ScopeModeratorManageChatMessages, ScopeUserBot, ScopeChannelBot}, {ScopeModeratorReadChatMessages, ScopeUserBot, ScopeChannelBot}},
 			subjectID:     req.ModeratorID,
 		},
 	})
@@ -104,7 +103,6 @@ func (s *ExperimentalChatService) PinChatMessage(ctx context.Context, req PinCha
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorManageChatMessages),
-			appScopeSets:  chatBotScopes(ScopeModeratorManageChatMessages),
 			subjectID:     req.ModeratorID,
 		},
 	})
@@ -118,7 +116,6 @@ func (s *ExperimentalChatService) UpdatePinnedChatMessage(ctx context.Context, r
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorManageChatMessages),
-			appScopeSets:  chatBotScopes(ScopeModeratorManageChatMessages),
 			subjectID:     req.ModeratorID,
 		},
 	})
@@ -132,7 +129,6 @@ func (s *ExperimentalChatService) UnpinChatMessage(ctx context.Context, req Unpi
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorManageChatMessages),
-			appScopeSets:  chatBotScopes(ScopeModeratorManageChatMessages),
 			subjectID:     req.ModeratorID,
 		},
 	})

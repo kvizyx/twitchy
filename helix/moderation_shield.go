@@ -27,10 +27,10 @@ type GetShieldModeStatusRequest struct {
 }
 
 func (s *ModerationService) UpdateShieldModeStatus(ctx context.Context, req UpdateShieldModeStatusRequest) (*Response[UpdateShieldModeStatusData], error) {
-	return executeModerationEndpoint[UpdateShieldModeStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "update-shield-mode-status", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageShieldMode), appScopeSets: chatReadScopes(ScopeModeratorManageShieldMode), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[UpdateShieldModeStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "update-shield-mode-status", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageShieldMode), subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ModerationService) GetShieldModeStatus(ctx context.Context, req GetShieldModeStatusRequest) (*Response[GetShieldModeStatusData], error) {
 	scopes := [][]AuthorizationScope{{ScopeModeratorReadShieldMode}, {ScopeModeratorManageShieldMode}}
-	return executeModerationEndpoint[GetShieldModeStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-shield-mode-status", query: req, auth: moderationAuthorization{userScopeSets: scopes, appScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[GetShieldModeStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-shield-mode-status", query: req, auth: moderationAuthorization{userScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
 }

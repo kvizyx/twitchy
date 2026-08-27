@@ -49,7 +49,7 @@ type ResolveUnbanRequestsRequest struct {
 }
 
 func (s *ModerationService) UnbanUser(ctx context.Context, req UnbanUserRequest) (*Response[UnbanUserData], error) {
-	return executeModerationEndpoint[UnbanUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "unban-user", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBannedUsers), appScopeSets: [][]AuthorizationScope{{ScopeModeratorManageBannedUsers, ScopeUserBot}}, subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[UnbanUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "unban-user", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBannedUsers), subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ModerationService) GetUnbanRequests(ctx context.Context, req GetUnbanRequestsRequest) (*Response[GetUnbanRequestsData], error) {

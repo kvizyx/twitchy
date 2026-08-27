@@ -30,7 +30,6 @@ func (s *ChatService) GetChatters(ctx context.Context, req GetChattersRequest) (
 		query:  req,
 		auth: chatAuthorization{
 			userScopeSets: chatReadScopes(ScopeModeratorReadChatters),
-			appScopeSets:  chatReadScopes(ScopeModeratorReadChatters),
 			subjectID:     req.ModeratorID,
 		},
 	})
@@ -54,7 +53,6 @@ func (s *ChatService) GetChattersPager(req GetChattersRequest, opts ...PagerOpti
 
 type chatAuthorization struct {
 	userScopeSets           [][]AuthorizationScope
-	appScopeSets            [][]AuthorizationScope
 	subjectID               string
 	rejectForSourceOnlyUser bool
 }
@@ -117,23 +115,22 @@ func validateChatCredential(snapshot CredentialSnapshot, operation manifest.Oper
 	if !operationAllowsTokenClass(snapshot.TokenClass(), operation.TokenClasses) {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	var scopeSets [][]AuthorizationScope
-	switch snapshot.TokenClass() {
-	case TokenClassApp:
-		scopeSets = auth.appScopeSets
-	case TokenClassUser:
-		scopeSets = auth.userScopeSets
-	default:
+	if snapshot.TokenClass() != TokenClassUser && snapshot.TokenClass() != TokenClassApp {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	if !chatHasScopeSet(snapshot, scopeSets) {
-		return localCredentialAuthError(operation.OperationID)
-	}
-	if snapshot.TokenClass() == TokenClassUser && auth.rejectForSourceOnlyUser {
-		return localCredentialAuthError(operation.OperationID)
-	}
-	if snapshot.TokenClass() == TokenClassUser && auth.subjectID != "" && snapshot.UserID() != auth.subjectID {
-		return localCredentialAuthError(operation.OperationID)
+	// App access tokens carry no scopes: Twitch authorizes them through prior
+	// user grants, which cannot be verified client-side, so scope checks only
+	// apply to user access tokens.
+	if snapshot.TokenClass() == TokenClassUser {
+		if !chatHasScopeSet(snapshot, auth.userScopeSets) {
+			return localCredentialAuthError(operation.OperationID)
+		}
+		if auth.rejectForSourceOnlyUser {
+			return localCredentialAuthError(operation.OperationID)
+		}
+		if auth.subjectID != "" && snapshot.UserID() != auth.subjectID {
+			return localCredentialAuthError(operation.OperationID)
+		}
 	}
 	return nil
 }
@@ -159,8 +156,4 @@ func chatHasScopeSet(snapshot CredentialSnapshot, scopeSets [][]AuthorizationSco
 
 func chatReadScopes(scope AuthorizationScope) [][]AuthorizationScope {
 	return [][]AuthorizationScope{{scope}}
-}
-
-func chatBotScopes(scope AuthorizationScope) [][]AuthorizationScope {
-	return [][]AuthorizationScope{{scope, ScopeUserBot, ScopeChannelBot}}
 }

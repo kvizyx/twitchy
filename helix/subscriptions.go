@@ -82,9 +82,6 @@ func (s *SubscriptionsService) GetBroadcasterSubscriptions(ctx context.Context, 
 	if err != nil {
 		return nil, err
 	}
-	if credential.TokenClass() == TokenClassApp {
-		operation.Scopes = nil
-	}
 	if err := validateCredentialForOperation(credential, operation, "", ""); err != nil {
 		return nil, err
 	}

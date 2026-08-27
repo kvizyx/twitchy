@@ -37,7 +37,7 @@ type RemoveBlockedTermRequest struct {
 
 func (s *ModerationService) GetBlockedTerms(ctx context.Context, req GetBlockedTermsRequest) (*Response[GetBlockedTermsData], error) {
 	scopes := [][]AuthorizationScope{{ScopeModeratorReadBlockedTerms}, {ScopeModeratorManageBlockedTerms}}
-	return executeModerationEndpoint[GetBlockedTermsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-blocked-terms", query: req, auth: moderationAuthorization{userScopeSets: scopes, appScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[GetBlockedTermsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-blocked-terms", query: req, auth: moderationAuthorization{userScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ModerationService) GetBlockedTermsPager(req GetBlockedTermsRequest, opts ...PagerOption) (*Pager[GetBlockedTermsData], error) {
@@ -57,9 +57,9 @@ func (s *ModerationService) GetBlockedTermsPager(req GetBlockedTermsRequest, opt
 }
 
 func (s *ModerationService) AddBlockedTerm(ctx context.Context, req AddBlockedTermRequest) (*Response[AddBlockedTermData], error) {
-	return executeModerationEndpoint[AddBlockedTermData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "add-blocked-term", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), appScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[AddBlockedTermData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "add-blocked-term", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ModerationService) RemoveBlockedTerm(ctx context.Context, req RemoveBlockedTermRequest) (*Response[RemoveBlockedTermData], error) {
-	return executeModerationEndpoint[RemoveBlockedTermData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "remove-blocked-term", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), appScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[RemoveBlockedTermData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "remove-blocked-term", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageBlockedTerms), subjectIDs: []string{req.ModeratorID}}})
 }

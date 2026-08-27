@@ -31,9 +31,9 @@ type RemoveSuspiciousStatusFromChatUserRequest struct {
 type RemoveSuspiciousStatusFromChatUserData []SuspiciousUserStatus
 
 func (s *ExperimentalModerationService) AddSuspiciousStatusToChatUser(ctx context.Context, req AddSuspiciousStatusToChatUserRequest) (*Response[AddSuspiciousStatusToChatUserData], error) {
-	return executeModerationEndpoint[AddSuspiciousStatusToChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "add-suspicious-status-to-chat-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), appScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[AddSuspiciousStatusToChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "add-suspicious-status-to-chat-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ExperimentalModerationService) RemoveSuspiciousStatusFromChatUser(ctx context.Context, req RemoveSuspiciousStatusFromChatUserRequest) (*Response[RemoveSuspiciousStatusFromChatUserData], error) {
-	return executeModerationEndpoint[RemoveSuspiciousStatusFromChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "remove-suspicious-status-from-chat-user", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), appScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[RemoveSuspiciousStatusFromChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "remove-suspicious-status-from-chat-user", query: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageSuspiciousUsers), subjectIDs: []string{req.ModeratorID}}})
 }

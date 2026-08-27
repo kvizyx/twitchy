@@ -33,14 +33,6 @@ func TestModerationAuthorizationRejectsBeforeNetwork(t *testing.T) {
 				return err
 			},
 		},
-		{
-			name:       "app ban missing user bot",
-			credential: moderationCredential(helix.TokenClassApp, "", helix.ScopeModeratorManageBannedUsers),
-			call: func(client *helix.Client) error {
-				_, err := client.Moderation.BanUser(context.Background(), helix.BanUserRequest{BroadcasterID: "1234", ModeratorID: "5678"})
-				return err
-			},
-		},
 	}
 	for _, testCase := range tests {
 		t.Run(testCase.name, func(t *testing.T) {

@@ -134,11 +134,7 @@ func (s *EventSubService) eventSubCredential(ctx context.Context, anchor string,
 	if err != nil {
 		return manifest.Operation{}, CredentialSnapshot{}, err
 	}
-	validationOperation := operation
-	if credential.TokenClass() == TokenClassApp {
-		validationOperation.Scopes = nil
-	}
-	if err := validateCredentialForOperation(credential, validationOperation, "", ""); err != nil {
+	if err := validateCredentialForOperation(credential, operation, "", ""); err != nil {
 		return manifest.Operation{}, CredentialSnapshot{}, err
 	}
 	wanted := TokenClassApp

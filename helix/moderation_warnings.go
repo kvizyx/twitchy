@@ -25,5 +25,5 @@ type ChatWarning struct {
 type WarnChatUserData []ChatWarning
 
 func (s *ModerationService) WarnChatUser(ctx context.Context, req WarnChatUserRequest) (*Response[WarnChatUserData], error) {
-	return executeModerationEndpoint[WarnChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "warn-chat-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageWarnings), appScopeSets: chatReadScopes(ScopeModeratorManageWarnings), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[WarnChatUserData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "warn-chat-user", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageWarnings), subjectIDs: []string{req.ModeratorID}}})
 }

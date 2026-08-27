@@ -73,7 +73,6 @@ type UpdateAutoModSettingsRequest struct {
 
 type moderationAuthorization struct {
 	userScopeSets [][]AuthorizationScope
-	appScopeSets  [][]AuthorizationScope
 	subjectIDs    []string
 }
 
@@ -123,14 +122,13 @@ func validateModerationCredential(snapshot CredentialSnapshot, operation manifes
 	if !operationAllowsTokenClass(snapshot.TokenClass(), operation.TokenClasses) {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	scopeSets := auth.userScopeSets
-	if snapshot.TokenClass() == TokenClassApp {
-		scopeSets = auth.appScopeSets
-	}
 	if snapshot.TokenClass() != TokenClassUser && snapshot.TokenClass() != TokenClassApp {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	if !chatHasScopeSet(snapshot, scopeSets) {
+	// App access tokens carry no scopes: Twitch authorizes them through prior
+	// user grants, which cannot be verified client-side, so scope checks only
+	// apply to user access tokens.
+	if snapshot.TokenClass() == TokenClassUser && !chatHasScopeSet(snapshot, auth.userScopeSets) {
 		return localCredentialAuthError(operation.OperationID)
 	}
 	if snapshot.TokenClass() == TokenClassUser && len(auth.subjectIDs) > 0 {
@@ -145,18 +143,18 @@ func validateModerationCredential(snapshot CredentialSnapshot, operation manifes
 }
 
 func (s *ModerationService) CheckAutoModStatus(ctx context.Context, req CheckAutoModStatusRequest) (*Response[CheckAutoModStatusData], error) {
-	return executeModerationEndpoint[CheckAutoModStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "check-automod-status", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModerationRead), appScopeSets: chatReadScopes(ScopeModerationRead), subjectIDs: []string{req.BroadcasterID}}})
+	return executeModerationEndpoint[CheckAutoModStatusData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "check-automod-status", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModerationRead), subjectIDs: []string{req.BroadcasterID}}})
 }
 
 func (s *ModerationService) ManageHeldAutoModMessages(ctx context.Context, req ManageHeldAutoModMessagesRequest) (*Response[ManageHeldAutoModMessagesData], error) {
-	return executeModerationEndpoint[ManageHeldAutoModMessagesData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "manage-held-automod-messages", body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageAutoMod), appScopeSets: chatReadScopes(ScopeModeratorManageAutoMod), subjectIDs: []string{req.UserID}}})
+	return executeModerationEndpoint[ManageHeldAutoModMessagesData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "manage-held-automod-messages", body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageAutoMod), subjectIDs: []string{req.UserID}}})
 }
 
 func (s *ModerationService) GetAutoModSettings(ctx context.Context, req GetAutoModSettingsRequest) (*Response[GetAutoModSettingsData], error) {
 	scopes := [][]AuthorizationScope{{ScopeModeratorReadAutoModSettings}, {ScopeModeratorManageAutoModSettings}}
-	return executeModerationEndpoint[GetAutoModSettingsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-automod-settings", query: req, auth: moderationAuthorization{userScopeSets: scopes, appScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[GetAutoModSettingsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "get-automod-settings", query: req, auth: moderationAuthorization{userScopeSets: scopes, subjectIDs: []string{req.ModeratorID}}})
 }
 
 func (s *ModerationService) UpdateAutoModSettings(ctx context.Context, req UpdateAutoModSettingsRequest) (*Response[UpdateAutoModSettingsData], error) {
-	return executeModerationEndpoint[UpdateAutoModSettingsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "update-automod-settings", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageAutoModSettings), appScopeSets: chatReadScopes(ScopeModeratorManageAutoModSettings), subjectIDs: []string{req.ModeratorID}}})
+	return executeModerationEndpoint[UpdateAutoModSettingsData](moderationEndpointSpec{client: s.client, ctx: ctx, anchor: "update-automod-settings", query: req, body: req, auth: moderationAuthorization{userScopeSets: chatReadScopes(ScopeModeratorManageAutoModSettings), subjectIDs: []string{req.ModeratorID}}})
 }

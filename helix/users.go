@@ -131,12 +131,17 @@ func validateTask26Credential(snapshot CredentialSnapshot, operation manifest.Op
 	if !operationAllowsTokenClass(snapshot.TokenClass(), operation.TokenClasses) {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	if len(auth.scopeSets) == 0 {
-		if err := validateCredentialForOperation(snapshot, operation, "", ""); err != nil {
-			return err
+	// App access tokens carry no scopes: Twitch authorizes them through prior
+	// user grants, which cannot be verified client-side, so scope checks only
+	// apply to user access tokens.
+	if snapshot.TokenClass() != TokenClassApp {
+		if len(auth.scopeSets) == 0 {
+			if err := validateCredentialForOperation(snapshot, operation, "", ""); err != nil {
+				return err
+			}
+		} else if !task26HasScopeSet(snapshot, auth.scopeSets) {
+			return localCredentialAuthError(operation.OperationID)
 		}
-	} else if !task26HasScopeSet(snapshot, auth.scopeSets) {
-		return localCredentialAuthError(operation.OperationID)
 	}
 	if snapshot.TokenClass() == TokenClassApp && auth.appSubjectRequired && auth.subjectID == "" {
 		return localCredentialAuthError(operation.OperationID)

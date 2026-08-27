@@ -43,12 +43,17 @@ func validateCredentialForOperation(snapshot CredentialSnapshot, operation manif
 	if !operationAllowsTokenClass(snapshot.TokenClass(), operation.TokenClasses) {
 		return localCredentialAuthError(operation.OperationID)
 	}
-	for _, scope := range operation.Scopes {
-		if scope == "" || scope == "unknown" {
-			continue
-		}
-		if !snapshotHasScope(snapshot, AuthorizationScope(scope)) {
-			return localCredentialAuthError(operation.OperationID)
+	// App access tokens carry no scopes: Twitch authorizes them through prior
+	// user grants of the operation's scopes, which cannot be verified
+	// client-side, so scope checks only apply to user access tokens.
+	if snapshot.TokenClass() != TokenClassApp {
+		for _, scope := range operation.Scopes {
+			if scope == "" || scope == "unknown" {
+				continue
+			}
+			if !snapshotHasScope(snapshot, AuthorizationScope(scope)) {
+				return localCredentialAuthError(operation.OperationID)
+			}
 		}
 	}
 	if operation.SubjectBinding != "" && operation.SubjectBinding != "unknown" && subjectID != "" && snapshot.UserID() != subjectID {
