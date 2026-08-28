@@ -35,6 +35,14 @@ func requestReplaySafe(request *http.Request, operation manifest.Operation) bool
 	if !operation.Replay.Replayable || !operation.Request.BodyReconstructible {
 		return false
 	}
+	return requestBodyReconstructible(request)
+}
+
+// requestBodyReconstructible reports whether the request body can be replayed.
+// A 401 response means Twitch rejected the request before applying it, so a
+// replay after a credential refresh is safe even for mutating operations —
+// unlike a 503, where the request may have reached the server.
+func requestBodyReconstructible(request *http.Request) bool {
 	return request.Body == nil || request.Body == http.NoBody || request.GetBody != nil
 }
 

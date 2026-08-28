@@ -50,9 +50,11 @@
 //
 // Replay is bounded and manifest-driven. At most one replay is attempted for a
 // given retry cause within the transport attempt budget, and a request body is
-// replayed only when it can be reconstructed. Mutating operations are never
-// replayed. A 401 is not a blanket retry: refresh is used only for a refreshable
-// user credential and only when the operation permits replay.
+// replayed only when it can be reconstructed. Mutating operations are replayed
+// only after a 401, which Twitch sends before applying the request; other
+// transient failures never replay mutations. A 401 is not a blanket retry:
+// refresh is used only for a refreshable user credential or for an app
+// credential backed by a RefreshableTokenSource.
 //
 // Anchor: pager-semantics
 //

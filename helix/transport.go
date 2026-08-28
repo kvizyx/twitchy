@@ -46,6 +46,7 @@ func (executor *transportExecutor) execute(ctx context.Context, request *http.Re
 		return nil, ResponseMeta{}, fmt.Errorf("helix: nil request")
 	}
 	replaySafe := requestReplaySafe(request, operation)
+	unauthorizedReplaySafe := requestBodyReconstructible(request)
 	state := retryState{seen: make(map[retryCause]bool)}
 	var retryAfter string
 	for attempt := 1; attempt <= maxHTTPAttempts; attempt++ {
@@ -70,7 +71,7 @@ func (executor *transportExecutor) execute(ctx context.Context, request *http.Re
 
 		switch response.StatusCode {
 		case http.StatusUnauthorized:
-			if replaySafe && state.canReplay(retryUnauthorized, attempt) && executor.canRefresh(credential) {
+			if unauthorizedReplaySafe && state.canReplay(retryUnauthorized, attempt) && executor.canRefresh(credential) {
 				if err := drainAndClose(response.Body); err != nil {
 					return nil, meta, err
 				}
@@ -105,8 +106,16 @@ func (executor *transportExecutor) execute(ctx context.Context, request *http.Re
 }
 
 func (executor *transportExecutor) canRefresh(credential CredentialSnapshot) bool {
-	_, refreshable := executor.source.(RefreshableTokenSource)
-	return credential.Refreshable() && credential.TokenClass() == TokenClassUser && refreshable
+	if _, refreshable := executor.source.(RefreshableTokenSource); !refreshable {
+		return false
+	}
+	// App access tokens carry no refresh token: a refreshable source "refreshes"
+	// them by minting a fresh client-credentials token, which is the documented
+	// Twitch recovery for a rejected app token.
+	if credential.TokenClass() == TokenClassApp {
+		return true
+	}
+	return credential.Refreshable() && credential.TokenClass() == TokenClassUser
 }
 
 func (executor *transportExecutor) refreshCredential(ctx context.Context, credential CredentialSnapshot) (CredentialSnapshot, error) {

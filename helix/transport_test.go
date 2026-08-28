@@ -145,6 +145,173 @@ func TestAttemptStateMachine(t *testing.T) {
 	}
 }
 
+type refreshScriptedSource struct {
+	current   CredentialSnapshot
+	refreshed CredentialSnapshot
+	refreshes atomic.Int32
+}
+
+func (s *refreshScriptedSource) Token(context.Context) (CredentialSnapshot, error) {
+	return s.current, nil
+}
+
+func (s *refreshScriptedSource) Refresh(context.Context, CredentialSnapshot, RefreshReason) (CredentialSnapshot, error) {
+	s.refreshes.Add(1)
+	return s.refreshed, nil
+}
+
+type tokenOnlySource struct{ snapshot CredentialSnapshot }
+
+func (s *tokenOnlySource) Token(context.Context) (CredentialSnapshot, error) {
+	return s.snapshot, nil
+}
+
+type authRecordingTransport struct {
+	base  http.RoundTripper
+	mu    sync.Mutex
+	auths []string
+}
+
+func (t *authRecordingTransport) RoundTrip(request *http.Request) (*http.Response, error) {
+	t.mu.Lock()
+	t.auths = append(t.auths, request.Header.Get("Authorization"))
+	t.mu.Unlock()
+	return t.base.RoundTrip(request)
+}
+
+func (t *authRecordingTransport) tokens() []string {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return append([]string(nil), t.auths...)
+}
+
+// mutatingOperation is never replayed for transient failures, but a 401 means
+// Twitch rejected the request before applying it, so a post-refresh replay is
+// safe.
+func mutatingOperation() manifest.Operation {
+	operation := testOperation()
+	operation.OperationID = "test-mutation"
+	operation.Method = http.MethodPatch
+	operation.Replay.Replayable = false
+	operation.Request.BodyReconstructible = false
+	return operation
+}
+
+func mutatingRequest(t *testing.T) *http.Request {
+	t.Helper()
+	request, err := http.NewRequest(http.MethodPatch, "https://api.example.test/helix", strings.NewReader(`{"key":"value"}`))
+	if err != nil {
+		t.Fatalf("NewRequest() error = %v", err)
+	}
+	if request.GetBody == nil {
+		t.Fatal("request body is not reconstructible")
+	}
+	return request
+}
+
+func TestAttemptStateMachine_refreshesAppCredentialOnUnauthorized(t *testing.T) {
+	source := &refreshScriptedSource{
+		current: NewCredentialSnapshot(Credential{
+			AccessToken: "old-app-token",
+			TokenClass:  TokenClassApp,
+			Generation:  1,
+		}),
+		refreshed: NewCredentialSnapshot(Credential{
+			AccessToken: "new-app-token",
+			TokenClass:  TokenClassApp,
+			Generation:  2,
+		}),
+	}
+	transport := &authRecordingTransport{base: &scriptedTransport{responses: []int{401, 200}}}
+	executor := newTransportExecutor(&http.Client{Transport: transport}, source, RateLimitPolicy{}, testClock{now: time.Unix(1704067200, 0)}, nil)
+
+	_, _, err := executor.execute(context.Background(), mutatingRequest(t), mutatingOperation(), source.current)
+	if err != nil {
+		t.Fatalf("execute() error = %v", err)
+	}
+	if got := source.refreshes.Load(); got != 1 {
+		t.Fatalf("refreshes = %d, want 1", got)
+	}
+	auths := transport.tokens()
+	if len(auths) != 2 || auths[0] != "Bearer old-app-token" || auths[1] != "Bearer new-app-token" {
+		t.Fatalf("authorization headers = %v, want old then new app token", auths)
+	}
+}
+
+func TestAttemptStateMachine_refreshesUserCredentialOnUnauthorizedMutation(t *testing.T) {
+	source := &refreshScriptedSource{
+		current: NewCredentialSnapshot(Credential{
+			AccessToken: "old-user-token",
+			TokenClass:  TokenClassUser,
+			Refreshable: true,
+			Generation:  1,
+		}),
+		refreshed: NewCredentialSnapshot(Credential{
+			AccessToken: "new-user-token",
+			TokenClass:  TokenClassUser,
+			Refreshable: true,
+			Generation:  2,
+		}),
+	}
+	transport := &authRecordingTransport{base: &scriptedTransport{responses: []int{401, 200}}}
+	executor := newTransportExecutor(&http.Client{Transport: transport}, source, RateLimitPolicy{}, testClock{now: time.Unix(1704067200, 0)}, nil)
+
+	_, _, err := executor.execute(context.Background(), mutatingRequest(t), mutatingOperation(), source.current)
+	if err != nil {
+		t.Fatalf("execute() error = %v", err)
+	}
+	auths := transport.tokens()
+	if len(auths) != 2 || auths[1] != "Bearer new-user-token" {
+		t.Fatalf("authorization headers = %v, want replay with refreshed user token", auths)
+	}
+}
+
+func TestAttemptStateMachine_doesNotRefreshAppCredentialWithoutRefreshableSource(t *testing.T) {
+	source := &tokenOnlySource{snapshot: NewCredentialSnapshot(Credential{
+		AccessToken: "app-token",
+		TokenClass:  TokenClassApp,
+		Generation:  1,
+	})}
+	transport := &scriptedTransport{responses: []int{401, 200}}
+	executor := newTransportExecutor(&http.Client{Transport: transport}, source, RateLimitPolicy{}, testClock{now: time.Unix(1704067200, 0)}, nil)
+
+	_, _, err := executor.execute(context.Background(), mutatingRequest(t), mutatingOperation(), source.snapshot)
+	if err == nil {
+		t.Fatal("execute() error = nil, want terminal 401")
+	}
+	if got := transport.calls.Load(); got != 1 {
+		t.Fatalf("attempts = %d, want 1", got)
+	}
+}
+
+func TestAttemptStateMachine_doesNotReplayUnauthorizedMutationWithOneShotBody(t *testing.T) {
+	source := &refreshScriptedSource{
+		current: NewCredentialSnapshot(Credential{
+			AccessToken: "old-user-token",
+			TokenClass:  TokenClassUser,
+			Refreshable: true,
+			Generation:  1,
+		}),
+	}
+	transport := &scriptedTransport{responses: []int{401, 200}}
+	executor := newTransportExecutor(&http.Client{Transport: transport}, source, RateLimitPolicy{}, testClock{now: time.Unix(1704067200, 0)}, nil)
+	request, err := http.NewRequest(http.MethodPatch, "https://api.example.test/helix", &oneShotReader{})
+	if err != nil {
+		t.Fatalf("NewRequest() error = %v", err)
+	}
+
+	_, _, err = executor.execute(context.Background(), request, mutatingOperation(), source.current)
+	if err == nil {
+		t.Fatal("execute() error = nil, want terminal 401")
+	}
+	if got := transport.calls.Load(); got != 1 {
+		t.Fatalf("attempts = %d, want 1", got)
+	}
+	if got := source.refreshes.Load(); got != 0 {
+		t.Fatalf("refreshes = %d, want 0", got)
+	}
+}
+
 func TestAttemptStateMachine_doesNotReplayMutationOrOneShotBody(t *testing.T) {
 	for _, replayable := range []bool{false, true} {
 		transport := &scriptedTransport{responses: []int{503, 200}}
