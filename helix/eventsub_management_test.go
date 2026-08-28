@@ -76,6 +76,47 @@ func TestEventSubManagement_deleteAndGetWire(t *testing.T) {
 	}
 }
 
+func TestEventSubManagement_getParsesPaginationCursor(t *testing.T) {
+	transport := testkit.NewRecordingRoundTripper(
+		testkit.RoundTripResponse{StatusCode: http.StatusOK, Body: `{"data":[{"id":"subscription-1","status":"enabled","type":"user.update","version":"1","condition":{"user_id":"1234"},"created_at":"2020-11-10T14:32:18.730260295Z","transport":{"method":"webhook","callback":"https://callback.test"},"cost":1}],"total":2,"total_cost":2,"max_total_cost":10000,"pagination":{"cursor":"cursor-page-2"}}`},
+		testkit.RoundTripResponse{StatusCode: http.StatusOK, Body: `{"data":[{"id":"subscription-1","status":"enabled","type":"user.update","version":"1","condition":{"user_id":"1234"},"created_at":"2020-11-10T14:32:18.730260295Z","transport":{"method":"webhook","callback":"https://callback.test"},"cost":1}],"total":2,"total_cost":2,"max_total_cost":10000,"pagination":{"cursor":"cursor-page-2"}}`},
+		testkit.RoundTripResponse{StatusCode: http.StatusOK, Body: `{"data":[{"id":"subscription-2","status":"enabled","type":"channel.follow","version":"2","condition":{"broadcaster_user_id":"1234","moderator_user_id":"4321"},"created_at":"2020-11-10T14:32:18.730260295Z","transport":{"method":"webhook","callback":"https://callback.test"},"cost":1}],"total":2,"total_cost":2,"max_total_cost":10000}`},
+	)
+	client, err := helix.New(helix.WithBaseURL("https://api.twitch.test/helix"), helix.WithHTTPClient(&http.Client{Transport: transport}), helix.WithStaticToken(helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp}))
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := client.EventSub.GetEventSubSubscriptions(context.Background(), helix.GetEventSubSubscriptionsRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := result.Pagination.Cursor(); got != "cursor-page-2" {
+		t.Fatalf("cursor = %q, want %q", got, "cursor-page-2")
+	}
+
+	pager, err := client.EventSub.GetEventSubSubscriptionsPager(helix.GetEventSubSubscriptionsRequest{})
+	if err != nil {
+		t.Fatal(err)
+	}
+	pages := 0
+	for pager.Next(context.Background()) {
+		pages++
+	}
+	if err := pager.Err(); err != nil {
+		t.Fatal(err)
+	}
+	if pages != 2 {
+		t.Fatalf("pages = %d, want 2", pages)
+	}
+	requests := transport.Requests()
+	if len(requests) != 3 {
+		t.Fatalf("requests = %d, want 3", len(requests))
+	}
+	if requests[2].Path != "/helix/eventsub/subscriptions?after=cursor-page-2" {
+		t.Fatalf("third request path = %q", requests[2].Path)
+	}
+}
+
 func TestEventSubManagement_rejectsTransportTokenPairBeforeNetwork(t *testing.T) {
 	transport := testkit.NewRecordingRoundTripper()
 	client, err := helix.New(helix.WithBaseURL("https://api.twitch.test/helix"), helix.WithHTTPClient(&http.Client{Transport: transport}), helix.WithStaticToken(helix.Credential{AccessToken: "app-token", ClientID: "client-id", TokenClass: helix.TokenClassApp}))

@@ -170,11 +170,17 @@ func executeEventSubEnvelope[T any](client *Client, ctx context.Context, operati
 	if err := json.Unmarshal(data, &envelope); err != nil {
 		return nil, newProtocolError(errorInput{operation: operation.OperationID, statusCode: response.StatusCode, meta: meta, cause: err, secrets: append([]string{credential.AccessToken()}, secrets...)})
 	}
+	var wire struct {
+		Pagination Pagination `json:"pagination"`
+	}
+	if err := json.Unmarshal(data, &wire); err != nil {
+		return nil, newProtocolError(errorInput{operation: operation.OperationID, statusCode: response.StatusCode, meta: meta, cause: err, secrets: append([]string{credential.AccessToken()}, secrets...)})
+	}
 	resultData, ok := any(envelope).(T)
 	if !ok {
 		return nil, newProtocolError(errorInput{operation: operation.OperationID, statusCode: response.StatusCode, meta: meta, cause: fmt.Errorf("decode %s response data type", operation.OperationID), secrets: append([]string{credential.AccessToken()}, secrets...)})
 	}
-	result := &Response[T]{Data: resultData, Meta: meta}
+	result := &Response[T]{Data: resultData, Pagination: wire.Pagination, Meta: meta}
 	return result, nil
 }
 
